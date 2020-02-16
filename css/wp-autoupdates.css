@@ -1,0 +1,11 @@
+#autoupdates_column {
+	min-width: 200px;
+}
+
+.autoupdates_column .plugin-autoupdate-enabled {
+	color: #006505;
+}
+
+.autoupdates_column .plugin-autoupdate-enabled .disable {
+	color: #a00;
+}
