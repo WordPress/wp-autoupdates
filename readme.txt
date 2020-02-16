@@ -1,5 +1,5 @@
 === WordPress Autoupdates ===
-Contributors: wordpressdotorg, audrasjb
+Contributors: wordpressdotorg, audrasjb, whodunitagency
 Requires at least: 5.3
 Requires PHP: 7.2
 Tested up to: 5.4
@@ -9,10 +9,8 @@ License: GPLv2 or later
 WordPress Automatic Updates feature plugin.
 
 == Description ==
-WordPress Automatic Updates feature plugin.
 
-== Screenshots ==
-1. Screenshot
+WordPress Automatic Updates feature plugin.
 
 == Changelog ==
 

@@ -8,7 +8,7 @@ Version: 0.1
 Requires at least: 5.3
 Tested up to: 5.3
 Author URI: https://wordpress.org
-Contributors: wordpressdotorg, audrasjb
+Contributors: wordpressdotorg, audrasjb, whodunitagency
 Text Domain: wp-autoupdates
 */
 
