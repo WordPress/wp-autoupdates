@@ -15,4 +15,4 @@ WordPress Automatic Updates feature plugin.
 == Changelog ==
 
 = 0.1 =
-- Initial commit
+- Initial release
