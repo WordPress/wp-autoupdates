@@ -1,3 +1,7 @@
+.theme-overlay .theme-autoupdate a {
+	text-decoration: none;
+}
+
 #autoupdates_column {
 	min-width: 200px;
 }
@@ -8,4 +12,9 @@
 
 .autoupdates_column .plugin-autoupdate-enabled .disable {
 	color: #a00;
+}
+
+.plugin-autoupdate-enabled,
+.theme-autoupdate-enabled {
+	color: #006505;
 }

@@ -20,11 +20,46 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Enqueue styles and scripts
  */
 function wp_auto_updates_styles_scripts( $hook ) {
-	if ( 'plugins.php' !== $hook ) {
+	if ( ! in_array( $hook, array( 'plugins.php', 'themes.php', 'update-core.php' ) ) ) {
 		return;
 	}
 	wp_register_style( 'wp-autoupdates', plugin_dir_url( __FILE__ ) . 'css/wp-autoupdates.css', array() );
 	wp_enqueue_style( 'wp-autoupdates' );
+	if ( 'update-core.php' === $hook ) {
+		$script = 'jQuery( document ).ready(function() {';
+		if ( wp_is_plugins_auto_update_enabled() ) {
+			$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
+			foreach ( $wp_auto_update_plugins as $plugin ) {
+				$next_update_time = wp_next_scheduled( 'wp_version_check' );
+				$time_to_next_update = human_time_diff( intval( $next_update_time ) );
+				$autoupdate_text = ' | <span class="plugin-autoupdate-enabled">';
+				$autoupdate_text .= sprintf(
+					/* translators: Time until the next update. */
+					__( 'Automatic update scheduled in %s', 'wp-autoupdates' ),
+					$time_to_next_update
+				);
+				$autoupdate_text .= '</span> ';
+				$script .= 'jQuery(".check-column input[value=\'' . $plugin . '\']").closest("tr").find(".plugin-title > p").append(\'' . $autoupdate_text . '\');';
+			}
+		}
+		if ( wp_is_themes_auto_update_enabled() ) {
+			$wp_auto_update_themes = get_site_option( 'wp_auto_update_themes', array() );
+			foreach ( $wp_auto_update_themes as $theme ) {
+				$next_update_time = wp_next_scheduled( 'wp_version_check' );
+				$time_to_next_update = human_time_diff( intval( $next_update_time ) );
+				$autoupdate_text = ' | <span class="theme-autoupdate-enabled">';
+				$autoupdate_text .= sprintf(
+					/* translators: Time until the next update. */
+					__( 'Automatic update scheduled in %s', 'wp-autoupdates' ),
+					$time_to_next_update
+				);
+				$autoupdate_text .= '</span> ';
+				$script .= 'jQuery(".check-column input[value=\'' . $theme . '\']").closest("tr").find(".plugin-title > p").append(\'' . $autoupdate_text . '\');';
+			}
+		}
+		$script .= '});';
+		wp_add_inline_script( 'jquery', $script );
+	}
 }
 add_action( 'admin_enqueue_scripts', 'wp_auto_updates_styles_scripts' );
 
@@ -44,6 +79,20 @@ function wp_is_plugins_auto_update_enabled() {
 }
 
 /**
+ * Checks whether themes manual autoupdate is enabled.
+ */
+function wp_is_themes_auto_update_enabled() {
+	$enabled = ! defined( 'WP_DISABLE_THEMES_AUTO_UPDATE' ) || ! WP_DISABLE_THEMES_AUTO_UPDATE;
+	
+	/**
+	 * Filters whether themes manual autoupdate is enabled.
+	 *
+	 * @param bool $enabled True if themes auto udpate is enabled, false otherwise.
+	 */
+	return apply_filters( 'wp_themes_auto_update_enabled', $enabled );
+}
+
+/**
  * Autoupdate selected plugins.
  */
 function wp_auto_update_plugin( $update, $item ) {
@@ -55,6 +104,19 @@ function wp_auto_update_plugin( $update, $item ) {
 	}
 }
 add_filter( 'auto_update_plugin', 'wp_auto_update_plugin', 10, 2 );
+
+/**
+ * Autoupdate selected themes.
+ */
+function wp_auto_update_theme( $update, $item ) {
+	$wp_auto_update_themes = get_site_option( 'wp_auto_update_themes', array() );
+	if ( in_array( $item->theme, $wp_auto_update_themes, true ) && wp_is_themes_auto_update_enabled() ) {
+		return true;
+	} else {
+		return $update;
+	}
+}
+add_filter( 'auto_update_theme', 'wp_auto_update_theme', 10, 2 );
 
 /**
  * Add autoupdate column to plugins screen.
