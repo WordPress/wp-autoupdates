@@ -201,7 +201,7 @@ function wp_autoupdates_enabler() {
 	if ( 'plugins.php' !== $pagenow ) {
 		return;
 	}
-	if ( 'autoupdate' === $_GET['action'] ) {
+	if ( 'autoupdate' === esc_html( $_GET['action'] ) ) {
 		if ( ! current_user_can( 'update_plugins' ) || ! wp_is_plugins_auto_update_enabled() ) {
 			wp_die( __( 'Sorry, you are not allowed to enable plugins automatic updates.', 'wp-autoupdates' ) );
 		}
@@ -210,7 +210,7 @@ function wp_autoupdates_enabler() {
 			wp_die( __( 'Please connect to your network admin to manage plugins automatic updates.', 'wp-autoupdates' ) );
 		}
 
-		$plugin = ! empty( $_GET['plugin'] ) ? wp_unslash( $_GET['plugin'] ) : '';
+		$plugin = ! empty( esc_html( $_GET['plugin'] ) ) ? wp_unslash( esc_html( $_GET['plugin'] ) ) : '';
 
 		if ( empty( $plugin ) ) {
 			wp_redirect( self_admin_url( "plugins.php?plugin_status=$status&paged=$page&s=$s" ) );
@@ -307,13 +307,13 @@ add_action( 'handle_bulk_actions-plugins', 'wp_plugins_bulk_actions_handle', 10,
  * Auto-update notices
  */
 function wp_autoupdate_notices() {
-	if ( isset( $_GET['enable-autoupdate'] ) ) {
+	if ( isset( esc_html( $_GET['enable-autoupdate'] ) ) ) {
 		echo '<div id="message" class="updated notice is-dismissible"><p>';
 		_e( 'The selected plugins will now update automatically.', 'wp-autoupdates' );
 		echo '</p></div>';
 	}
 	
-	if ( isset( $_GET['disable-autoupdate'] ) ) {
+	if ( isset( esc_html( $_GET['disable-autoupdate'] ) ) ) {
 		echo '<div id="message" class="updated notice is-dismissible"><p>';
 		_e( 'The selected plugins won’t automatically update anymore.', 'wp-autoupdates' );
 		echo '</p></div>';
