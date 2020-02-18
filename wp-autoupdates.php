@@ -1,14 +1,17 @@
 <?php
 /*
 Plugin Name: WordPress Autoupdates
-Plugin URI: https://wordpress.org
-Description: WordPress Automatic Updates feature plugin.
-Author: The WordPress Team
+Plugin URI: https://wordpress.org/plugins/wp-autoupdates
+Description: A feature plugin to integrate Plugins & Themes automatic updates in WordPress Core.
 Version: 0.1
 Requires at least: 5.3
+Requires PHP: 7.2
 Tested up to: 5.3
+Author: The WordPress Team
 Author URI: https://wordpress.org
-Contributors: wordpressdotorg, audrasjb, whodunitagency
+Contributors: wordpressdotorg, audrasjb, whodunitagency, desrosj, xkon
+License: GPLv2
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: wp-autoupdates
 */
 
@@ -65,6 +68,7 @@ function wp_autoupdates_is_plugins_auto_update_enabled() {
 	return apply_filters( 'wp_plugins_auto_update_enabled', $enabled );
 }
 
+
 /**
  * Autoupdate selected plugins.
  */
@@ -78,6 +82,7 @@ function wp_autoupdates_selected_plugins( $update, $item ) {
 }
 add_filter( 'auto_update_plugin', 'wp_autoupdates_selected_plugins', 10, 2 );
 
+
 /**
  * Add autoupdate column to plugins screen.
  */
@@ -86,6 +91,7 @@ function wp_autoupdates_add_plugins_autoupdates_column( $columns ) {
 	return $columns;
 }
 add_filter( 'manage_plugins_columns', 'wp_autoupdates_add_plugins_autoupdates_column' );
+
 
 /**
  * Render autoupdate column’s content.
@@ -142,6 +148,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 }
 add_action( 'manage_plugins_custom_column' , 'wp_autoupdates_add_plugins_autoupdates_column_content', 10, 3 );
 
+
 /**
  * Add plugins autoupdates bulk actions
  */
@@ -193,6 +200,7 @@ function wp_autoupdates_enabler() {
 	}
 }
 add_action( 'admin_init', 'wp_autoupdates_enabler' );
+
 
 /**
  * Handle plugins autoupdates bulk actions
@@ -259,6 +267,7 @@ function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $i
 }
 add_action( 'handle_bulk_actions-plugins', 'wp_autoupdates_plugins_bulk_actions_handle', 10, 3 );
 
+
 /**
  * Auto-update notices
  */
@@ -276,3 +285,4 @@ function wp_autoupdates_notices() {
 	}
 }
 add_action( 'admin_notices', 'wp_autoupdates_notices' );
+

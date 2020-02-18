@@ -1,5 +1,7 @@
 # WordPress Autoupdates 🤖
 
+![WordPress AutoUpdates](https://jeanbaptisteaudras.com/images/wp-autoupdates-banner.png)
+
 A feature plugin to integrate Plugins & Themes automatic updates in WordPress Core.
 
 ## About 🔎
@@ -53,11 +55,11 @@ TODO.
 
 ### Plugins Admin screen - screenshot
 
-![Plugins Admin screen - screenshot](https://jeanbaptisteaudras.com/images/wp-autoupdates-togglesingleplugin-01.gif)
+![Plugins Admin screen - screenshot](https://jeanbaptisteaudras.com/images/wp-autoupdates-plugins-01.png)
 
 ### Plugins Admin screen - Toggle update single plugin - screenshot
 
-![Plugins Admin screen - Toggle update single plugin - animated screenshot](https://jeanbaptisteaudras.com/images/wp-autoupdates-plugins-01.png)
+![Plugins Admin screen - Toggle update single plugin - animated screenshot](https://jeanbaptisteaudras.com/images/wp-autoupdates-togglesingleplugin-01.gif)
 
 ### Plugins Admin screen - Buk Edit - animated screenshot
 
