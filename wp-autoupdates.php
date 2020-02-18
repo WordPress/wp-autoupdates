@@ -19,20 +19,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Enqueue styles and scripts
  */
-function wp_auto_updates_styles_scripts( $hook ) {
-	if ( ! in_array( $hook, array( 'plugins.php', 'themes.php', 'update-core.php' ) ) ) {
+function wp_autoupdates_enqueues( $hook ) {
+	if ( ! in_array( $hook, array( 'plugins.php', 'update-core.php' ) ) ) {
 		return;
 	}
 	wp_register_style( 'wp-autoupdates', plugin_dir_url( __FILE__ ) . 'css/wp-autoupdates.css', array() );
 	wp_enqueue_style( 'wp-autoupdates' );
+	
+	// Update core screen JS hack (due to lack of filters)
 	if ( 'update-core.php' === $hook ) {
 		$script = 'jQuery( document ).ready(function() {';
-		if ( wp_is_plugins_auto_update_enabled() ) {
+		if ( wp_autoupdates_is_plugins_auto_update_enabled() ) {
 			$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
 			foreach ( $wp_auto_update_plugins as $plugin ) {
 				$next_update_time = wp_next_scheduled( 'wp_version_check' );
 				$time_to_next_update = human_time_diff( intval( $next_update_time ) );
-				$autoupdate_text = ' | <span class="plugin-autoupdate-enabled">';
+				$autoupdate_text = ' <span class="plugin-autoupdate-enabled"><span class="dashicons dashicons-update" aria-hidden="true"></span> ';
 				$autoupdate_text .= sprintf(
 					/* translators: Time until the next update. */
 					__( 'Automatic update scheduled in %s', 'wp-autoupdates' ),
@@ -42,32 +44,17 @@ function wp_auto_updates_styles_scripts( $hook ) {
 				$script .= 'jQuery(".check-column input[value=\'' . $plugin . '\']").closest("tr").find(".plugin-title > p").append(\'' . $autoupdate_text . '\');';
 			}
 		}
-		if ( wp_is_themes_auto_update_enabled() ) {
-			$wp_auto_update_themes = get_site_option( 'wp_auto_update_themes', array() );
-			foreach ( $wp_auto_update_themes as $theme ) {
-				$next_update_time = wp_next_scheduled( 'wp_version_check' );
-				$time_to_next_update = human_time_diff( intval( $next_update_time ) );
-				$autoupdate_text = ' | <span class="theme-autoupdate-enabled">';
-				$autoupdate_text .= sprintf(
-					/* translators: Time until the next update. */
-					__( 'Automatic update scheduled in %s', 'wp-autoupdates' ),
-					$time_to_next_update
-				);
-				$autoupdate_text .= '</span> ';
-				$script .= 'jQuery(".check-column input[value=\'' . $theme . '\']").closest("tr").find(".plugin-title > p").append(\'' . $autoupdate_text . '\');';
-			}
-		}
 		$script .= '});';
 		wp_add_inline_script( 'jquery', $script );
 	}
 }
-add_action( 'admin_enqueue_scripts', 'wp_auto_updates_styles_scripts' );
+add_action( 'admin_enqueue_scripts', 'wp_autoupdates_enqueues' );
 
 
 /**
  * Checks whether plugins manual autoupdate is enabled.
  */
-function wp_is_plugins_auto_update_enabled() {
+function wp_autoupdates_is_plugins_auto_update_enabled() {
 	$enabled = ! defined( 'WP_DISABLE_PLUGINS_AUTO_UPDATE' ) || ! WP_DISABLE_PLUGINS_AUTO_UPDATE;
 	
 	/**
@@ -79,65 +66,38 @@ function wp_is_plugins_auto_update_enabled() {
 }
 
 /**
- * Checks whether themes manual autoupdate is enabled.
- */
-function wp_is_themes_auto_update_enabled() {
-	$enabled = ! defined( 'WP_DISABLE_THEMES_AUTO_UPDATE' ) || ! WP_DISABLE_THEMES_AUTO_UPDATE;
-	
-	/**
-	 * Filters whether themes manual autoupdate is enabled.
-	 *
-	 * @param bool $enabled True if themes auto udpate is enabled, false otherwise.
-	 */
-	return apply_filters( 'wp_themes_auto_update_enabled', $enabled );
-}
-
-/**
  * Autoupdate selected plugins.
  */
-function wp_auto_update_plugin( $update, $item ) {
+function wp_autoupdates_selected_plugins( $update, $item ) {
 	$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
-	if ( in_array( $item->plugin, $wp_auto_update_plugins, true ) && wp_is_plugins_auto_update_enabled() ) {
+	if ( in_array( $item->plugin, $wp_auto_update_plugins, true ) && wp_autoupdates_is_plugins_auto_update_enabled() ) {
 		return true;
 	} else {
 		return $update;
 	}
 }
-add_filter( 'auto_update_plugin', 'wp_auto_update_plugin', 10, 2 );
-
-/**
- * Autoupdate selected themes.
- */
-function wp_auto_update_theme( $update, $item ) {
-	$wp_auto_update_themes = get_site_option( 'wp_auto_update_themes', array() );
-	if ( in_array( $item->theme, $wp_auto_update_themes, true ) && wp_is_themes_auto_update_enabled() ) {
-		return true;
-	} else {
-		return $update;
-	}
-}
-add_filter( 'auto_update_theme', 'wp_auto_update_theme', 10, 2 );
+add_filter( 'auto_update_plugin', 'wp_autoupdates_selected_plugins', 10, 2 );
 
 /**
  * Add autoupdate column to plugins screen.
  */
-function wp_add_plugins_autoupdates_column( $columns ) {
+function wp_autoupdates_add_plugins_autoupdates_column( $columns ) {
 	$columns['autoupdates_column'] = 'Automatic updates';
 	return $columns;
 }
-add_filter( 'manage_plugins_columns', 'wp_add_plugins_autoupdates_column' );
+add_filter( 'manage_plugins_columns', 'wp_autoupdates_add_plugins_autoupdates_column' );
 
 /**
  * Render autoupdate column’s content.
  */
-function wp_add_plugins_autoupdates_column_content( $column_name, $plugin_file, $plugin_data ) {
-	if ( ! current_user_can( 'update_plugins' ) || ! wp_is_plugins_auto_update_enabled() ) {
+function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $plugin_file, $plugin_data ) {
+	if ( ! current_user_can( 'update_plugins' ) || ! wp_autoupdates_is_plugins_auto_update_enabled() ) {
 		return;
 	}
 	if ( is_multisite() && ! is_network_admin() ) {
 		return;
 	}
-	if ( wp_is_plugins_auto_update_enabled() ) {
+	if ( wp_autoupdates_is_plugins_auto_update_enabled() ) {
 		$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
 		if ( in_array( $plugin_file, $wp_auto_update_plugins, true ) ) {
 			$aria_label = esc_attr(
@@ -180,17 +140,17 @@ function wp_add_plugins_autoupdates_column_content( $column_name, $plugin_file, 
 		}
 	}
 }
-add_action( 'manage_plugins_custom_column' , 'wp_add_plugins_autoupdates_column_content', 10, 3 );
+add_action( 'manage_plugins_custom_column' , 'wp_autoupdates_add_plugins_autoupdates_column_content', 10, 3 );
 
 /**
  * Add plugins autoupdates bulk actions
  */
-function wp_plugins_bulk_actions( $actions ) {
+function wp_autoupdates_plugins_bulk_actions( $actions ) {
     $actions['enable-autoupdate-selected']  = __( 'Enable auto-updates', 'wp-autoupdates' );
     $actions['disable-autoupdate-selected'] = __( 'Disable auto-updates', 'wp-autoupdates' );
     return $actions;
 }
-add_action( 'bulk_actions-plugins', 'wp_plugins_bulk_actions' );
+add_action( 'bulk_actions-plugins', 'wp_autoupdates_plugins_bulk_actions' );
 
 
 /**
@@ -202,7 +162,7 @@ function wp_autoupdates_enabler() {
 		return;
 	}
 	if ( 'autoupdate' === esc_html( $_GET['action'] ) ) {
-		if ( ! current_user_can( 'update_plugins' ) || ! wp_is_plugins_auto_update_enabled() ) {
+		if ( ! current_user_can( 'update_plugins' ) || ! wp_autoupdates_is_plugins_auto_update_enabled() ) {
 			wp_die( __( 'Sorry, you are not allowed to enable plugins automatic updates.', 'wp-autoupdates' ) );
 		}
 
@@ -218,7 +178,6 @@ function wp_autoupdates_enabler() {
 		}
 
 		check_admin_referer( 'autoupdate-plugin_' . $plugin );
-
 		$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
 
 		if ( in_array( $plugin, $wp_auto_update_plugins, true ) ) {
@@ -228,12 +187,9 @@ function wp_autoupdates_enabler() {
 			$wp_auto_update_plugins[] = $plugin;
 			$action_type = 'enable-autoupdate=true';
 		}
-
 		update_site_option( 'wp_auto_update_plugins', $wp_auto_update_plugins );
-
 		wp_redirect( self_admin_url( "plugins.php?$action_type&plugin_status=$status&paged=$page&s=$s" ) );
 		exit;
-		
 	}
 }
 add_action( 'admin_init', 'wp_autoupdates_enabler' );
@@ -241,9 +197,9 @@ add_action( 'admin_init', 'wp_autoupdates_enabler' );
 /**
  * Handle plugins autoupdates bulk actions
  */
-function wp_plugins_bulk_actions_handle( $redirect_to, $doaction, $items ) {
+function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $items ) {
 	if ( 'enable-autoupdate-selected' === $doaction ) {
-		if ( ! current_user_can( 'update_plugins' ) || ! wp_is_plugins_auto_update_enabled() ) {
+		if ( ! current_user_can( 'update_plugins' ) || ! wp_autoupdates_is_plugins_auto_update_enabled() ) {
 			wp_die( __( 'Sorry, you are not allowed to enable plugins automatic updates.', 'wp-autoupdates' ) );
 		}
 
@@ -272,7 +228,7 @@ function wp_plugins_bulk_actions_handle( $redirect_to, $doaction, $items ) {
 	}
 	
 	if ( 'disable-autoupdate-selected' === $doaction ) {
-		if ( ! current_user_can( 'update_plugins' ) || ! wp_is_plugins_auto_update_enabled() ) {
+		if ( ! current_user_can( 'update_plugins' ) || ! wp_autoupdates_is_plugins_auto_update_enabled() ) {
 			wp_die( __( 'Sorry, you are not allowed to enable plugins automatic updates.', 'wp-autoupdates' ) );
 		}
 
@@ -301,22 +257,22 @@ function wp_plugins_bulk_actions_handle( $redirect_to, $doaction, $items ) {
 	}
 	
 }
-add_action( 'handle_bulk_actions-plugins', 'wp_plugins_bulk_actions_handle', 10, 3 );
+add_action( 'handle_bulk_actions-plugins', 'wp_autoupdates_plugins_bulk_actions_handle', 10, 3 );
 
 /**
  * Auto-update notices
  */
-function wp_autoupdate_notices() {
-	if ( isset( esc_html( $_GET['enable-autoupdate'] ) ) ) {
+function wp_autoupdates_notices() {
+	// Plugins screen
+	if ( isset( $_GET['enable-autoupdate'] ) ) {
 		echo '<div id="message" class="updated notice is-dismissible"><p>';
 		_e( 'The selected plugins will now update automatically.', 'wp-autoupdates' );
 		echo '</p></div>';
 	}
-	
-	if ( isset( esc_html( $_GET['disable-autoupdate'] ) ) ) {
+	if ( isset( $_GET['disable-autoupdate'] ) ) {
 		echo '<div id="message" class="updated notice is-dismissible"><p>';
 		_e( 'The selected plugins won’t automatically update anymore.', 'wp-autoupdates' );
 		echo '</p></div>';
 	}
 }
-add_action( 'admin_notices', 'wp_autoupdate_notices' );
+add_action( 'admin_notices', 'wp_autoupdates_notices' );

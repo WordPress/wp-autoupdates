@@ -1,7 +1,3 @@
-.theme-overlay .theme-autoupdate a {
-	text-decoration: none;
-}
-
 #autoupdates_column {
 	min-width: 200px;
 }
@@ -16,5 +12,19 @@
 
 .plugin-autoupdate-enabled,
 .theme-autoupdate-enabled {
+	color: #006505;
+}
+
+.plugins .plugin-title .plugin-autoupdate-enabled .dashicons {
+	float: none;
+	padding: 0;
+	width: auto;
+	height: auto;
+}
+.plugins .plugin-title .plugin-autoupdate-enabled .dashicons:before {
+	padding: 0;
+	background: transparent;
+	box-shadow: none;
+	font-size: 20px;
 	color: #006505;
 }
