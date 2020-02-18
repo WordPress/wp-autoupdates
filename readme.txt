@@ -12,7 +12,9 @@ WordPress Automatic Updates feature plugin.
 
 A feature plugin to integrate Plugins & Themes automatic updates in WordPress Core.
 
-The purpose of this repository is to prepare a future Plugins & Themes automatic updates feature.
+The purpose of this plugin is to prepare a future Plugins & Themes automatic updates feature.
+
+**This is a Beta Test Plugin, you shouldn’t use it in production.**
 
 In 2018, Matt Mullenweg posted 9 projects for Core to focus on in 2019. We didn’t ship as many as hoped, but we made a lot of progress. Plugins and Themes Automatic Updates were one of those 9 projects. This project is now milestoned to WordPress 5.5 and this feature plugin is here to help move towards this achievement.
 
