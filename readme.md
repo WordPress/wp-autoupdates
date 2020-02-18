@@ -65,4 +65,4 @@ TODO.
 
 ### Update Core Admin Screen
 
-![Update Core Admin screen - screenshot](wp-autoupdates-updatecore-01.png)
+![Update Core Admin screen - screenshot](https://jeanbaptisteaudras.com/images/wp-autoupdates-updatecore-01.png)
