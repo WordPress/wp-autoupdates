@@ -26,11 +26,11 @@ In 2018, Matt Mullenweg posted 9 projects for Core to focus on in 2019. We didn�
 - 🔲 Handle themes autoupdates
 - ✅ Handle plugin autoupdates in a multisite context
 - 🔲 Handle themes autoupdates in a multisite context
+- 🔲 Email notifications for plugins
+- 🔲 Email notifications for themes
 - 🔲 Validate design for plugins screen
 - 🔲 Validate design for themes screen
 - 🔲 Validate design for update-core screen
-- 🔲 Email notifications for plugins
-- 🔲 Email notifications for themes
 - 🔲 Documentation
 - 🔲 Submit Feature Plugin on WordPress.org repository
 - 🔲 Publish the feature plugin proposal
@@ -44,8 +44,10 @@ In 2018, Matt Mullenweg posted 9 projects for Core to focus on in 2019. We didn�
 
 ## Contributors 👥
 
-- audrasjb
-- whodunitagency
+- @audrasjb
+- @whodunitagency
+- @xkon
+- @desrosj
 
 ## Documentation 📚
 
