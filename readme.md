@@ -10,6 +10,8 @@ The purpose of this repository is to prepare a future Plugins & Themes automatic
 
 To test/contribute, just install this plugin and activate it on your WordPress installation.
 
+The goal of this plugin is to test the UI of the feature, to help decision making. It uses WordPress Core hooks (with potentially some hacks when needed).
+
 ## Context ⏳
 
 In 2018, Matt Mullenweg posted 9 projects for Core to focus on in 2019. We didn’t ship as many as hoped, but we made a lot of progress. Plugins and Themes Automatic Updates were one of those 9 projects. This project is now milestoned to WordPress 5.5 and this feature plugin is here to help move towards this achievement.
