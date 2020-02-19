@@ -106,6 +106,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 	if ( 'autoupdates_column' !== $column_name ) {
 		return;
 	}
+	$plugins = get_plugins();
 	if ( wp_autoupdates_is_plugins_auto_update_enabled() ) {
 		$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
 		if ( in_array( $plugin_file, $wp_auto_update_plugins, true ) ) {
@@ -113,7 +114,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 				sprintf(
 					/* translators: Plugin name. */
 					_x( 'Disable automatic updates for %s', 'plugin', 'wp-autoupdates' ),
-					$plugin_name
+					esc_html( $plugins[ $plugin_file ]['Name'] )
 				)
 			);
 			echo '<p class="plugin-autoupdate-enabled">';
@@ -134,7 +135,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 					sprintf(
 						/* translators: Plugin name. */
 						_x( 'Enable automatic updates for %s', 'plugin', 'wp-autoupdates' ),
-						$plugin_name
+						esc_html( $plugins[ $plugin_file ]['Name'] )
 					)
 				);
 				echo '<p class="plugin-autoupdate-disabled">';
