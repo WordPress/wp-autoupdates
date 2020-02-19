@@ -87,7 +87,7 @@ add_filter( 'auto_update_plugin', 'wp_autoupdates_selected_plugins', 10, 2 );
  * Add autoupdate column to plugins screen.
  */
 function wp_autoupdates_add_plugins_autoupdates_column( $columns ) {
-	$columns['autoupdates_column'] = 'Automatic updates';
+	$columns['autoupdates_column'] = __( 'Automatic updates', 'wp-autoupdates' );
 	return $columns;
 }
 add_filter( 'manage_plugins_columns', 'wp_autoupdates_add_plugins_autoupdates_column' );
