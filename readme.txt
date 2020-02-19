@@ -24,9 +24,7 @@ In 2018, Matt Mullenweg posted 9 projects for Core to focus on in 2019. We didn�
 
 [This project is currently developed on GitHub](https://github.com/audrasjb/wp-autoupdates)
 
-To test the autoupdate feature, just install this plugin and activate it on your WordPress installation.
-
-To contribute, please open issues and/or send pull requests on the [WP Autoupdate Feature Plugin GitHub repository](https://github.com/WordPress/wp-autoupdates).
+To test/contribute, just install this plugin and activate it on your WordPress installation.
 
 **Features / to-do list** 🛠
 
@@ -36,15 +34,17 @@ To contribute, please open issues and/or send pull requests on the [WP Autoupdat
 - 🔲 Handle themes autoupdates
 - ✅ Handle plugin autoupdates in a multisite context
 - 🔲 Handle themes autoupdates in a multisite context
+- 🔲 Email notifications for plugins
+- 🔲 Email notifications for themes
 - 🔲 Validate design for plugins screen
 - 🔲 Validate design for themes screen
 - 🔲 Validate design for update-core screen
-- 🔲 Email notifications for plugins
-- 🔲 Email notifications for themes
 - 🔲 Documentation
-- 🔲 Submit Feature Plugin on WordPress.org repository
+- ✅ Create and add feature plugin assets
+- ✅ Submit Feature Plugin on WordPress.org repository
+- ✅ Get the plugin featured as beta plugin on WordPress.org
+- 🔲 Move the repository to WordPress.org GitHub account
 - 🔲 Publish the feature plugin proposal
-- 🔲 Get the plugin featured as beta plugin on WordPress.org
 - 🔲 Open a dedicated Slack channel on Make WordPress
 - 🔲 Copy review
 - 🔲 Accessibility audit

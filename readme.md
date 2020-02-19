@@ -36,7 +36,7 @@ In 2018, Matt Mullenweg posted 9 projects for Core to focus on in 2019. We didn�
 - 🔲 Documentation
 - ✅ Create and add feature plugin assets
 - ✅ Submit Feature Plugin on WordPress.org repository
-- 🔲 Get the plugin featured as beta plugin on WordPress.org
+- ✅ Get the plugin featured as beta plugin on WordPress.org
 - 🔲 Move the repository to WordPress.org GitHub account
 - 🔲 Publish the feature plugin proposal
 - 🔲 Open a dedicated Slack channel on Make WordPress
