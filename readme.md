@@ -76,3 +76,13 @@ TODO.
 ### Update Core Admin Screen
 
 ![Update Core Admin screen - screenshot](https://jeanbaptisteaudras.com/images/wp-autoupdates-updatecore-01.png)
+
+## Changelog 🗓
+
+### Version 0.1.1
+February 19, 2020
+- Fixes few PHP notices/warnings.
+
+### Version 0.1
+February 18, 2020
+- Initial release
