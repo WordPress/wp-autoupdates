@@ -103,6 +103,9 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 	if ( is_multisite() && ! is_network_admin() ) {
 		return;
 	}
+	if ( 'autoupdates_column' !== $column_name ) {
+		return;
+	}
 	if ( wp_autoupdates_is_plugins_auto_update_enabled() ) {
 		$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
 		if ( in_array( $plugin_file, $wp_auto_update_plugins, true ) ) {
