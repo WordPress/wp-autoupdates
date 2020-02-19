@@ -173,7 +173,8 @@ function wp_autoupdates_enabler() {
 	if ( 'plugins.php' !== $pagenow ) {
 		return;
 	}
-	if ( 'autoupdate' === esc_html( $_GET['action'] ) ) {
+	$action = isset( $_GET['action'] ) && ! empty( esc_html( $_GET['action'] ) ) ? wp_unslash( esc_html( $_GET['action'] ) ) : '';
+	if ( 'autoupdate' === $action ) {
 		if ( ! current_user_can( 'update_plugins' ) || ! wp_autoupdates_is_plugins_auto_update_enabled() ) {
 			wp_die( __( 'Sorry, you are not allowed to enable plugins automatic updates.', 'wp-autoupdates' ) );
 		}
