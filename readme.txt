@@ -24,7 +24,9 @@ In 2018, Matt Mullenweg posted 9 projects for Core to focus on in 2019. We didnâ
 
 [This project is currently developed on GitHub](https://github.com/audrasjb/wp-autoupdates)
 
-To test/contribute, just install this plugin and activate it on your WordPress installation.
+To test the autoupdate feature, just install this plugin and activate it on your WordPress installation.
+
+To contribute, please open issues and/or send pull requests on the [WP Autoupdate Feature Plugin GitHub repository](https://github.com/WordPress/wp-autoupdates).
 
 **Features / to-do list** ðŸ› 
 
