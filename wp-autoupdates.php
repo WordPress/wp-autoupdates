@@ -107,6 +107,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 		return;
 	}
 	$plugins = get_plugins();
+	$page    = isset( $_GET['paged'] ) && ! empty( esc_html( $_GET['paged'] ) ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
 	if ( wp_autoupdates_is_plugins_auto_update_enabled() ) {
 		$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
 		if ( in_array( $plugin_file, $wp_auto_update_plugins, true ) ) {
@@ -172,7 +173,8 @@ function wp_autoupdates_enabler() {
 	if ( 'plugins.php' !== $pagenow ) {
 		return;
 	}
-	if ( 'autoupdate' === esc_html( $_GET['action'] ) ) {
+	$action = isset( $_GET['action'] ) && ! empty( esc_html( $_GET['action'] ) ) ? wp_unslash( esc_html( $_GET['action'] ) ) : '';
+	if ( 'autoupdate' === $action ) {
 		if ( ! current_user_can( 'update_plugins' ) || ! wp_autoupdates_is_plugins_auto_update_enabled() ) {
 			wp_die( __( 'Sorry, you are not allowed to enable plugins automatic updates.', 'wp-autoupdates' ) );
 		}
@@ -182,6 +184,7 @@ function wp_autoupdates_enabler() {
 		}
 
 		$plugin = ! empty( esc_html( $_GET['plugin'] ) ) ? wp_unslash( esc_html( $_GET['plugin'] ) ) : '';
+		$page   = isset( $_GET['paged'] ) && ! empty( esc_html( $_GET['paged'] ) ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
 
 		if ( empty( $plugin ) ) {
 			wp_redirect( self_admin_url( "plugins.php?plugin_status=$status&paged=$page&s=$s" ) );
@@ -222,6 +225,7 @@ function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $i
 		check_admin_referer( 'bulk-plugins' );
 
 		$plugins = ! empty( $items ) ? (array) wp_unslash( $items ) : array();
+		$page    = isset( $_GET['paged'] ) && ! empty( esc_html( $_GET['paged'] ) ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
 
 		if ( empty( $plugins ) ) {
 			$redirect_to = self_admin_url( "plugins.php?plugin_status=$status&paged=$page&s=$s" );
