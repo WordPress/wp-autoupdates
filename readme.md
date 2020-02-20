@@ -54,6 +54,7 @@ In 2018, Matt Mullenweg posted 9 projects for Core to focus on in 2019. We didnâ
 - [@desrosj](https://profiles.wordpress.org/desrosj/)
 - [@pedromendonca](https://profiles.wordpress.org/pedromendonca/)
 - [@javiercasares](https://profiles.wordpress.org/javiercasares/)
+- [@karmatosed](https://profiles.wordpress.org/karmatosed/)
 
 ## Documentation ðŸ“š
 

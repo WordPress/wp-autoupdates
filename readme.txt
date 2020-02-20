@@ -1,5 +1,5 @@
 === WordPress Autoupdates ===
-Contributors: wordpressdotorg, audrasjb, whodunitagency, desrosj, xkon
+Contributors: wordpressdotorg, audrasjb, whodunitagency, desrosj, xkon, karmatosed
 Requires at least: 5.3
 Tested up to: 5.4
 Requires PHP: 7.2

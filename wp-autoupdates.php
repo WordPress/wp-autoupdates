@@ -9,7 +9,7 @@ Requires PHP: 7.2
 Tested up to: 5.3
 Author: The WordPress Team
 Author URI: https://wordpress.org
-Contributors: wordpressdotorg, audrasjb, whodunitagency, desrosj, xkon
+Contributors: wordpressdotorg, audrasjb, whodunitagency, desrosj, xkon, karmatosed
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: wp-autoupdates
