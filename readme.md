@@ -80,6 +80,10 @@ TODO.
 
 ## Changelog 🗓
 
+### Version 0.1.2
+February 23, 2020
+- Add time to next update in Plugins screen.
+
 ### Version 0.1.1
 February 19, 2020
 - Fixes few PHP notices/warnings.
