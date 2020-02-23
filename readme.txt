@@ -54,6 +54,10 @@ To test/contribute, just install this plugin and activate it on your WordPress i
 
 == Changelog ==
 
+= 0.1.2 =
+February 23, 2020
+- Add time to next update in Plugins screen.
+
 = 0.1.1 =
 February 19, 2020
 * Fixes few PHP notices/warnings.
