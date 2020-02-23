@@ -107,7 +107,8 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 		return;
 	}
 	$plugins = get_plugins();
-	$page    = isset( $_GET['paged'] ) && ! empty( esc_html( $_GET['paged'] ) ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
+	$plugins_updates = get_site_transient( 'update_plugins' );
+	$page = isset( $_GET['paged'] ) && ! empty( esc_html( $_GET['paged'] ) ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
 	if ( wp_autoupdates_is_plugins_auto_update_enabled() ) {
 		$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
 		if ( in_array( $plugin_file, $wp_auto_update_plugins, true ) ) {
@@ -118,12 +119,22 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 					esc_html( $plugins[ $plugin_file ]['Name'] )
 				)
 			);
-			echo '<p class="plugin-autoupdate-enabled">';
-			echo '<span class="dashicons dashicons-update" aria-hidden="true"></span> ' . __( 'Automatic updates enabled', 'wp-autoupdates' );
+			echo '<p>';
+			echo '<span class="plugin-autoupdate-enabled"><span class="dashicons dashicons-update" aria-hidden="true"></span> ' . __( 'Enabled', 'wp-autoupdates' ) . '</span>';
 			echo '<br />';
+			$next_update_time = wp_next_scheduled( 'wp_version_check' );
+			$time_to_next_update = human_time_diff( intval( $next_update_time ) );
+			if ( $plugins_updates->response[$plugin_file] ) {
+				echo sprintf(
+					/* translators: Time until the next update. */
+					__( 'Update scheduled in %s', 'wp-autoupdates' ),
+					$time_to_next_update
+				);
+				echo '<br />';
+			}
 			if ( current_user_can( 'update_plugins', $plugin_file ) ) {
 				echo sprintf(
-					'<a href="%s" class="disable" aria-label="%s">%s</a>',
+					'<a href="%s" class="plugin-autoupdate-disable" aria-label="%s">%s</a>',
 					wp_nonce_url( 'plugins.php?action=autoupdate&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page, 'autoupdate-plugin_' . $plugin_file ),
 					$aria_label,
 					__( 'Disable', 'wp-autoupdates' )
@@ -144,7 +155,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 					'<a href="%s" class="edit" aria-label="%s"><span class="dashicons dashicons-update" aria-hidden="true"></span> %s</a>',
 					wp_nonce_url( 'plugins.php?action=autoupdate&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page, 'autoupdate-plugin_' . $plugin_file ),
 					$aria_label,
-					__( 'Enable automatic updates', 'wp-autoupdates' )
+					__( 'Enable', 'wp-autoupdates' )
 				);
 				echo '</p>';
 			}
