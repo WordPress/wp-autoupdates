@@ -1,6 +1,6 @@
-# WordPress Autoupdates 🤖
+# WordPress Auto-updates 🤖
 
-![WordPress AutoUpdates](https://jeanbaptisteaudras.com/images/wp-autoupdates-banner.png)
+![WordPress Auto-updates](https://jeanbaptisteaudras.com/images/wp-autoupdates-banner.png)
 
 A feature plugin to integrate Plugins & Themes automatic updates in WordPress Core.
 
@@ -17,17 +17,17 @@ The goal of this plugin is to test the UI of the feature, to help decision makin
 In 2018, Matt Mullenweg posted 9 projects for Core to focus on in 2019. We didn’t ship as many as hoped, but we made a lot of progress. Plugins and Themes Automatic Updates were one of those 9 projects. This project is now milestoned to WordPress 5.5 and this feature plugin is here to help move towards this achievement.
 
 - [See also: Update on the 9 projects for 2019](https://make.wordpress.org/core/2019/12/06/update-9-projects-for-2019/):
-- [Related Trac ticket for plugins autoupdates](https://core.trac.wordpress.org/ticket/48850)
-- [Related Trac ticket for themes autoupdates](https://core.trac.wordpress.org/ticket/48850)
+- [Related Trac ticket for plugins auto-updates](https://core.trac.wordpress.org/ticket/48850)
+- [Related Trac ticket for themes auto-updates](https://core.trac.wordpress.org/ticket/48850)
 
 ## Features / to-do list 🛠
 
 - ✅ Open a Trac ticket to handle Core merge for plugins
 - ✅ Open a Trac ticket to handle Core merge for themes
-- ✅ Handle plugin autoupdates
-- 🔲 Handle themes autoupdates
-- ✅ Handle plugin autoupdates in a multisite context
-- 🔲 Handle themes autoupdates in a multisite context
+- ✅ Handle plugin auto-updates
+- 🔲 Handle themes auto-updates
+- ✅ Handle plugin auto-updates in a multisite context
+- 🔲 Handle themes auto-updates in a multisite context
 - 🔲 Email notifications for plugins
 - 🔲 Email notifications for themes
 - 🔲 Validate design for plugins screen
@@ -79,6 +79,10 @@ TODO.
 ![Update Core Admin screen - screenshot](https://jeanbaptisteaudras.com/images/wp-autoupdates-updatecore-01.png)
 
 ## Changelog 🗓
+
+### Version 0.1.3
+February 25, 2020
+- Replace all "autoupdate" occurrences with "auto-update" which is now the official wording.
 
 ### Version 0.1.2
 February 23, 2020
