@@ -1,4 +1,4 @@
-=== WordPress auto-updates ===
+=== WordPress Auto-updates ===
 Contributors: wordpressdotorg, audrasjb, whodunitagency, desrosj, xkon, karmatosed
 Requires at least: 5.3
 Tested up to: 5.4
