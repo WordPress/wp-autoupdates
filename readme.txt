@@ -16,7 +16,7 @@ The purpose of this plugin is to prepare a future Plugins & Themes automatic upd
 
 **This is a Beta Test Plugin, you shouldn’t use it in production.**
 
-**Please note that the code of this plugin is not meant to land in WordPress Core "as it", it will be completely reworked for core merge. This plugin is meant to discuss auto-updates principles and user interface.**
+**Please note that the code of this plugin is not meant to land in WordPress Core "as is", it will be completely reworked for core merge. This plugin is meant to discuss auto-updates principles and user interface.**
 
 In 2018, Matt Mullenweg posted 9 projects for Core to focus on in 2019. We didn’t ship as many as hoped, but we made a lot of progress. Plugins and Themes Automatic Updates were one of those 9 projects. This project is now milestoned to WordPress 5.5 and this feature plugin is here to help move towards this achievement.
 
