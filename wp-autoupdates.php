@@ -209,7 +209,7 @@ function wp_autoupdates_enabler() {
 			$wp_auto_update_plugins = array_diff( $wp_auto_update_plugins, array( $plugin ) );
 			$action_type = 'disable-autoupdate=true';
 		} else {
-			$wp_auto_update_plugins[] = $plugin;
+			array_push( $wp_auto_update_plugins, $plugin );
 			$action_type = 'enable-autoupdate=true';
 		}
 		update_site_option( 'wp_auto_update_plugins', $wp_auto_update_plugins );
