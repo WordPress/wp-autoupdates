@@ -3,7 +3,7 @@
 Plugin Name: WordPress Autoupdates
 Plugin URI: https://wordpress.org/plugins/wp-autoupdates
 Description: A feature plugin to integrate Plugins & Themes automatic updates in WordPress Core.
-Version: 0.1.3
+Version: 0.1.4
 Requires at least: 5.3
 Requires PHP: 7.2
 Tested up to: 5.3
@@ -108,7 +108,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 	}
 	$plugins = get_plugins();
 	$plugins_updates = get_site_transient( 'update_plugins' );
-	$page = isset( $_GET['paged'] ) && ! empty( esc_html( $_GET['paged'] ) ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
+	$page = isset( $_GET['paged'] ) && ! empty( $_GET['paged'] ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
 	if ( wp_autoupdates_is_plugins_auto_update_enabled() ) {
 		$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
 		if ( in_array( $plugin_file, $wp_auto_update_plugins, true ) ) {
@@ -124,7 +124,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 			echo '<br />';
 			$next_update_time = wp_next_scheduled( 'wp_version_check' );
 			$time_to_next_update = human_time_diff( intval( $next_update_time ) );
-			if ( $plugins_updates->response[$plugin_file] ) {
+			if ( isset( $plugins_updates->response[$plugin_file] ) ) {
 				echo sprintf(
 					/* translators: Time until the next update. */
 					__( 'Update scheduled in %s', 'wp-autoupdates' ),
