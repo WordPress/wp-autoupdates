@@ -293,12 +293,12 @@ add_action( 'handle_bulk_actions-plugins', 'wp_autoupdates_plugins_bulk_actions_
 function wp_autoupdates_notices() {
 	// Plugins screen
 	if ( isset( $_GET['enable-autoupdate'] ) ) {
-		echo '<div id="message" class="updated notice is-dismissible"><p>';
+		echo '<div id="message" class="notice notice-success is-dismissible"><p>';
 		_e( 'The selected plugins will now update automatically.', 'wp-autoupdates' );
 		echo '</p></div>';
 	}
 	if ( isset( $_GET['disable-autoupdate'] ) ) {
-		echo '<div id="message" class="updated notice is-dismissible"><p>';
+		echo '<div id="message" class="notice notice-success is-dismissible"><p>';
 		_e( 'The selected plugins won’t automatically update anymore.', 'wp-autoupdates' );
 		echo '</p></div>';
 	}
