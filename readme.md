@@ -46,7 +46,9 @@ In 2018, Matt Mullenweg posted 9 projects for Core to focus on in 2019. We didn�
 - 🔲 Coding standards audit
 - 🔲 Inline Docs audit
 
-## Contributors 👥
+## Contributors ♥️
+
+Thanks to everyone who contributed to this feature plugin!
 
 - [@audrasjb](https://profiles.wordpress.org/audrasjb/)
 - [@whodunitagency](https://profiles.wordpress.org/whodunitagency/)
@@ -55,6 +57,9 @@ In 2018, Matt Mullenweg posted 9 projects for Core to focus on in 2019. We didn�
 - [@pedromendonca](https://profiles.wordpress.org/pedromendonca/)
 - [@javiercasares](https://profiles.wordpress.org/javiercasares/)
 - [@karmatosed](https://profiles.wordpress.org/karmatosed/)
+- [@mapk](https://profiles.wordpress.org/mapk/)
+- [@afercia](https://profiles.wordpress.org/afercia/)
+- [@gmays](https://profiles.wordpress.org/gmays/)
 
 ## Documentation 📚
 
