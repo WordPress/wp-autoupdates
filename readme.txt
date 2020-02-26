@@ -2,7 +2,7 @@
 Contributors: wordpressdotorg, audrasjb, whodunitagency, desrosj, xkon, karmatosed
 Requires at least: 5.3
 Tested up to: 5.4
-Requires PHP: 7.2
+Requires PHP: 5.6.20
 Tested up to: 5.4
 Stable tag: 0.1.4
 License: GPLv2 or later
