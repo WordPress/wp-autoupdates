@@ -62,6 +62,7 @@ Thanks to everyone who contributed to this feature plugin!
 - [@mapk](https://profiles.wordpress.org/mapk/)
 - [@afercia](https://profiles.wordpress.org/afercia/)
 - [@gmays](https://profiles.wordpress.org/gmays/)
+- [@knutsp](https://profiles.wordpress.org/knutsp/)
 
 ## Documentation 📚
 
