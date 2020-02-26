@@ -2,9 +2,9 @@
 Contributors: wordpressdotorg, audrasjb, whodunitagency, desrosj, xkon, karmatosed
 Requires at least: 5.3
 Tested up to: 5.4
-Requires PHP: 5.6.20
+Requires PHP: 5.6
 Tested up to: 5.4
-Stable tag: 0.1.4
+Stable tag: 0.1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,6 +57,13 @@ To test/contribute, just install this plugin and activate it on your WordPress i
 - 🔲 Inline Docs audit
 
 == Changelog ==
+
+= Version 0.1.5 =
+February 26, 2020
+- Fix fatal error on PHP 7+
+- Fix legacy notice classes
+- Various tiny enhancements
+- Replace required PHP version
 
 = Version 0.1.4 =
 February 26, 2020

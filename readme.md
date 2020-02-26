@@ -87,11 +87,18 @@ TODO.
 
 ## Changelog 🗓
 
-### Version 0.1.4
+### Version 0.1.5 🐣
+February 26, 2020
+- Fix fatal error on PHP 7+
+- Fix legacy notice classes
+- Various tiny enhancements
+- Replace required PHP version
+
+### Version 0.1.4 👻
 February 26, 2020
 - Fix PHP warnings.
 
-### Version 0.1.3
+### Version 0.1.3 ☀️
 February 25, 2020
 - Replace all "autoupdate" occurrences with "auto-update" which is now the official wording.
 
