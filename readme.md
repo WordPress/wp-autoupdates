@@ -12,6 +12,8 @@ To test/contribute, just install this plugin and activate it on your WordPress i
 
 The goal of this plugin is to test the UI of the feature, to help decision making. It uses WordPress Core hooks (with potentially some hacks when needed).
 
+For full details, see the [Feature Plugin proposal published on Make/Core](https://make.wordpress.org/core/2020/02/26/feature-plugin-wp-auto-updates/).
+
 ## Context ⏳
 
 In 2018, Matt Mullenweg posted 9 projects for Core to focus on in 2019. We didn’t ship as many as hoped, but we made a lot of progress. Plugins and Themes Automatic Updates were one of those 9 projects. This project is now milestoned to WordPress 5.5 and this feature plugin is here to help move towards this achievement.
@@ -38,7 +40,7 @@ In 2018, Matt Mullenweg posted 9 projects for Core to focus on in 2019. We didn�
 - ✅ Submit Feature Plugin on WordPress.org repository
 - ✅ Get the plugin featured as beta plugin on WordPress.org
 - 🔲 Move the repository to WordPress.org GitHub account
-- 🔲 Publish the feature plugin proposal
+- ✅ Publish the feature plugin proposal
 - 🔲 Open a dedicated Slack channel on Make WordPress
 - 🔲 Copy review
 - 🔲 Accessibility audit
