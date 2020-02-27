@@ -324,8 +324,8 @@ function wp_autoupdates_plugins_status_links( $status_links ) {
 
 	// when merged, these counts will need to be set in WP_Plugins_List_Table::prepare_items().
 	$counts = array(
-		'auto-update-enabled'  => $enabled_count,
-		'auto-update-disabled' => $totals['all'] - $enabled_count,
+		'autoupdate_enabled'  => $enabled_count,
+		'autoupdate_disabled' => $totals['all'] - $enabled_count,
 	);
 
 	// we can't use the global $status set in WP_Plugin_List_Table::__construct() because
@@ -334,30 +334,32 @@ function wp_autoupdates_plugins_status_links( $status_links ) {
 
 	foreach ( $counts as $type => $count ) {
 		switch( $type ) {
-			case 'auto-update-enabled':
+			case 'autoupdate_enabled':
 				/* translators: %s: Number of plugins. */
 				$text = _n(
-					'Auto-update enabled <span class="count">(%s)</span>',
-					'Auto-update enabled <span class="count">(%s)</span>',
-					$count
+					'Automatic Update Enabled <span class="count">(%s)</span>',
+					'Automatic Update Enabled <span class="count">(%s)</span>',
+					$count,
+					'wp-autoupdates'
 				);
 
 				break;
-			case 'auto-update-disabled':
+			case 'autoupdate_disabled':
 				/* translators: %s: Number of plugins. */
 				$text = _n(
-					'Auto-update disabled <span class="count">(%s)</span>',
-					'Auto-update disabled <span class="count">(%s)</span>',
-					$count
+					'Automatic Update Disabled <span class="count">(%s)</span>',
+					'Automatic Update Disabled <span class="count">(%s)</span>',
+					$count,
+					'wp-autoupdates'
 				);
-			}
+		}
 
-			$status_links[ $type ] = sprintf(
-				"<a href='%s'%s>%s</a>",
-				add_query_arg( 'plugin_status', $type, 'plugins.php' ),
-				( $type === $status ) ? ' class="current" aria-current="page"' : '',
-				sprintf( $text, number_format_i18n( $count ) )
-			);
+		$status_links[ $type ] = sprintf(
+			"<a href='%s'%s>%s</a>",
+			add_query_arg( 'plugin_status', $type, 'plugins.php' ),
+			( $type === $status ) ? ' class="current" aria-current="page"' : '',
+			sprintf( $text, number_format_i18n( $count ) )
+		);
 	}
 
 	// make the 'all' status link not current if one of our "custom statuses" is current.
@@ -367,7 +369,7 @@ function wp_autoupdates_plugins_status_links( $status_links ) {
 
 	return $status_links;
 }
-add_action( 'views_plugins', 'wp_autoupdates_plugins_status_links' );
+add_action( is_multisite() ? 'views_plugins-network' : 'views_plugins', 'wp_autoupdates_plugins_status_links' );
 
 /**
  * Filter plugins shown in the list table when status is 'auto-update-enabled' or 'auto-update-disabled'.
