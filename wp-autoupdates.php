@@ -28,7 +28,7 @@ function wp_autoupdates_enqueues( $hook ) {
 	}
 	wp_register_style( 'wp-autoupdates', plugin_dir_url( __FILE__ ) . 'css/wp-autoupdates.css', array() );
 	wp_enqueue_style( 'wp-autoupdates' );
-	
+
 	// Update core screen JS hack (due to lack of filters)
 	if ( 'update-core.php' === $hook ) {
 		$script = 'jQuery( document ).ready(function() {';
@@ -305,3 +305,136 @@ function wp_autoupdates_notices() {
 }
 add_action( 'admin_notices', 'wp_autoupdates_notices' );
 
+/**
+ * Add views for auto-update enabled/disabled.
+ *
+ * This is modeled on `WP_Plugins_List_Table::get_views()`.  If this is merged into core,
+ * then this should be encorporated there.
+ *
+ * @global array  $totals Counts by plugin_status, set in `WP_Plugins_List_Table::prepare_items()`.
+ */
+function wp_autoupdates_plugins_status_links( $status_links ) {
+	global $totals;
+
+	if ( ! current_user_can( 'update_plugins' ) || ! wp_autoupdates_is_plugins_auto_update_enabled() ) {
+		return $status_links;
+	}
+
+	$enabled_count = count( get_site_option( 'wp_auto_update_plugins', array() ) );
+
+	// when merged, these counts will need to be set in WP_Plugins_List_Table::prepare_items().
+	$counts = array(
+		'auto-update-enabled'  => $enabled_count,
+		'auto-update-disabled' => $totals['all'] - $enabled_count,
+	);
+
+	// we can't use the global $status set in WP_Plugin_List_Table::__construct() because
+	// it will be 'all' for our "custom statuses".
+	$status = isset( $_REQUEST['plugin_status'] ) ? $_REQUEST['plugin_status'] : 'all';
+
+	foreach ( $counts as $type => $count ) {
+		switch( $type ) {
+			case 'auto-update-enabled':
+				/* translators: %s: Number of plugins. */
+				$text = _n(
+					'Auto-update enabled <span class="count">(%s)</span>',
+					'Auto-update enabled <span class="count">(%s)</span>',
+					$count
+				);
+
+				break;
+			case 'auto-update-disabled':
+				/* translators: %s: Number of plugins. */
+				$text = _n(
+					'Auto-update disabled <span class="count">(%s)</span>',
+					'Auto-update disabled <span class="count">(%s)</span>',
+					$count
+				);
+			}
+
+			$status_links[ $type ] = sprintf(
+				"<a href='%s'%s>%s</a>",
+				add_query_arg( 'plugin_status', $type, 'plugins.php' ),
+				( $type === $status ) ? ' class="current" aria-current="page"' : '',
+				sprintf( $text, number_format_i18n( $count ) )
+			);
+	}
+
+	// make the 'all' status link not current if one of our "custom statuses" is current.
+	if ( in_array( $status, array_keys( $counts ) ) ) {
+		$status_links['all'] = str_replace( ' class="current" aria-current="page"', '', $status_links['all'] );
+	}
+
+	return $status_links;
+}
+add_action( 'views_plugins', 'wp_autoupdates_plugins_status_links' );
+
+/**
+ * Filter plugins shown in the list table when status is 'auto-update-enabled' or 'auto-update-disabled'.
+ *
+ * This is modeled on `WP_Plugins_List_Table::prepare_items()`.  If this is merged into core,
+ * then this should be encorporated there.
+ *
+ * This action this is hooked to is fired in `wp-admin/plugins.php`.
+ *
+ * @global WP_Plugins_List_Table $wp_list_table The global list table object.  Set in `wp-admin/plugins.php`.
+ * @global int                   $page          The current page of plugins displayed.  Set in WP_Plugins_List_Table::__construct().
+ */
+function wp_autoupdates_plugins_filter_plugins_by_status( $plugins ) {
+	global $wp_list_table, $page;
+
+	$custom_statuses = array(
+		'auto-update-enabled',
+		'auto-update-disabled',
+	);
+
+	if ( ! ( isset( $_REQUEST['plugin_status'] ) &&
+			in_array( $_REQUEST['plugin_status'], $custom_statuses ) ) ) {
+		// current request is not for one of our statuses.
+		// nothing to do, so bail.
+		return;
+	}
+
+	$wp_auto_update_plguins = get_site_option( 'wp_auto_update_plugins', array() );
+	$_plugins = array();
+	foreach ( $plugins as $plugin_file => $plugin_data ) {
+		switch ( $_REQUEST['plugin_status'] ) {
+			case 'auto-update-enabled':
+				if ( in_array( $plugin_file, $wp_auto_update_plguins ) ) {
+					$_plugins[ $plugin_file ] = _get_plugin_data_markup_translate( $plugin_file, $plugin_data, false, true );
+				}
+
+				break;
+			case 'auto-update-disabled':
+				if ( ! in_array( $plugin_file, $wp_auto_update_plguins ) ) {
+					$_plugins[ $plugin_file ] = _get_plugin_data_markup_translate( $plugin_file, $plugin_data, false, true );
+				}
+
+				break;
+		}
+	}
+
+	// set the list table's items array to just those plugins with our custom status.
+	$wp_list_table->items = $_plugins;
+
+	// now, update the pagination properties of the list table accordingly.
+	$total_this_page = count( $_plugins );
+
+	$plugins_per_page = $wp_list_table->get_items_per_page( str_replace( '-', '_', $wp_list_table->screen->id . '_per_page' ), 999 );
+
+	$start = ( $page - 1 ) * $plugins_per_page;
+
+	if ( $total_this_page > $plugins_per_page ) {
+		$wp_list_table->items = array_slice( $wp_list_table->items, $start, $plugins_per_page );
+	}
+
+	$wp_list_table->set_pagination_args(
+		array(
+			'total_items' => $total_this_page,
+			'per_page'    => $plugins_per_page,
+		)
+	);
+
+	return;
+}
+add_action( 'pre_current_active_plugins', 'wp_autoupdates_plugins_filter_plugins_by_status' );
