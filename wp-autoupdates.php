@@ -90,17 +90,13 @@ function wp_autoupdates_add_plugins_autoupdates_column( $columns ) {
 	$columns['autoupdates_column'] = __( 'Automatic updates', 'wp-autoupdates' );
 	return $columns;
 }
-add_filter( 'manage_plugins_columns', 'wp_autoupdates_add_plugins_autoupdates_column' );
-
+add_filter( is_multisite() ? 'manage_plugins-network_columns' : 'manage_plugins_columns', 'wp_autoupdates_add_plugins_autoupdates_column' );
 
 /**
  * Render autoupdate column’s content.
  */
 function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $plugin_file, $plugin_data ) {
 	if ( ! current_user_can( 'update_plugins' ) || ! wp_autoupdates_is_plugins_auto_update_enabled() ) {
-		return;
-	}
-	if ( is_multisite() && ! is_network_admin() ) {
 		return;
 	}
 	if ( 'autoupdates_column' !== $column_name ) {
