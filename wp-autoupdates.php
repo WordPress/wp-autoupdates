@@ -320,7 +320,9 @@ function wp_autoupdates_plugins_status_links( $status_links ) {
 		return $status_links;
 	}
 
-	$enabled_count = count( get_site_option( 'wp_auto_update_plugins', array() ) );
+	$wp_autoupdate_plugins = get_site_option( 'wp_auto_update_plugins', array() );
+	$wp_autoupdate_plugins = array_intersect( $wp_autoupdate_plugins, array_keys( get_plugins() ) );
+	$enabled_count         = count( $wp_autoupdate_plugins );
 
 	// when merged, these counts will need to be set in WP_Plugins_List_Table::prepare_items().
 	$counts = array(
@@ -386,8 +388,8 @@ function wp_autoupdates_plugins_filter_plugins_by_status( $plugins ) {
 	global $wp_list_table, $page;
 
 	$custom_statuses = array(
-		'auto-update-enabled',
-		'auto-update-disabled',
+		'autoupdate_enabled',
+		'autoupdate_disabled',
 	);
 
 	if ( ! ( isset( $_REQUEST['plugin_status'] ) &&
@@ -397,18 +399,18 @@ function wp_autoupdates_plugins_filter_plugins_by_status( $plugins ) {
 		return;
 	}
 
-	$wp_auto_update_plguins = get_site_option( 'wp_auto_update_plugins', array() );
+	$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
 	$_plugins = array();
 	foreach ( $plugins as $plugin_file => $plugin_data ) {
 		switch ( $_REQUEST['plugin_status'] ) {
-			case 'auto-update-enabled':
-				if ( in_array( $plugin_file, $wp_auto_update_plguins ) ) {
+			case 'autoupdate_enabled':
+				if ( in_array( $plugin_file, $wp_auto_update_plugins ) ) {
 					$_plugins[ $plugin_file ] = _get_plugin_data_markup_translate( $plugin_file, $plugin_data, false, true );
 				}
 
 				break;
-			case 'auto-update-disabled':
-				if ( ! in_array( $plugin_file, $wp_auto_update_plguins ) ) {
+			case 'autoupdate_disabled':
+				if ( ! in_array( $plugin_file, $wp_auto_update_plugins ) ) {
 					$_plugins[ $plugin_file ] = _get_plugin_data_markup_translate( $plugin_file, $plugin_data, false, true );
 				}
 
