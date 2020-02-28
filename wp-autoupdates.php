@@ -196,6 +196,8 @@ function wp_autoupdates_enabler() {
 
 		$plugin = ! empty( esc_html( $_GET['plugin'] ) ) ? wp_unslash( esc_html( $_GET['plugin'] ) ) : '';
 		$page   = isset( $_GET['paged'] ) && ! empty( esc_html( $_GET['paged'] ) ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
+		$status = isset( $_GET['plugin_status'] ) && ! empty( esc_html( $_GET['plugin_status'] ) ) ? wp_unslash( esc_html( $_GET['plugin_status'] ) ) : '';
+		$s      = isset( $_GET['s'] ) && ! empty( esc_html( $_GET['s'] ) ) ? wp_unslash( esc_html( $_GET['s'] ) ) : '';
 
 		if ( empty( $plugin ) ) {
 			wp_redirect( self_admin_url( "plugins.php?plugin_status=$status&paged=$page&s=$s" ) );
@@ -237,6 +239,8 @@ function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $i
 
 		$plugins = ! empty( $items ) ? (array) wp_unslash( $items ) : array();
 		$page    = isset( $_GET['paged'] ) && ! empty( esc_html( $_GET['paged'] ) ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
+		$status  = isset( $_GET['plugin_status'] ) && ! empty( esc_html( $_GET['plugin_status'] ) ) ? wp_unslash( esc_html( $_GET['plugin_status'] ) ) : '';
+		$s       = isset( $_GET['s'] ) && ! empty( esc_html( $_GET['s'] ) ) ? wp_unslash( esc_html( $_GET['s'] ) ) : '';
 
 		if ( empty( $plugins ) ) {
 			$redirect_to = self_admin_url( "plugins.php?plugin_status=$status&paged=$page&s=$s" );
@@ -266,6 +270,9 @@ function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $i
 		check_admin_referer( 'bulk-plugins' );
 
 		$plugins = ! empty( $items ) ? (array) wp_unslash( $items ) : array();
+		$page    = isset( $_GET['paged'] ) && ! empty( esc_html( $_GET['paged'] ) ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
+		$status  = isset( $_GET['plugin_status'] ) && ! empty( esc_html( $_GET['plugin_status'] ) ) ? wp_unslash( esc_html( $_GET['plugin_status'] ) ) : '';
+		$s       = isset( $_GET['s'] ) && ! empty( esc_html( $_GET['s'] ) ) ? wp_unslash( esc_html( $_GET['s'] ) ) : '';
 
 		if ( empty( $plugins ) ) {
 			$redirect_to = self_admin_url( "plugins.php?plugin_status=$status&paged=$page&s=$s" );
