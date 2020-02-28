@@ -301,3 +301,75 @@ function wp_autoupdates_notices() {
 }
 add_action( 'admin_notices', 'wp_autoupdates_notices' );
 
+/**
+ * Populate site health informations
+ */
+function wp_autoupdates_debug_information( $info ) {
+	if ( wp_autoupdates_is_plugins_auto_update_enabled() ) {
+		// Populate plugins informations
+		$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
+
+		$plugins        = get_plugins();
+		$plugin_updates = get_plugin_updates();
+
+		foreach ( $plugins as $plugin_path => $plugin ) {
+			$plugin_part = ( is_plugin_active( $plugin_path ) ) ? 'wp-plugins-active' : 'wp-plugins-inactive';
+
+			$plugin_version = $plugin['Version'];
+			$plugin_author  = $plugin['Author'];
+
+			$plugin_version_string       = __( 'No version or author information is available.', 'wp-autoupdates' );
+			$plugin_version_string_debug = __( 'author: (undefined), version: (undefined)', 'wp-autoupdates' );
+
+			if ( ! empty( $plugin_version ) && ! empty( $plugin_author ) ) {
+				/* translators: 1: Plugin version number. 2: Plugin author name. */
+				$plugin_version_string       = sprintf( __( 'Version %1$s by %2$s', 'wp-autoupdates' ), $plugin_version, $plugin_author );
+				/* translators: 1: Plugin version number. 2: Plugin author name. */
+				$plugin_version_string_debug = sprintf( __( 'version: %1$s, author: %2$s', 'wp-autoupdates' ), $plugin_version, $plugin_author );
+			} else {
+				if ( ! empty( $plugin_author ) ) {
+					/* translators: %s: Plugin author name. */
+					$plugin_version_string       = sprintf( __( 'By %s', 'wp-autoupdates' ), $plugin_author );
+					/* translators: %s: Plugin author name. */
+					$plugin_version_string_debug = sprintf( __( 'author: %s, version: (undefined)', 'wp-autoupdates' ), $plugin_author );
+				}
+				if ( ! empty( $plugin_version ) ) {
+					/* translators: %s: Plugin version number. */
+					$plugin_version_string       = sprintf( __( 'Version %s', 'wp-autoupdates' ), $plugin_version );
+					/* translators: %s: Plugin version number. */
+					$plugin_version_string_debug = sprintf( __( 'author: (undefined), version: %s', 'wp-autoupdates' ), $plugin_version );
+				}
+			}
+
+			if ( array_key_exists( $plugin_path, $plugin_updates ) ) {
+				/* translators: %s: Latest plugin version number. */
+				$plugin_version_string       .= ' ' . sprintf( __( '(Latest version: %s)', 'wp-autoupdates' ), $plugin_updates[ $plugin_path ]->update->new_version );
+				/* translators: %s: Latest plugin version number. */
+				$plugin_version_string_debug .= ' ' . sprintf( __( '(latest version: %s)', 'wp-autoupdates' ), $plugin_updates[ $plugin_path ]->update->new_version );
+			}
+
+			if ( in_array( $plugin_path, $wp_auto_update_plugins ) ) {
+				$plugin_version_string       .= ' | ' . sprintf( __( 'Auto-updates enabled', 'wp-autoupdates' ) );
+				$plugin_version_string_debug .= sprintf( __( 'auto-updates enabled', 'wp-autoupdates' ) );
+			} else {
+				$plugin_version_string       .= ' | ' . sprintf( __( 'Auto-updates disabled', 'wp-autoupdates' ) );
+				$plugin_version_string_debug .= sprintf( __( 'auto-updates disabled', 'wp-autoupdates' ) );
+			}
+
+			$info[ $plugin_part ]['fields'][ sanitize_text_field( $plugin['Name'] ) ] = array(
+				'label' => $plugin['Name'],
+				'value' => $plugin_version_string,
+				'debug' => $plugin_version_string_debug,
+			);
+		}
+	}
+	// Populate constants informations
+	$enabled = defined( 'WP_DISABLE_PLUGINS_AUTO_UPDATE' ) ? WP_DISABLE_PLUGINS_AUTO_UPDATE : __( 'Undefined', 'wp-autoupdates' );
+	$info['wp-constants']['fields']['WP_DISABLE_PLUGINS_AUTO_UPDATE'] = array(
+		'label' => 'WP_DISABLE_PLUGINS_AUTO_UPDATE',
+		'value' => $enabled,
+		'debug' => strtolower( $enabled ),
+	);
+	return $info;
+}
+add_filter( 'debug_information', 'wp_autoupdates_debug_information' );
