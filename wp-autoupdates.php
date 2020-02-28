@@ -364,7 +364,7 @@ function wp_autoupdates_debug_information( $info ) {
 		}
 	}
 	// Populate constants informations
-	$enabled = defined( 'WP_DISABLE_PLUGINS_AUTO_UPDATE' ) ? WP_DISABLE_PLUGINS_AUTO_UPDATE : 'Undefined';
+	$enabled = defined( 'WP_DISABLE_PLUGINS_AUTO_UPDATE' ) ? WP_DISABLE_PLUGINS_AUTO_UPDATE : __( 'Undefined', 'wp-autoupdates' );
 	$info['wp-constants']['fields']['WP_DISABLE_PLUGINS_AUTO_UPDATE'] = array(
 		'label' => 'WP_DISABLE_PLUGINS_AUTO_UPDATE',
 		'value' => $enabled,
