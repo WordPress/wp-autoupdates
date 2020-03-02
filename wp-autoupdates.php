@@ -291,6 +291,25 @@ add_action( 'handle_bulk_actions-plugins', 'wp_autoupdates_plugins_bulk_actions_
 
 
 /**
+ * Handle cleanup when plugin deleted
+ */
+function wp_autoupdates_plugin_deleted( $plugin_file, $deleted ) {
+	// Do nothing if the plugin wasn't deleted
+	if ( ! $deleted ) {
+		return;
+	}
+
+	// Remove settings
+	$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
+	if ( in_array( $plugin_file, $wp_auto_update_plugins, true ) ) {
+		$wp_auto_update_plugins = array_diff( $wp_auto_update_plugins, array( $plugin_file ) );
+		update_site_option( 'wp_auto_update_plugins', $wp_auto_update_plugins );
+	}
+}
+add_action( 'deleted_plugin', 'wp_autoupdates_plugin_deleted', 10, 2 );
+
+
+/**
  * Auto-update notices
  */
 function wp_autoupdates_notices() {
