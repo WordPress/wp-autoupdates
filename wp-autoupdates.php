@@ -116,7 +116,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 				)
 			);
 			echo '<p>';
-			echo '<span class="plugin-autoupdate-enabled"><span class="dashicons dashicons-update" aria-hidden="true"></span> ' . __( 'Enabled', 'wp-autoupdates' ) . '</span>';
+			echo '<span class="plugin-autoupdate-enabled">' . __( 'Auto-updates enabled', 'wp-autoupdates' ) . '</span>';
 			echo '<br />';
 			$next_update_time = wp_next_scheduled( 'wp_version_check' );
 			$time_to_next_update = human_time_diff( intval( $next_update_time ) );
