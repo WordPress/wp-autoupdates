@@ -338,6 +338,9 @@ function wp_autoupdates_plugins_status_links( $status_links ) {
 	$status = isset( $_REQUEST['plugin_status'] ) ? $_REQUEST['plugin_status'] : 'all';
 
 	foreach ( $counts as $type => $count ) {
+		if ( 0 === $count ) {
+			continue;
+		}
 		switch( $type ) {
 			case 'autoupdate_enabled':
 				/* translators: %s: Number of plugins. */
