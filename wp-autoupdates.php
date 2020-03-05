@@ -342,8 +342,8 @@ function wp_autoupdates_plugins_status_links( $status_links ) {
 			case 'autoupdate_enabled':
 				/* translators: %s: Number of plugins. */
 				$text = _n(
-					'Automatic Update Enabled <span class="count">(%s)</span>',
-					'Automatic Update Enabled <span class="count">(%s)</span>',
+					'Auto-updates Enabled <span class="count">(%s)</span>',
+					'Auto-updates Enabled <span class="count">(%s)</span>',
 					$count,
 					'wp-autoupdates'
 				);
@@ -352,8 +352,8 @@ function wp_autoupdates_plugins_status_links( $status_links ) {
 			case 'autoupdate_disabled':
 				/* translators: %s: Number of plugins. */
 				$text = _n(
-					'Automatic Update Disabled <span class="count">(%s)</span>',
-					'Automatic Update Disabled <span class="count">(%s)</span>',
+					'Auto-updates Disabled <span class="count">(%s)</span>',
+					'Auto-updates Disabled <span class="count">(%s)</span>',
 					$count,
 					'wp-autoupdates'
 				);
