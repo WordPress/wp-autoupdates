@@ -14,6 +14,8 @@ The goal of this plugin is to test the UI of the feature, to help decision makin
 
 For full details, see the [Feature Plugin proposal published on Make/Core](https://make.wordpress.org/core/2020/02/26/feature-plugin-wp-auto-updates/).
 
+Interested in contributing to this plugin? Feel free to join us in `#core-auto-updates` channel on Make WordPress Slack Team. We’ll host weekly meetings on Slack every Tuesdays at 18:00 UTC.
+
 ## Context ⏳
 
 In 2018, Matt Mullenweg posted 9 projects for Core to focus on in 2019. We didn’t ship as many as hoped, but we made a lot of progress. Plugins and Themes Automatic Updates were one of those 9 projects. This project is now milestoned to WordPress 5.5 and this feature plugin is here to help move towards this achievement.
@@ -26,6 +28,13 @@ In 2018, Matt Mullenweg posted 9 projects for Core to focus on in 2019. We didn�
 
 - ✅ Open a Trac ticket to handle Core merge for plugins
 - ✅ Open a Trac ticket to handle Core merge for themes
+- ✅ Create and add feature plugin assets
+- ✅ Submit Feature Plugin on WordPress.org repository
+- ✅ Get the plugin featured as beta plugin on WordPress.org
+- 🔲 Move the repository to WordPress.org GitHub account
+- ✅ Publish the feature plugin proposal
+- ✅ Open a dedicated Slack channel on Make WordPress
+- ✅ Launch weekly meetings on Slack
 - ✅ Handle plugin auto-updates
 - 🔲 Handle themes auto-updates
 - ✅ Handle plugin auto-updates in a multisite context
@@ -36,12 +45,6 @@ In 2018, Matt Mullenweg posted 9 projects for Core to focus on in 2019. We didn�
 - 🔲 Validate design for themes screen
 - 🔲 Validate design for update-core screen
 - 🔲 Documentation
-- ✅ Create and add feature plugin assets
-- ✅ Submit Feature Plugin on WordPress.org repository
-- ✅ Get the plugin featured as beta plugin on WordPress.org
-- 🔲 Move the repository to WordPress.org GitHub account
-- ✅ Publish the feature plugin proposal
-- 🔲 Open a dedicated Slack channel on Make WordPress
 - 🔲 Copy review
 - 🔲 Accessibility audit
 - 🔲 Security audit
@@ -66,10 +69,11 @@ Thanks to everyone who contributed to this feature plugin!
 - [@pbiron](https://profiles.wordpress.org/pbiron/)
 - [@passionate](https://profiles.wordpress.org/passionate/)
 - [@nicolaskulka](https://profiles.wordpress.org/nicolaskulka/)
+- [@bookdude13](https://profiles.wordpress.org/bookdude13/)
 
 ## Documentation 📚
 
-TODO.
+Work in progress.
 
 ## Screenshots 🖼
 

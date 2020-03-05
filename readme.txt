@@ -3,7 +3,6 @@ Contributors: wordpressdotorg, audrasjb, whodunitagency, desrosj, xkon, karmatos
 Requires at least: 5.3
 Tested up to: 5.4
 Requires PHP: 5.6
-Tested up to: 5.4
 Stable tag: 0.1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -28,33 +27,7 @@ For full details, see the [Feature Plugin proposal published on Make/Core](https
 
 [This project is currently developed on GitHub](https://github.com/audrasjb/wp-autoupdates)
 
-To test/contribute, just install this plugin and activate it on your WordPress installation.
-
-**Features / to-do list** 🛠
-
-- ✅ Open a Trac ticket to handle Core merge for plugins
-- ✅ Open a Trac ticket to handle Core merge for themes
-- ✅ Handle plugin auto-updates
-- 🔲 Handle themes auto-updates
-- ✅ Handle plugin auto-updates in a multisite context
-- 🔲 Handle themes auto-updates in a multisite context
-- 🔲 Email notifications for plugins
-- 🔲 Email notifications for themes
-- 🔲 Validate design for plugins screen
-- 🔲 Validate design for themes screen
-- 🔲 Validate design for update-core screen
-- 🔲 Documentation
-- ✅ Create and add feature plugin assets
-- ✅ Submit Feature Plugin on WordPress.org repository
-- ✅ Get the plugin featured as beta plugin on WordPress.org
-- 🔲 Move the repository to WordPress.org GitHub account
-- ✅ Publish the feature plugin proposal
-- 🔲 Open a dedicated Slack channel on Make WordPress
-- 🔲 Copy review
-- 🔲 Accessibility audit
-- 🔲 Security audit
-- 🔲 Coding standards audit
-- 🔲 Inline Docs audit
+Interested in contributing to this plugin? Feel free to join us in `#core-auto-updates` channel on Make WordPress Slack Team. We’ll host weekly meetings on Slack every Tuesdays at 18:00 UTC.
 
 == Changelog ==
 
