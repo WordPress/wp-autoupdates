@@ -87,7 +87,9 @@ add_filter( 'auto_update_plugin', 'wp_autoupdates_selected_plugins', 10, 2 );
  * Add autoupdate column to plugins screen.
  */
 function wp_autoupdates_add_plugins_autoupdates_column( $columns ) {
-	$columns['autoupdates_column'] = __( 'Automatic updates', 'wp-autoupdates' );
+	if ( 'mustuse' !== $_GET['plugin_status'] && 'dropins' !== $_GET['plugin_status'] ) {
+		$columns['autoupdates_column'] = __( 'Automatic updates', 'wp-autoupdates' );
+	}
 	return $columns;
 }
 add_filter( is_multisite() ? 'manage_plugins-network_columns' : 'manage_plugins_columns', 'wp_autoupdates_add_plugins_autoupdates_column' );
@@ -106,6 +108,9 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 	$plugins_updates = get_site_transient( 'update_plugins' );
 	$page = isset( $_GET['paged'] ) && ! empty( $_GET['paged'] ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
 	if ( wp_autoupdates_is_plugins_auto_update_enabled() ) {
+		if ( ! isset( $plugins[ $plugin_file ] ) ) {
+			return;
+		}
 		$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
 		if ( in_array( $plugin_file, $wp_auto_update_plugins, true ) ) {
 			$aria_label = esc_attr(
