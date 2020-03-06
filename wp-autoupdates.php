@@ -175,6 +175,7 @@ function wp_autoupdates_plugins_bulk_actions( $actions ) {
     return $actions;
 }
 add_action( 'bulk_actions-plugins', 'wp_autoupdates_plugins_bulk_actions' );
+add_action( 'bulk_actions-plugins-network', 'wp_autoupdates_plugins_bulk_actions' );
 
 
 /**
@@ -293,6 +294,7 @@ function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $i
 	
 }
 add_action( 'handle_bulk_actions-plugins', 'wp_autoupdates_plugins_bulk_actions_handle', 10, 3 );
+add_action( 'handle_bulk_actions-plugins-network', 'wp_autoupdates_plugins_bulk_actions_handle', 10, 3 );
 
 
 /**
