@@ -33,7 +33,7 @@ Interested in contributing to this plugin? Feel free to join us in `#core-auto-u
 
 = 0.2 =
 March 6, 2020
-- Remove auto-updates column from mustuse and dropins screens - [39](https://github.com/audrasjb/wp-autoupdates/pull/39)
+- Remove auto-updates column from mustuse and dropins screens - [#39](https://github.com/audrasjb/wp-autoupdates/pull/39)
 - Ensure the the enable/disable bulk actions appear in the dropdown and are handled in multisite - [#38](https://github.com/audrasjb/wp-autoupdates/pull/38)
 - Remove dashicon from "Enable" text in plugins auto-updates column - [#36](https://github.com/audrasjb/wp-autoupdates/pull/36)
 - Replace "Automatic Updates" with "Auto-updates" in filters - [#35](https://github.com/audrasjb/wp-autoupdates/pull/35)
