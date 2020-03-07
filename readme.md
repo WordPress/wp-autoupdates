@@ -85,9 +85,9 @@ Work in progress.
 
 ![Plugins Admin screen - Toggle update single plugin - animated screenshot](https://jeanbaptisteaudras.com/images/wp-autoupdates-togglesingleplugin-01.gif)
 
-### Plugins Admin screen - Buk Edit - animated screenshot
+### Plugins Admin screen - Bulk Edit - animated screenshot
 
-![Plugins Admin screen - Buk Edit - animated screenshot](https://jeanbaptisteaudras.com/images/wp-autoupdates-bulkeditplugins-01.gif)
+![Plugins Admin screen - Bulk Edit - animated screenshot](https://jeanbaptisteaudras.com/images/wp-autoupdates-bulkeditplugins-01.gif)
 
 ### Update Core Admin Screen
 
