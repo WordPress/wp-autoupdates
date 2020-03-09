@@ -99,6 +99,20 @@ add_filter( 'auto_update_plugin', 'wp_autoupdates_selected_plugins', 10, 2 );
 
 
 /**
+ * Autoupdate selected themes.
+ */
+function wp_autoupdates_selected_themes( $update, $item ) {
+	$wp_auto_update_themes = get_site_option( 'wp_auto_update_themes', array() );
+	if ( in_array( $item->theme, $wp_auto_update_themes, true ) && wp_autoupdates_is_themes_auto_update_enabled() ) {
+		return true;
+	} else {
+		return $update;
+	}
+}
+add_filter( 'auto_update_theme', 'wp_autoupdates_selected_themes', 10, 2 );
+
+
+/**
  * Add autoupdate column to plugins screen.
  */
 function wp_autoupdates_add_plugins_autoupdates_column( $columns ) {
