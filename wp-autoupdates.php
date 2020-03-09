@@ -55,17 +55,32 @@ add_action( 'admin_enqueue_scripts', 'wp_autoupdates_enqueues' );
 
 
 /**
- * Checks whether plugins manual autoupdate is enabled.
+ * Checks whether plugins manual auto-update is enabled.
  */
 function wp_autoupdates_is_plugins_auto_update_enabled() {
 	$enabled = ! defined( 'WP_DISABLE_PLUGINS_AUTO_UPDATE' ) || ! WP_DISABLE_PLUGINS_AUTO_UPDATE;
 	
 	/**
-	 * Filters whether plugins manual autoupdate is enabled.
+	 * Filters whether plugins manual auto-update is enabled.
 	 *
-	 * @param bool $enabled True if plugins auto udpate is enabled, false otherwise.
+	 * @param bool $enabled True if plugins auto-udpate is enabled, false otherwise.
 	 */
 	return apply_filters( 'wp_plugins_auto_update_enabled', $enabled );
+}
+
+
+/**
+ * Checks whether themes manual auto-update is enabled.
+ */
+function wp_autoupdates_is_themes_auto_update_enabled() {
+	$enabled = ! defined( 'WP_DISABLE_THEMES_AUTO_UPDATE' ) || ! WP_DISABLE_THEMES_AUTO_UPDATE;
+	
+	/**
+	 * Filters whether themes manual auto-update is enabled.
+	 *
+	 * @param bool $enabled True if themes auto-udpate is enabled, false otherwise.
+	 */
+	return apply_filters( 'wp_themes_auto_update_enabled', $enabled );
 }
 
 
