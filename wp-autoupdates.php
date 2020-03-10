@@ -107,6 +107,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 	$plugins = get_plugins();
 	$plugins_updates = get_site_transient( 'update_plugins' );
 	$page = isset( $_GET['paged'] ) && ! empty( $_GET['paged'] ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
+	$plugin_status = isset( $_GET['plugin_status'] ) && ! empty( $_GET['plugin_status'] ) ? wp_unslash( esc_html( $_GET['plugin_status'] ) ) : '';
 	if ( wp_autoupdates_is_plugins_auto_update_enabled() ) {
 		if ( ! isset( $plugins[ $plugin_file ] ) ) {
 			return;
@@ -136,7 +137,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 			if ( current_user_can( 'update_plugins', $plugin_file ) ) {
 				echo sprintf(
 					'<a href="%s" class="plugin-autoupdate-disable" aria-label="%s">%s</a>',
-					wp_nonce_url( 'plugins.php?action=autoupdate&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page, 'autoupdate-plugin_' . $plugin_file ),
+					wp_nonce_url( 'plugins.php?action=autoupdate&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page . '&amp;plugin_status=' . $plugin_status, 'autoupdate-plugin_' . $plugin_file ),
 					$aria_label,
 					__( 'Disable', 'wp-autoupdates' )
 				);
@@ -154,7 +155,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 				echo '<p class="plugin-autoupdate-disabled">';
 				echo sprintf(
 					'<a href="%s" class="edit" aria-label="%s"><span class="dashicons dashicons-update" aria-hidden="true"></span> %s</a>',
-					wp_nonce_url( 'plugins.php?action=autoupdate&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page, 'autoupdate-plugin_' . $plugin_file ),
+					wp_nonce_url( 'plugins.php?action=autoupdate&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page . '&amp;plugin_status=' . $plugin_status, 'autoupdate-plugin_' . $plugin_file ),
 					$aria_label,
 					__( 'Enable', 'wp-autoupdates' )
 				);
