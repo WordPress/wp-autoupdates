@@ -87,7 +87,7 @@ add_filter( 'auto_update_plugin', 'wp_autoupdates_selected_plugins', 10, 2 );
  * Add autoupdate column to plugins screen.
  */
 function wp_autoupdates_add_plugins_autoupdates_column( $columns ) {
-	if ( 'mustuse' !== $_GET['plugin_status'] && 'dropins' !== $_GET['plugin_status'] ) {
+	if ( ! isset( $_GET['plugin_status'] ) || ( 'mustuse' !== $_GET['plugin_status'] && 'dropins' !== $_GET['plugin_status'] ) ) {
 		$columns['autoupdates_column'] = __( 'Automatic updates', 'wp-autoupdates' );
 	}
 	return $columns;
