@@ -3,7 +3,7 @@ Contributors: wordpressdotorg, audrasjb, whodunitagency, pbiron, xkon, karmatose
 Requires at least: 5.3
 Tested up to: 5.4
 Requires PHP: 5.6
-Stable tag: 0.2
+Stable tag: 0.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,11 @@ For full details, see the [Feature Plugin proposal published on Make/Core](https
 Interested in contributing to this plugin? Feel free to join us in `#core-auto-updates` channel on Make WordPress Slack Team. We’ll host weekly meetings on Slack every Tuesdays at 18:00 UTC.
 
 == Changelog ==
+
+= 0.2.1 =
+March 11, 2020
+- Prevent "PHP Notice: Undefined index: plugin_status" when adding the autoupdates_column - [#47](https://github.com/audrasjb/wp-autoupdates/pull/47)
+- Add plugin_status query arg to the enable/disable links in the Automatic Updates column - [#48](https://github.com/audrasjb/wp-autoupdates/pull/48)
 
 = 0.2 =
 March 6, 2020

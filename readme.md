@@ -95,6 +95,11 @@ Work in progress.
 
 ## Changelog 🗓
 
+## 0.2.1 🐜
+March 11, 2020
+- Prevent "PHP Notice: Undefined index: plugin_status" when adding the autoupdates_column - [#47](https://github.com/audrasjb/wp-autoupdates/pull/47)
+- Add plugin_status query arg to the enable/disable links in the Automatic Updates column - [#48](https://github.com/audrasjb/wp-autoupdates/pull/48)
+
 ### 0.2 🐝
 March 6, 2020
 - Remove auto-updates column from mustuse and dropins screens - [#39](https://github.com/audrasjb/wp-autoupdates/pull/39)
