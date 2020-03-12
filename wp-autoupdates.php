@@ -558,7 +558,7 @@ function wp_autoupdates_automatic_updates_complete_notification( $results ) {
 	$failed_updates = array();
 	if ( isset( $results['plugin'] ) ) {
 		foreach ( $results['plugin'] as $update_result ) {
-			if ( 1 === intval( $update_result->result ) ) {
+			if ( true === $update_result->result ) {
 				$successful_updates[] = $update_result;
 			} else {
 				$failed_updates[] = $update_result;
