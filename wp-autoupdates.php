@@ -579,7 +579,7 @@ function wp_autoupdates_automatic_updates_complete_notification( $results ) {
 add_action( 'automatic_updates_complete', 'wp_autoupdates_automatic_updates_complete_notification' );
 
 
-/*
+/**
  * Sends an email upon the completion or failure of a plugin background update.
  *
  * @param string $type               The type of email to send. Can be one of 'success', 'failure', 'mixed'.
