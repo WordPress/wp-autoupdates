@@ -59,7 +59,7 @@ function wp_autoupdates_enqueues( $hook ) {
 				var plugin = jQuery( this ).closest("tr").data("plugin");
 				var plugin_row = jQuery( "tr.update[data-plugin=\'" + plugin + "\']" );
 				var plugin_auto_update_time_text = plugin_row.find("span.plugin-autoupdate-time");
-				plugin_auto_update_time_text.text("");
+				plugin_auto_update_time_text.remove();
 			});
 		});';
 		wp_add_inline_script( 'jquery', $script );
