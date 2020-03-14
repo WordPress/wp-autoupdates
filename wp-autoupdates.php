@@ -50,6 +50,20 @@ function wp_autoupdates_enqueues( $hook ) {
 		$script .= '});';
 		wp_add_inline_script( 'jquery', $script );
 	}
+
+	// When manually updating a plugin the 'time until next update' text needs to be hidden.
+	// Doesn't need to be done on the update-core.php page since that page refreshes after an update.
+	if ( 'plugins.php' === $hook ) {
+		$script = 'jQuery( document ).ready(function() {
+			jQuery( ".update-link" ).click( function() {
+				var plugin = jQuery( this ).closest("tr").data("plugin");
+				var plugin_row = jQuery( "tr.update[data-plugin=\'" + plugin + "\']" );
+				var plugin_auto_update_time_text = plugin_row.find("span.plugin-autoupdate-time");
+				plugin_auto_update_time_text.remove();
+			});
+		});';
+		wp_add_inline_script( 'jquery', $script );
+	}
 }
 add_action( 'admin_enqueue_scripts', 'wp_autoupdates_enqueues' );
 
@@ -130,12 +144,14 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 			$next_update_time = wp_next_scheduled( 'wp_version_check' );
 			$time_to_next_update = human_time_diff( intval( $next_update_time ) );
 			if ( isset( $plugins_updates->response[$plugin_file] ) ) {
+				echo '<span class="plugin-autoupdate-time">';
 				echo sprintf(
 					/* translators: Time until the next update. */
 					__( 'Update scheduled in %s', 'wp-autoupdates' ),
 					$time_to_next_update
 				);
 				echo '<br />';
+				echo '</span>';
 			}
 			if ( current_user_can( 'update_plugins', $plugin_file ) ) {
 				echo sprintf(
