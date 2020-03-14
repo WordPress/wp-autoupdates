@@ -85,15 +85,20 @@ Work in progress.
 
 ![Plugins Admin screen - Toggle update single plugin - animated screenshot](https://jeanbaptisteaudras.com/images/wp-autoupdates-togglesingleplugin-01.gif)
 
-### Plugins Admin screen - Buk Edit - animated screenshot
+### Plugins Admin screen - Bulk Edit - animated screenshot
 
-![Plugins Admin screen - Buk Edit - animated screenshot](https://jeanbaptisteaudras.com/images/wp-autoupdates-bulkeditplugins-01.gif)
+![Plugins Admin screen - Bulk Edit - animated screenshot](https://jeanbaptisteaudras.com/images/wp-autoupdates-bulkeditplugins-01.gif)
 
 ### Update Core Admin Screen
 
 ![Update Core Admin screen - screenshot](https://jeanbaptisteaudras.com/images/wp-autoupdates-updatecore-01.png)
 
 ## Changelog 🗓
+
+## 0.2.1 🐜
+March 11, 2020
+- Prevent "PHP Notice: Undefined index: plugin_status" when adding the autoupdates_column - [#47](https://github.com/audrasjb/wp-autoupdates/pull/47)
+- Add plugin_status query arg to the enable/disable links in the Automatic Updates column - [#48](https://github.com/audrasjb/wp-autoupdates/pull/48)
 
 ### 0.2 🐝
 March 6, 2020

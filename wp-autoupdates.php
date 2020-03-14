@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name: WordPress Autoupdates
+Plugin Name: WordPress Auto-updates
 Plugin URI: https://wordpress.org/plugins/wp-autoupdates
 Description: A feature plugin to integrate Plugins & Themes automatic updates in WordPress Core.
-Version: 0.2
+Version: 0.2.1
 Requires at least: 5.3
 Requires PHP: 5.6
 Tested up to: 5.4
@@ -101,7 +101,10 @@ add_filter( 'auto_update_plugin', 'wp_autoupdates_selected_plugins', 10, 2 );
  * Add autoupdate column to plugins screen.
  */
 function wp_autoupdates_add_plugins_autoupdates_column( $columns ) {
-	if ( 'mustuse' !== $_GET['plugin_status'] && 'dropins' !== $_GET['plugin_status'] ) {
+	if ( ! current_user_can( 'update_plugins' ) || ! wp_autoupdates_is_plugins_auto_update_enabled() ) {
+		return $columns;
+	}
+	if ( ! isset( $_GET['plugin_status'] ) || ( 'mustuse' !== $_GET['plugin_status'] && 'dropins' !== $_GET['plugin_status'] ) ) {
 		$columns['autoupdates_column'] = __( 'Automatic updates', 'wp-autoupdates' );
 	}
 	return $columns;
@@ -121,6 +124,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 	$plugins = get_plugins();
 	$plugins_updates = get_site_transient( 'update_plugins' );
 	$page = isset( $_GET['paged'] ) && ! empty( $_GET['paged'] ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
+	$plugin_status = isset( $_GET['plugin_status'] ) && ! empty( $_GET['plugin_status'] ) ? wp_unslash( esc_html( $_GET['plugin_status'] ) ) : '';
 	if ( wp_autoupdates_is_plugins_auto_update_enabled() ) {
 		if ( ! isset( $plugins[ $plugin_file ] ) ) {
 			return;
@@ -152,7 +156,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 			if ( current_user_can( 'update_plugins', $plugin_file ) ) {
 				echo sprintf(
 					'<a href="%s" class="plugin-autoupdate-disable" aria-label="%s">%s</a>',
-					wp_nonce_url( 'plugins.php?action=autoupdate&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page, 'autoupdate-plugin_' . $plugin_file ),
+					wp_nonce_url( 'plugins.php?action=autoupdate&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page . '&amp;plugin_status=' . $plugin_status, 'autoupdate-plugin_' . $plugin_file ),
 					$aria_label,
 					__( 'Disable', 'wp-autoupdates' )
 				);
@@ -170,7 +174,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 				echo '<p class="plugin-autoupdate-disabled">';
 				echo sprintf(
 					'<a href="%s" class="edit" aria-label="%s"><span class="dashicons dashicons-update" aria-hidden="true"></span> %s</a>',
-					wp_nonce_url( 'plugins.php?action=autoupdate&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page, 'autoupdate-plugin_' . $plugin_file ),
+					wp_nonce_url( 'plugins.php?action=autoupdate&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page . '&amp;plugin_status=' . $plugin_status, 'autoupdate-plugin_' . $plugin_file ),
 					$aria_label,
 					__( 'Enable', 'wp-autoupdates' )
 				);
@@ -561,3 +565,130 @@ function wp_autoupdates_debug_information( $info ) {
 	return $info;
 }
 add_filter( 'debug_information', 'wp_autoupdates_debug_information' );
+
+
+/**
+ * If we tried to perform plugin updates, check if we should send an email.
+ *
+ * @param object $results The result of the plugin updates.
+ */
+function wp_autoupdates_automatic_updates_complete_notification( $results ) {
+	$successful_updates = array();
+	$failed_updates = array();
+	if ( isset( $results['plugin'] ) ) {
+		foreach ( $results['plugin'] as $update_result ) {
+			if ( true === $update_result->result ) {
+				$successful_updates[] = $update_result;
+			} else {
+				$failed_updates[] = $update_result;
+			}
+		}
+		if ( empty( $successful_updates ) && empty( $failed_updates ) ) {
+			return;
+		}
+		if ( empty( $failed_updates ) ) {
+			wp_autoupdates_send_email_notification( 'success', $successful_updates, $failed_updates );
+		} elseif ( empty( $successful_updates ) ) {
+			wp_autoupdates_send_email_notification( 'fail', $successful_updates, $failed_updates );
+		} else {
+			wp_autoupdates_send_email_notification( 'mixed', $successful_updates, $failed_updates );
+		}
+	}
+}
+add_action( 'automatic_updates_complete', 'wp_autoupdates_automatic_updates_complete_notification' );
+
+
+/**
+ * Sends an email upon the completion or failure of a plugin background update.
+ *
+ * @param string $type               The type of email to send. Can be one of 'success', 'failure', 'mixed'.
+ * @param array  $successful_updates A list of plugin updates that succeeded.
+ * @param array  $failed_updates     A list of plugin updates that failed.
+ */
+function wp_autoupdates_send_email_notification( $type, $successful_updates, $failed_updates ) {
+	// No updates were attempted.
+	if ( empty( $successful_updates ) && empty( $failed_updates ) ) {
+		return;
+	}
+	$body = array();
+
+	switch ( $type ) {
+		case 'success':
+			/* translators: %s: Site title. */
+			$subject = __( '[%s] Plugins have automatically updated', 'wp-autoupdates' );
+			break;
+		case 'fail':
+			/* translators: %s: Site title. */
+			$subject = __( '[%s] Plugins have failed to update', 'wp-autoupdates' );
+			$body[]  = sprintf(
+				/* translators: %s: Home URL. */
+				__( 'Howdy! Failures occurred when attempting to update plugins on your site at %s.', 'wp-autoupdates' ),
+				home_url()
+			);
+			$body[] = "\n";
+			$body[] = __( 'Please check out your site now. It’s possible that everything is working. If it says you need to update, you should do so.', 'wp-autoupdates' );
+			break;
+		case 'mixed':
+			/* translators: %s: Site title. */
+			$subject = __( '[%s] Some plugins have automatically updated', 'wp-autoupdates' );
+			$body[] = sprintf(
+				/* translators: %s: Home URL. */
+				__( 'Howdy! There were some failures while attempting to update plugins on your site at %s.', 'wp-autoupdates' ),
+				home_url()
+			);
+			$body[] = "\n";
+			$body[] = __( 'Please check out your site now. It’s possible that everything is working. If it says you need to update, you should do so.', 'wp-autoupdates' );
+			$body[] = "\n";
+			break;
+	}
+
+	if ( in_array( $type, array( 'fail', 'mixed' ), true ) && ! empty( $failed_updates ) ) {
+		$body[] = __( 'The following plugins failed to update:' );
+		// List failed updates.
+		foreach ( $failed_updates as $item ) {
+			/* translators: %s: Name of the related plugin. */
+			$body[] = ' ' . sprintf( __( '- %s', 'wp-autoupdates' ), $item->name );
+		}
+		$body[] = "\n";
+	}
+	if ( in_array( $type, array( 'success', 'mixed' ), true ) && ! empty( $successful_updates ) ) {
+		$body[] = __( 'The following plugins were successfully updated:' );
+		// List successful updates.
+		foreach ( $successful_updates as $plugin ) {
+			/* translators: %s: Name of plugin. */
+			$body[] = ' ' . sprintf( __( '- %s', 'wp-autoupdates' ), $plugin->name );
+		}
+	}
+	$body[] = "\n";
+	
+	// Add a note about the support forums.
+	$body[] = __( 'If you experience any issues or need support, the volunteers in the WordPress.org support forums may be able to help.', 'wp-autoupdates' );
+	$body[] = __( 'https://wordpress.org/support/forums/', 'wp-autoupdates' );
+	$body[] = "\n" . __( 'The WordPress Team', 'wp-autoupdates' );
+
+	$body    = implode( "\n", $body );
+	$to      = get_site_option( 'admin_email' );
+	$subject = sprintf( $subject, wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ) );
+	$headers = '';
+
+	$email = compact( 'to', 'subject', 'body', 'headers' );
+
+	/**
+	 * Filters the email sent following an automatic background plugin update.
+	 * @param array $email {
+	 *     Array of email arguments that will be passed to wp_mail().
+	 *
+	 *     @type string $to      The email recipient. An array of emails
+	 *                           can be returned, as handled by wp_mail().
+	 *     @type string $subject The email's subject.
+	 *     @type string $body    The email message body.
+	 *     @type string $headers Any email headers, defaults to no headers.
+	 * }
+	 * @param string $type               The type of email being sent. Can be one of
+	 *                                   'success', 'fail', 'mixed'.
+	 * @param object $successful_updates The updates that succeded.
+	 * @param object $failed_updates     The updates that failed.
+	 */
+	$email = apply_filters( 'wp_autoupdates_notifications_email', $email, $type, $successful_updates, $failed_updates );
+	wp_mail( $email['to'], wp_specialchars_decode( $email['subject'] ), $email['body'], $email['headers'] );
+}
