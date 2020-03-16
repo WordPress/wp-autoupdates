@@ -3,7 +3,7 @@ Contributors: wordpressdotorg, audrasjb, whodunitagency, pbiron, xkon, karmatose
 Requires at least: 5.3
 Tested up to: 5.4
 Requires PHP: 5.6
-Stable tag: 0.2.1
+Stable tag: 0.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,14 @@ For full details, see the [Feature Plugin proposal published on Make/Core](https
 Interested in contributing to this plugin? Feel free to join us in `#core-auto-updates` channel on Make WordPress Slack Team. We’ll host weekly meetings on Slack every Tuesdays at 18:00 UTC.
 
 == Changelog ==
+
+= 0.3.0 =
+March 16, 2020
+- Add functions to handle plugins updates notification emails - [#54](https://github.com/audrasjb/wp-autoupdates/pull/54)
+- Remove update time text after manual update - [#43](https://github.com/audrasjb/wp-autoupdates/pull/43)
+- Ensure "Automatic Updates" column is not added if no content would be output in the column - [#57](https://github.com/audrasjb/wp-autoupdates/pull/57)
+- Specific messages for delayed or disabled cron events - [#58](https://github.com/audrasjb/wp-autoupdates/pull/58)
+- Prevent mis-match between count in Auto-updates Enabled view and the number of plugins displayed for that view by applying 'all_plugins' filter before computing that count. - [#59](https://github.com/audrasjb/wp-autoupdates/pull/59)
 
 = 0.2.1 =
 March 11, 2020

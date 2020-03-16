@@ -39,7 +39,7 @@ In 2018, Matt Mullenweg posted 9 projects for Core to focus on in 2019. We didn�
 - 🔲 Handle themes auto-updates
 - ✅ Handle plugin auto-updates in a multisite context
 - 🔲 Handle themes auto-updates in a multisite context
-- 🔲 Email notifications for plugins
+- ✅ Email notifications for plugins
 - 🔲 Email notifications for themes
 - 🔲 Validate design for plugins screen
 - 🔲 Validate design for themes screen
@@ -94,6 +94,14 @@ Work in progress.
 ![Update Core Admin screen - screenshot](https://jeanbaptisteaudras.com/images/wp-autoupdates-updatecore-01.png)
 
 ## Changelog 🗓
+
+## 0.3.0 🦉
+March 16, 2020
+- Add functions to handle plugins updates notification emails - [#54](https://github.com/audrasjb/wp-autoupdates/pull/54)
+- Remove update time text after manual update - [#43](https://github.com/audrasjb/wp-autoupdates/pull/43)
+- Ensure "Automatic Updates" column is not added if no content would be output in the column - [#57](https://github.com/audrasjb/wp-autoupdates/pull/57)
+- Specific messages for delayed or disabled cron events - [#58](https://github.com/audrasjb/wp-autoupdates/pull/58)
+- Prevent mis-match between count in Auto-updates Enabled view and the number of plugins displayed for that view by applying 'all_plugins' filter before computing that count. - [#59](https://github.com/audrasjb/wp-autoupdates/pull/59)
 
 ## 0.2.1 🐜
 March 11, 2020
