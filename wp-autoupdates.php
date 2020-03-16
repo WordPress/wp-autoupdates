@@ -70,7 +70,7 @@ add_action( 'admin_enqueue_scripts', 'wp_autoupdates_enqueues' );
  */
 function wp_autoupdates_is_plugins_auto_update_enabled() {
 	$enabled = ! defined( 'WP_DISABLE_PLUGINS_AUTO_UPDATE' ) || ! WP_DISABLE_PLUGINS_AUTO_UPDATE;
-	
+
 	/**
 	 * Filters whether plugins manual autoupdate is enabled.
 	 *
@@ -272,7 +272,7 @@ function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $i
 		$redirect_to = self_admin_url( "plugins.php?enable-autoupdate=true&plugin_status=$status&paged=$page&s=$s" );
 		return $redirect_to;
 	}
-	
+
 	if ( 'disable-autoupdate-selected' === $doaction ) {
 		if ( ! current_user_can( 'update_plugins' ) || ! wp_autoupdates_is_plugins_auto_update_enabled() ) {
 			wp_die( __( 'Sorry, you are not allowed to enable plugins automatic updates.', 'wp-autoupdates' ) );
@@ -304,7 +304,7 @@ function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $i
 		$redirect_to = self_admin_url( "plugins.php?disable-autoupdate=true&plugin_status=$status&paged=$page&s=$s" );
 		return $redirect_to;
 	}
-	
+
 }
 add_action( 'handle_bulk_actions-plugins', 'wp_autoupdates_plugins_bulk_actions_handle', 10, 3 );
 add_action( 'handle_bulk_actions-plugins-network', 'wp_autoupdates_plugins_bulk_actions_handle', 10, 3 );
@@ -653,7 +653,7 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 		}
 	}
 	$body[] = "\n";
-	
+
 	// Add a note about the support forums.
 	$body[] = __( 'If you experience any issues or need support, the volunteers in the WordPress.org support forums may be able to help.', 'wp-autoupdates' );
 	$body[] = __( 'https://wordpress.org/support/forums/', 'wp-autoupdates' );
