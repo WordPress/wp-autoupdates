@@ -362,8 +362,10 @@ function wp_autoupdates_plugins_status_links( $status_links ) {
 		return $status_links;
 	}
 
+	/** This filter is documented in wp-admin/includes/class-wp-plugins-list-table.php */
+	$all_plugins           = apply_filters( 'all_plugins', get_plugins() );
 	$wp_autoupdate_plugins = get_site_option( 'wp_auto_update_plugins', array() );
-	$wp_autoupdate_plugins = array_intersect( $wp_autoupdate_plugins, array_keys( get_plugins() ) );
+	$wp_autoupdate_plugins = array_intersect( $wp_autoupdate_plugins, array_keys( $all_plugins ) );
 	$enabled_count         = count( $wp_autoupdate_plugins );
 
 	// when merged, these counts will need to be set in WP_Plugins_List_Table::prepare_items().
