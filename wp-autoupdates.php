@@ -650,7 +650,7 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 		$body[] = __( 'The following plugins were successfully updated:' );
 		// List successful updates.
 		foreach ( $successful_updates as $plugin ) {
-			/* translators: %s: Name of plugin. */
+			/* translators: %s: Name of the related plugin. */
 			$body[] = ' ' . sprintf( __( '- %s', 'wp-autoupdates' ), $plugin->name );
 		}
 	}
@@ -715,13 +715,13 @@ function wp_autoupdates_get_update_message() {
 	if ( $overdue ) {
 		return sprintf(
 			/* translators: Duration that WP-Cron has been overdue. */
-			__( 'There may be a problem with WP-Cron. Automatic update overdue by %s', 'wp-autoupdates' ),
+			__( 'There may be a problem with WP-Cron. Automatic update overdue by %s.', 'wp-autoupdates' ),
 			$time_to_next_update
 		);
 	} else {
 		return sprintf(
 			/* translators: Time until the next update. */
-			__( 'Automatic update scheduled in %s', 'wp-autoupdates' ),
+			__( 'Automatic update scheduled in %s.', 'wp-autoupdates' ),
 			$time_to_next_update
 		);
 	}
