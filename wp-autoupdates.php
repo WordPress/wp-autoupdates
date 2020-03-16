@@ -19,6 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Invalid request.' );
 }
 
+
 /**
  * Enqueue styles and scripts
  */
@@ -34,15 +35,11 @@ function wp_autoupdates_enqueues( $hook ) {
 		$script = 'jQuery( document ).ready(function() {';
 		if ( wp_autoupdates_is_plugins_auto_update_enabled() ) {
 			$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
+
+			$update_message = wp_autoupdates_get_update_message();
 			foreach ( $wp_auto_update_plugins as $plugin ) {
-				$next_update_time = wp_next_scheduled( 'wp_version_check' );
-				$time_to_next_update = human_time_diff( intval( $next_update_time ) );
 				$autoupdate_text = ' <span class="plugin-autoupdate-enabled"><span class="dashicons dashicons-update" aria-hidden="true"></span> ';
-				$autoupdate_text .= sprintf(
-					/* translators: Time until the next update. */
-					__( 'Automatic update scheduled in %s', 'wp-autoupdates' ),
-					$time_to_next_update
-				);
+				$autoupdate_text .= $update_message;
 				$autoupdate_text .= '</span> ';
 				$script .= 'jQuery(".check-column input[value=\'' . $plugin . '\']").closest("tr").find(".plugin-title > p").append(\'' . $autoupdate_text . '\');';
 			}
@@ -141,15 +138,11 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 			echo '<p>';
 			echo '<span class="plugin-autoupdate-enabled">' . __( 'Auto-updates enabled', 'wp-autoupdates' ) . '</span>';
 			echo '<br />';
-			$next_update_time = wp_next_scheduled( 'wp_version_check' );
-			$time_to_next_update = human_time_diff( intval( $next_update_time ) );
+
+			$update_message = wp_autoupdates_get_update_message();
 			if ( isset( $plugins_updates->response[$plugin_file] ) ) {
 				echo '<span class="plugin-autoupdate-time">';
-				echo sprintf(
-					/* translators: Time until the next update. */
-					__( 'Update scheduled in %s', 'wp-autoupdates' ),
-					$time_to_next_update
-				);
+				echo $update_message;
 				echo '<br />';
 				echo '</span>';
 			}
@@ -691,4 +684,43 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 	 */
 	$email = apply_filters( 'wp_autoupdates_notifications_email', $email, $type, $successful_updates, $failed_updates );
 	wp_mail( $email['to'], wp_specialchars_decode( $email['subject'] ), $email['body'], $email['headers'] );
+}
+
+
+/**
+ * Determines the appropriate update message to be displayed.
+ *
+ * @return string The update message to be shown.
+ */
+function wp_autoupdates_get_update_message() {
+	$next_update_time = wp_next_scheduled( 'wp_version_check' );
+
+	// Check if event exists.
+	if ( false === $next_update_time ) {
+		return __( 'There may be a problem with WP-Cron. Automatic update not scheduled.', 'wp-autoupdates' );
+	}
+
+	// See if cron is disabled
+	$cron_disabled = defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON;
+	if ( $cron_disabled ) {
+		return __( 'WP-Cron is disabled. Automatic updates not available.', 'wp-autoupdates' );
+	}
+
+	$time_to_next_update = human_time_diff( intval( $next_update_time ) );
+
+	// See if cron is overdue.
+	$overdue = (time() - $next_update_time) > 0;
+	if ( $overdue ) {
+		return sprintf(
+			/* translators: Duration that WP-Cron has been overdue. */
+			__( 'There may be a problem with WP-Cron. Automatic update overdue by %s', 'wp-autoupdates' ),
+			$time_to_next_update
+		);
+	} else {
+		return sprintf(
+			/* translators: Time until the next update. */
+			__( 'Automatic update scheduled in %s', 'wp-autoupdates' ),
+			$time_to_next_update
+		);
+	}
 }
