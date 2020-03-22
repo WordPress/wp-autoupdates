@@ -221,13 +221,9 @@ add_action( 'bulk_actions-plugins-network', 'wp_autoupdates_plugins_bulk_actions
 
 
 /**
- * Handle autoupdates enabling
+ * Handles auto-updates enabling for plugins
  */
-function wp_autoupdates_enabler() {
-	$pagenow = $GLOBALS['pagenow'];
-	if ( 'plugins.php' !== $pagenow ) {
-		return;
-	}
+function wp_autoupdates_enabler_plugins() {
 	$action = isset( $_GET['action'] ) && ! empty( esc_html( $_GET['action'] ) ) ? wp_unslash( esc_html( $_GET['action'] ) ) : '';
 	if ( 'autoupdate' === $action ) {
 		if ( ! current_user_can( 'update_plugins' ) || ! wp_autoupdates_is_plugins_auto_update_enabled() ) {
@@ -261,6 +257,60 @@ function wp_autoupdates_enabler() {
 		update_site_option( 'wp_auto_update_plugins', $wp_auto_update_plugins );
 		wp_redirect( self_admin_url( "plugins.php?$action_type&plugin_status=$status&paged=$page&s=$s" ) );
 		exit;
+	}
+}
+
+
+/**
+ * Handles auto-updates enabling for themes
+ */
+function wp_autoupdates_enabler_themes() {
+	$action = isset( $_GET['action'] ) && ! empty( esc_html( $_GET['action'] ) ) ? wp_unslash( esc_html( $_GET['action'] ) ) : '';
+	if ( 'autoupdate' === $action ) {
+		if ( ! current_user_can( 'update_themes' ) || ! wp_autoupdates_is_themes_auto_update_enabled() ) {
+			wp_die( __( 'Sorry, you are not allowed to enable themes automatic updates.', 'wp-autoupdates' ) );
+		}
+
+		if ( is_multisite() && ! is_network_admin() ) {
+			wp_die( __( 'Please connect to your network admin to manage themes automatic updates.', 'wp-autoupdates' ) );
+		}
+
+		$theme = ! empty( esc_html( $_GET['theme'] ) ) ? wp_unslash( esc_html( $_GET['theme'] ) ) : '';
+		if ( empty( $theme ) ) {
+			wp_redirect( self_admin_url( 'themes.php' ) );
+			exit;
+		}
+
+		$slug = $theme->get_stylesheet();
+
+		check_admin_referer( 'autoupdate-theme_' . $slug );
+		$wp_auto_update_themes = get_site_option( 'wp_auto_update_themes', array() );
+
+		if ( in_array( $slug, $wp_auto_update_themes, true ) ) {
+			$wp_auto_update_themes = array_diff( $wp_auto_update_themes, array( $slug ) );
+			$action_type = 'disable-autoupdate=true';
+		} else {
+			array_push( $wp_auto_update_themes, $slug );
+			$action_type = 'enable-autoupdate=true';
+		}
+
+		update_site_option( 'wp_auto_update_themes', $wp_auto_update_themes );
+		wp_redirect( self_admin_url( 'themes.php?' . $action_type ) );
+		exit;
+	}
+}
+
+
+/**
+ * Handle autoupdates enabling
+ */
+function wp_autoupdates_enabler() {
+	$pagenow = $GLOBALS['pagenow'];
+	if ( 'plugins.php' === $pagenow ) {
+		wp_autoupdates_enabler_plugins();
+	}
+	else if ( 'themes.php' === $pagenow ) {
+		wp_autoupdates_enabler_themes();
 	}
 }
 add_action( 'admin_init', 'wp_autoupdates_enabler' );
@@ -359,10 +409,9 @@ add_action( 'deleted_plugin', 'wp_autoupdates_plugin_deleted', 10, 2 );
 
 
 /**
- * Auto-update notices
+ * Auto-update notices for plugins
  */
-function wp_autoupdates_notices() {
-	// Plugins screen
+function wp_autoupdates_notices_plugins() {
 	if ( isset( $_GET['enable-autoupdate'] ) ) {
 		echo '<div id="message" class="notice notice-success is-dismissible"><p>';
 		_e( 'The selected plugins will now update automatically.', 'wp-autoupdates' );
@@ -373,6 +422,38 @@ function wp_autoupdates_notices() {
 		_e( 'The selected plugins won’t automatically update anymore.', 'wp-autoupdates' );
 		echo '</p></div>';
 	}
+}
+
+
+/**
+ * Auto-update notices for themes
+ */
+function wp_autoupdates_notices_themes() {
+	if ( isset( $_GET['enable-autoupdate'] ) ) {
+		echo '<div id="message" class="notice notice-success is-dismissible"><p>';
+		_e( 'The selected themes will now update automatically.', 'wp-autoupdates' );
+		echo '</p></div>';
+	}
+	if ( isset( $_GET['disable-autoupdate'] ) ) {
+		echo '<div id="message" class="notice notice-success is-dismissible"><p>';
+		_e( 'The selected themes won’t automatically update anymore.', 'wp-autoupdates' );
+		echo '</p></div>';
+	}
+}
+
+
+/**
+ * Auto-update notices
+ */
+function wp_autoupdates_notices() {
+	// Plugins screen
+	$pagenow = $GLOBALS['pagenow'];
+	if ( 'plugins.php' === $pagenow ) {
+		wp_autoupdates_notices_plugins();
+	}
+	else if ( 'themes.php' === $pagenow ) {
+		wp_autoupdates_notices_themes();
+	}	
 }
 add_action( 'admin_notices', 'wp_autoupdates_notices' );
 
