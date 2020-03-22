@@ -223,7 +223,7 @@ add_action( 'bulk_actions-plugins-network', 'wp_autoupdates_plugins_bulk_actions
 /**
  * Handles auto-updates enabling for plugins
  */
-function wp_autoupdates_enabler_plugins() {
+function wp_autoupdates_plugins_enabler() {
 	$action = isset( $_GET['action'] ) && ! empty( esc_html( $_GET['action'] ) ) ? wp_unslash( esc_html( $_GET['action'] ) ) : '';
 	if ( 'autoupdate' === $action ) {
 		if ( ! current_user_can( 'update_plugins' ) || ! wp_autoupdates_is_plugins_auto_update_enabled() ) {
@@ -264,7 +264,7 @@ function wp_autoupdates_enabler_plugins() {
 /**
  * Handles auto-updates enabling for themes
  */
-function wp_autoupdates_enabler_themes() {
+function wp_autoupdates_themes_enabler() {
 	$action = isset( $_GET['action'] ) && ! empty( esc_html( $_GET['action'] ) ) ? wp_unslash( esc_html( $_GET['action'] ) ) : '';
 	if ( 'autoupdate' === $action ) {
 		if ( ! current_user_can( 'update_themes' ) || ! wp_autoupdates_is_themes_auto_update_enabled() ) {
@@ -307,10 +307,10 @@ function wp_autoupdates_enabler_themes() {
 function wp_autoupdates_enabler() {
 	$pagenow = $GLOBALS['pagenow'];
 	if ( 'plugins.php' === $pagenow ) {
-		wp_autoupdates_enabler_plugins();
+		wp_autoupdates_plugins_enabler();
 	}
 	else if ( 'themes.php' === $pagenow ) {
-		wp_autoupdates_enabler_themes();
+		wp_autoupdates_themes_enabler();
 	}
 }
 add_action( 'admin_init', 'wp_autoupdates_enabler' );
@@ -411,7 +411,7 @@ add_action( 'deleted_plugin', 'wp_autoupdates_plugin_deleted', 10, 2 );
 /**
  * Auto-update notices for plugins
  */
-function wp_autoupdates_notices_plugins() {
+function wp_autoupdates_plugins_notices() {
 	if ( isset( $_GET['enable-autoupdate'] ) ) {
 		echo '<div id="message" class="notice notice-success is-dismissible"><p>';
 		_e( 'The selected plugins will now update automatically.', 'wp-autoupdates' );
@@ -428,7 +428,7 @@ function wp_autoupdates_notices_plugins() {
 /**
  * Auto-update notices for themes
  */
-function wp_autoupdates_notices_themes() {
+function wp_autoupdates_themes_notices() {
 	if ( isset( $_GET['enable-autoupdate'] ) ) {
 		echo '<div id="message" class="notice notice-success is-dismissible"><p>';
 		_e( 'The selected themes will now update automatically.', 'wp-autoupdates' );
@@ -449,10 +449,10 @@ function wp_autoupdates_notices() {
 	// Plugins screen
 	$pagenow = $GLOBALS['pagenow'];
 	if ( 'plugins.php' === $pagenow ) {
-		wp_autoupdates_notices_plugins();
+		wp_autoupdates_plugins_notices();
 	}
 	else if ( 'themes.php' === $pagenow ) {
-		wp_autoupdates_notices_themes();
+		wp_autoupdates_themes_notices();
 	}	
 }
 add_action( 'admin_notices', 'wp_autoupdates_notices' );
