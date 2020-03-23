@@ -77,7 +77,6 @@ function wp_autoupdates_enqueues( $hook ) {
 			$autoupdate_text .= '<a href="{{{ data.actions.autoupdate }}}" aria-label="' . $aria_label_enable . '"><span class="dashicons dashicons-update" aria-hidden="true"></span>' . __( 'Enable automatic updates' ) . '</a>';
 			$autoupdate_text .= '<# } #> </p>';
 
-			$script .= '	window.console.log("here");';
 			$script .= '	const theme_template_single = jQuery( "#tmpl-theme-single" );
 
 				// Pull template into new html element, manipulate, then put back.
@@ -106,15 +105,16 @@ add_action( 'admin_enqueue_scripts', 'wp_autoupdates_enqueues' );
 function wp_autoupdates_prepare_themes_for_js( $prepared_themes ) {
 	$wp_auto_update_themes = get_option( 'wp_auto_update_themes', array() );
 	foreach( $prepared_themes as $theme ) {
-		// Set extra data for theme, for when this gets merged into core.
+		// Set extra data for use in the template.
 		$slug = $theme['id'];
 		$encoded_slug = urlencode( $slug );
 		$theme['autoupdate'] = in_array( $slug, $wp_auto_update_themes, true );
 		$theme['actions']['autoupdate'] = current_user_can( 'update_themes' ) ? wp_nonce_url( admin_url( 'themes.php?action=autoupdate&amp;stylesheet=' . $encoded_slug ), 'autoupdate-theme_' . $slug ) : null;
 	}
+
 	return $prepared_themes;
 }
-add_filter( 'wp_prepare_themes_for_js', 'wp_autoupdates_prepare_themes_for_js' );
+add_action( 'wp_prepare_themes_for_js', 'wp_autoupdates_prepare_themes_for_js' );
 
 
 /**
