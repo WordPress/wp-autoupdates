@@ -72,9 +72,13 @@ function wp_autoupdates_enqueues( $hook ) {
  			$aria_label_disable = sprintf( _x( 'Disable automatic update for %s', 'theme' ), '{{ data.name }}' );
 
 			$autoupdate_text = '<p class="theme-autoupdate"> <# if ( data.autoupdate ) { #>';
+			$autoupdate_text .= '<span class="theme-autoupdate-disabled">';
 			$autoupdate_text .= '<a href="{{{ data.actions.autoupdate }}}" aria-label="' . $aria_label_disable . '"><span class="dashicons dashicons-update" aria-hidden="true"></span>' . __( 'Disable automatic updates' ) . '</a>';
+			$autoupdate_text .= '</span>';
 			$autoupdate_text .= '<# } else { #>';
+			$autoupdate_text .= '<span class="theme-autoupdate-enabled">';
 			$autoupdate_text .= '<a href="{{{ data.actions.autoupdate }}}" aria-label="' . $aria_label_enable . '"><span class="dashicons dashicons-update" aria-hidden="true"></span>' . __( 'Enable automatic updates' ) . '</a>';
+			$autoupdate_text .= '</span>';
 			$autoupdate_text .= '<# } #> </p>';
 
 			$script .= '	const theme_template_single = jQuery( "#tmpl-theme-single" );
