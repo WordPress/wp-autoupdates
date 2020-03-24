@@ -95,7 +95,6 @@ function wp_autoupdates_enqueues( $hook ) {
 
 						const new_template_text = template_text.substr(0, position) + added_text + template_text.substr(position);
 						theme_template_single.text( new_template_text );
-						window.console.log(new_template_text);
 					}
 				}
 
