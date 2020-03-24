@@ -66,11 +66,11 @@ function wp_autoupdates_enqueues( $hook ) {
 		if ( wp_autoupdates_is_themes_auto_update_enabled() ) {
 			$script = 'jQuery( document ).ready( function() {';
 
-			$update_message = wp_autoupdates_get_update_message();
 			/* translators: %s: Theme name. */
 			$aria_label_enable  = sprintf( _x( 'Enable automatic update for %s', 'theme' ), '{{ data.name }}' );
  			$aria_label_disable = sprintf( _x( 'Disable automatic update for %s', 'theme' ), '{{ data.name }}' );
 
+			// Put the enable/disable link below the author and before the update box.
 			$autoupdate_text = '<p class="theme-autoupdate"> <# if ( data.autoupdate ) { #>';
 			$autoupdate_text .= '<span class="theme-autoupdate-disabled">';
 			$autoupdate_text .= '<a href="{{{ data.actions.autoupdate }}}" aria-label="' . $aria_label_disable . '"><span class="dashicons dashicons-update" aria-hidden="true"></span>' . __( 'Disable automatic updates' ) . '</a>';
@@ -85,15 +85,35 @@ function wp_autoupdates_enqueues( $hook ) {
 
 				// Pull template into new html element, manipulate, then put back.
 				// Props https://stackoverflow.com/a/42248980.
-				var template_text = theme_template_single.text();
-				const positioning_text = "<# if \\\\( data.hasUpdate \\\\) { #>";
-				const position = template_text.search(positioning_text);
-				if ( -1 !== position ) {
-					const added_text = "' . str_replace('"', '\"', $autoupdate_text) . '";
-					const new_template_text = template_text.substr(0, position) + added_text + template_text.substr(position);
-					theme_template_single.text( new_template_text );
+				function insert_into_template(positioning_text, added_text, insert_before) {
+					var template_text = theme_template_single.text();
+					var position = template_text.search(positioning_text);
+					if ( -1 !== position ) {
+						if ( true !== insert_before ) {
+							position += positioning_text.length;
+						}
+
+						const new_template_text = template_text.substr(0, position) + added_text + template_text.substr(position);
+						theme_template_single.text( new_template_text );
+						window.console.log(new_template_text);
+					}
 				}
+
+				const position_beginning_of_update_box = "<# if \\\\( data.hasUpdate \\\\) { #>";
+				insert_into_template(position_beginning_of_update_box, "' . str_replace('"', '\"', $autoupdate_text) . '", true);
 			';
+
+			// Put the time until next update within the data.hasUpdate block.
+			$update_message = wp_autoupdates_get_update_message();
+			$autoupdate_time_text = '<# if ( data.autoupdate ) { #>';
+			$autoupdate_time_text .= '<p class="theme-autoupdate-enabled">' . $update_message . '</p>';
+			$autoupdate_time_text .= '<# } #>';
+
+			$script .= '
+				const position_data_update = "{{{ data.update }}}";
+				insert_into_template(position_data_update, "' . str_replace('"', '\"', $autoupdate_time_text) . '", false);
+			';
+
 			$script .= '});';
 			wp_add_inline_script( 'jquery', $script );
 		}
