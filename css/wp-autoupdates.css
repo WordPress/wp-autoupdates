@@ -17,12 +17,14 @@
 	color: #006505;
 }
 
-.plugins .plugin-title .plugin-autoupdate-enabled .dashicons {
+.plugins .plugin-title .plugin-autoupdate-enabled .dashicons,
+#update-themes-table .plugin-title .dashicons {
 	float: none;
 	padding: 0;
 	width: auto;
 	height: auto;
 }
+
 .plugins .plugin-title .plugin-autoupdate-enabled .dashicons:before {
 	padding: 0;
 	background: transparent;

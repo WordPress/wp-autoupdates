@@ -33,6 +33,19 @@ function wp_autoupdates_enqueues( $hook ) {
 	// Update core screen JS hack (due to lack of filters)
 	if ( 'update-core.php' === $hook ) {
 		$script = 'jQuery( document ).ready(function() {';
+
+		if ( wp_autoupdates_is_themes_auto_update_enabled() ) {
+			$wp_auto_update_themes = get_site_option( 'wp_auto_update_themes', array() );
+
+			$update_message = wp_autoupdates_get_update_message();
+			foreach ( $wp_auto_update_themes as $theme ) {
+				$autoupdate_text = ' <span class="plugin-autoupdate-enabled"><span class="dashicons dashicons-update" aria-hidden="true"></span> ';
+				$autoupdate_text .= $update_message;
+				$autoupdate_text .= '</span> ';
+				$script .= 'jQuery(".check-column input[value=\'' . $theme . '\']").closest("tr").find(".plugin-title > p").append(\'' . $autoupdate_text . '\');';
+			}
+		}
+
 		if ( wp_autoupdates_is_plugins_auto_update_enabled() ) {
 			$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
 
