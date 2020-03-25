@@ -24,33 +24,6 @@ In 2018, Matt Mullenweg posted 9 projects for Core to focus on in 2019. We didn�
 - [Related Trac ticket for plugins auto-updates](https://core.trac.wordpress.org/ticket/48850)
 - [Related Trac ticket for themes auto-updates](https://core.trac.wordpress.org/ticket/48850)
 
-## Features / to-do list 🛠
-
-- ✅ Open a Trac ticket to handle Core merge for plugins
-- ✅ Open a Trac ticket to handle Core merge for themes
-- ✅ Create and add feature plugin assets
-- ✅ Submit Feature Plugin on WordPress.org repository
-- ✅ Get the plugin featured as beta plugin on WordPress.org
-- 🔲 Move the repository to WordPress.org GitHub account
-- ✅ Publish the feature plugin proposal
-- ✅ Open a dedicated Slack channel on Make WordPress
-- ✅ Launch weekly meetings on Slack
-- ✅ Handle plugin auto-updates
-- 🔲 Handle themes auto-updates
-- ✅ Handle plugin auto-updates in a multisite context
-- 🔲 Handle themes auto-updates in a multisite context
-- ✅ Email notifications for plugins
-- 🔲 Email notifications for themes
-- 🔲 Validate design for plugins screen
-- 🔲 Validate design for themes screen
-- 🔲 Validate design for update-core screen
-- 🔲 Documentation
-- 🔲 Copy review
-- 🔲 Accessibility audit
-- 🔲 Security audit
-- 🔲 Coding standards audit
-- 🔲 Inline Docs audit
-
 ## Contributors ♥️
 
 Thanks to everyone who contributed to this feature plugin!
