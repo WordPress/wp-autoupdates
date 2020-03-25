@@ -1223,3 +1223,4 @@ function wp_autoupdates_themes_bulk_actions_handle( $redirect_to, $doaction, $it
 	}
 }
 add_action( 'handle_network_bulk_actions-themes-network', 'wp_autoupdates_themes_bulk_actions_handle', 10, 3 );
+add_action( 'handle_network_bulk_actions-site-themes-network', 'wp_autoupdates_themes_bulk_actions_handle', 10, 3 );
