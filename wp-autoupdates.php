@@ -562,6 +562,7 @@ function wp_autoupdates_notices() {
 	}
 }
 add_action( 'admin_notices', 'wp_autoupdates_notices' );
+add_action( 'network_admin_notices', 'wp_autoupdates_notices' );
 
 /**
  * Add views for auto-update enabled/disabled.
@@ -1214,10 +1215,10 @@ function wp_autoupdates_themes_bulk_actions_handle( $redirect_to, $doaction, $it
 		update_site_option( 'wp_auto_update_themes', $new_autoupdated_themes );
 
 		if ( 'themes.php' === $pagenow ) {
-			$redirect_to = self_admin_url( "themes.php?enable-autoupdate=true&theme_status=$status&paged=$page&s=$s" );
+			$redirect_to = self_admin_url( "themes.php?disable-autoupdate=true&theme_status=$status&paged=$page&s=$s" );
 		}
 		else {
-			$redirect_to = self_admin_url( "site-themes.php?id=$id&enable-autoupdate=true&theme_status=$status&paged=$page&s=$s" );
+			$redirect_to = self_admin_url( "site-themes.php?id=$id&disable-autoupdate=true&theme_status=$status&paged=$page&s=$s" );
 		}
 		return $redirect_to;
 	}
