@@ -1093,7 +1093,7 @@ add_action( 'manage_themes_custom_column' , 'wp_autoupdates_add_themes_autoupdat
 
 
 /**
- * Add plugins autoupdates bulk actions
+ * Add themes autoupdates bulk actions
  */
 function wp_autoupdates_themes_bulk_actions( $actions ) {
 	$actions['enable-autoupdate-selected']  = __( 'Enable auto-updates', 'wp-autoupdates' );
