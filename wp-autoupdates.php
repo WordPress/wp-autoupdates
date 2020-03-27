@@ -729,17 +729,17 @@ function wp_autoupdates_debug_information( $info ) {
 
 			if ( array_key_exists( $plugin_path, $plugin_updates ) ) {
 				/* translators: %s: Latest plugin version number. */
-				$plugin_version_string       .= ' ' . sprintf( __( '(Latest version: %s)', 'wp-autoupdates' ), $plugin_updates[ $plugin_path ]->update->new_version );
+				$plugin_version_string       .= ' ' . sprintf( __( '(latest version: %s)', 'wp-autoupdates' ), $plugin_updates[ $plugin_path ]->update->new_version );
 				/* translators: %s: Latest plugin version number. */
 				$plugin_version_string_debug .= ' ' . sprintf( __( '(latest version: %s)', 'wp-autoupdates' ), $plugin_updates[ $plugin_path ]->update->new_version );
 			}
 
 			if ( in_array( $plugin_path, $wp_auto_update_plugins ) ) {
 				$plugin_version_string       .= ' | ' . sprintf( __( 'Auto-updates enabled', 'wp-autoupdates' ) );
-				$plugin_version_string_debug .= sprintf( __( 'auto-updates enabled', 'wp-autoupdates' ) );
+				$plugin_version_string_debug .= sprintf( __( 'Auto-updates enabled', 'wp-autoupdates' ) );
 			} else {
 				$plugin_version_string       .= ' | ' . sprintf( __( 'Auto-updates disabled', 'wp-autoupdates' ) );
-				$plugin_version_string_debug .= sprintf( __( 'auto-updates disabled', 'wp-autoupdates' ) );
+				$plugin_version_string_debug .= sprintf( __( 'Auto-updates disabled', 'wp-autoupdates' ) );
 			}
 
 			$info[ $plugin_part ]['fields'][ sanitize_text_field( $plugin['Name'] ) ] = array(
