@@ -841,9 +841,9 @@ add_filter( 'debug_information', 'wp_autoupdates_debug_information' );
 
 
 /**
- * If we tried to perform plugin updates, check if we should send an email.
+ * If we tried to perform plugin or theme updates, check if we should send an email.
  *
- * @param object $results The result of the plugin updates.
+ * @param object $results The result of updates tasks.
  */
 function wp_autoupdates_automatic_updates_complete_notification( $results ) {
 	$successful_updates = array();
@@ -851,32 +851,41 @@ function wp_autoupdates_automatic_updates_complete_notification( $results ) {
 	if ( isset( $results['plugin'] ) ) {
 		foreach ( $results['plugin'] as $update_result ) {
 			if ( true === $update_result->result ) {
-				$successful_updates[] = $update_result;
+				$successful_updates['plugin'][] = $update_result;
 			} else {
-				$failed_updates[] = $update_result;
+				$failed_updates['plugin'][] = $update_result;
 			}
 		}
-		if ( empty( $successful_updates ) && empty( $failed_updates ) ) {
-			return;
+	}
+	if ( isset( $results['theme'] ) ) {
+		foreach ( $results['theme'] as $update_result ) {
+			if ( true === $update_result->result ) {
+				$successful_updates['theme'][] = $update_result;
+			} else {
+				$failed_updates['theme'][] = $update_result;
+			}
 		}
-		if ( empty( $failed_updates ) ) {
-			wp_autoupdates_send_email_notification( 'success', $successful_updates, $failed_updates );
-		} elseif ( empty( $successful_updates ) ) {
-			wp_autoupdates_send_email_notification( 'fail', $successful_updates, $failed_updates );
-		} else {
-			wp_autoupdates_send_email_notification( 'mixed', $successful_updates, $failed_updates );
-		}
+	}
+	if ( empty( $successful_updates ) && empty( $failed_updates ) ) {
+		return;
+	}
+	if ( empty( $failed_updates ) ) {
+		wp_autoupdates_send_email_notification( 'success', $successful_updates, $failed_updates );
+	} elseif ( empty( $successful_updates ) ) {
+		wp_autoupdates_send_email_notification( 'fail', $successful_updates, $failed_updates );
+	} else {
+		wp_autoupdates_send_email_notification( 'mixed', $successful_updates, $failed_updates );
 	}
 }
 add_action( 'automatic_updates_complete', 'wp_autoupdates_automatic_updates_complete_notification' );
 
 
 /**
- * Sends an email upon the completion or failure of a plugin background update.
+ * Sends an email upon the completion or failure of a plugin or theme background update.
  *
  * @param string $type               The type of email to send. Can be one of 'success', 'failure', 'mixed'.
- * @param array  $successful_updates A list of plugin updates that succeeded.
- * @param array  $failed_updates     A list of plugin updates that failed.
+ * @param array  $successful_updates A list of updates that succeeded.
+ * @param array  $failed_updates     A list of updates that failed.
  */
 function wp_autoupdates_send_email_notification( $type, $successful_updates, $failed_updates ) {
 	// No updates were attempted.
@@ -888,14 +897,14 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 	switch ( $type ) {
 		case 'success':
 			/* translators: %s: Site title. */
-			$subject = __( '[%s] Plugins have automatically updated', 'wp-autoupdates' );
+			$subject = __( '[%s] Some plugins or themes have automatically updated', 'wp-autoupdates' );
 			break;
 		case 'fail':
 			/* translators: %s: Site title. */
-			$subject = __( '[%s] Plugins have failed to update', 'wp-autoupdates' );
+			$subject = __( '[%s] Some plugins or themes have failed to update', 'wp-autoupdates' );
 			$body[]  = sprintf(
 				/* translators: %s: Home URL. */
-				__( 'Howdy! Failures occurred when attempting to update plugins on your site at %s.', 'wp-autoupdates' ),
+				__( 'Howdy! Failures occurred when attempting to update plugins/themes on your site at %s.', 'wp-autoupdates' ),
 				home_url()
 			);
 			$body[] = "\n";
@@ -903,10 +912,10 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 			break;
 		case 'mixed':
 			/* translators: %s: Site title. */
-			$subject = __( '[%s] Some plugins have automatically updated', 'wp-autoupdates' );
+			$subject = __( '[%s] Some plugins/themes have automatically updated', 'wp-autoupdates' );
 			$body[] = sprintf(
 				/* translators: %s: Home URL. */
-				__( 'Howdy! There were some failures while attempting to update plugins on your site at %s.', 'wp-autoupdates' ),
+				__( 'Howdy! There were some failures while attempting to update plugins/themes on your site at %s.', 'wp-autoupdates' ),
 				home_url()
 			);
 			$body[] = "\n";
@@ -915,22 +924,45 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 			break;
 	}
 
-	if ( in_array( $type, array( 'fail', 'mixed' ), true ) && ! empty( $failed_updates ) ) {
+	// Get failed plugin updates
+	if ( in_array( $type, array( 'fail', 'mixed' ), true ) && ! empty( $failed_updates['plugin'] ) ) {
 		$body[] = __( 'The following plugins failed to update:' );
 		// List failed updates.
-		foreach ( $failed_updates as $item ) {
+		foreach ( $failed_updates['plugin'] as $item ) {
 			/* translators: %s: Name of the related plugin. */
 			$body[] = ' ' . sprintf( __( '- %s', 'wp-autoupdates' ), $item->name );
 		}
 		$body[] = "\n";
 	}
-	if ( in_array( $type, array( 'success', 'mixed' ), true ) && ! empty( $successful_updates ) ) {
+	// Get failed theme updates
+	if ( in_array( $type, array( 'fail', 'mixed' ), true ) && ! empty( $failed_updates['theme'] ) ) {
+		$body[] = __( 'The following themes failed to update:' );
+		// List failed updates.
+		foreach ( $failed_updates['theme'] as $item ) {
+			/* translators: %s: Name of the related plugin. */
+			$body[] = ' ' . sprintf( __( '- %s', 'wp-autoupdates' ), $item->name );
+		}
+		$body[] = "\n";
+	}
+	// Get successful plugin updates
+	if ( in_array( $type, array( 'success', 'mixed' ), true ) && ! empty( $successful_updates['plugin'] ) ) {
 		$body[] = __( 'The following plugins were successfully updated:' );
 		// List successful updates.
-		foreach ( $successful_updates as $plugin ) {
+		foreach ( $successful_updates['plugin'] as $plugin ) {
 			/* translators: %s: Name of the related plugin. */
 			$body[] = ' ' . sprintf( __( '- %s', 'wp-autoupdates' ), $plugin->name );
 		}
+		$body[] = "\n";
+	}
+	// Get successful theme updates
+	if ( in_array( $type, array( 'success', 'mixed' ), true ) && ! empty( $successful_updates['theme'] ) ) {
+		$body[] = __( 'The following themes were successfully updated:' );
+		// List successful updates.
+		foreach ( $successful_updates['theme'] as $plugin ) {
+			/* translators: %s: Name of the related plugin. */
+			$body[] = ' ' . sprintf( __( '- %s', 'wp-autoupdates' ), $plugin->name );
+		}
+		$body[] = "\n";
 	}
 	$body[] = "\n";
 
