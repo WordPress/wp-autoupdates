@@ -175,7 +175,7 @@ function wp_autoupdates_is_plugins_auto_update_enabled() {
  */
 function wp_autoupdates_is_themes_auto_update_enabled() {
 	$enabled = ! defined( 'WP_DISABLE_THEMES_AUTO_UPDATE' ) || ! WP_DISABLE_THEMES_AUTO_UPDATE;
-	
+
 	/**
 	 * Filters whether themes manual auto-update is enabled.
 	 *
@@ -355,6 +355,8 @@ function wp_autoupdates_plugins_enabler() {
  * Handles auto-updates enabling for themes
  */
 function wp_autoupdates_themes_enabler() {
+	$pagenow = $GLOBALS['pagenow'];
+
 	$action = isset( $_GET['action'] ) && ! empty( esc_html( $_GET['action'] ) ) ? wp_unslash( esc_html( $_GET['action'] ) ) : '';
 	if ( 'autoupdate' === $action ) {
 		if ( ! current_user_can( 'update_themes' ) || ! wp_autoupdates_is_themes_auto_update_enabled() ) {
@@ -367,7 +369,13 @@ function wp_autoupdates_themes_enabler() {
 
 		$theme = ! empty( esc_html( $_GET['theme'] ) ) ? wp_unslash( esc_html( $_GET['theme'] ) ) : '';
 		if ( empty( $theme ) ) {
-			wp_redirect( self_admin_url( 'themes.php' ) );
+			if ( 'themes.php' === $pagenow ) {
+				wp_redirect( self_admin_url( 'themes.php' ) );
+			}
+			else {
+				$id = ! empty( esc_html( $_GET['id'] ) ) ? wp_unslash( esc_html( $_GET['id'] ) ) : '';
+				wp_redirect( self_admin_url( "site-themes.php?id=$id" ) );
+			}
 			exit;
 		}
 
@@ -383,7 +391,17 @@ function wp_autoupdates_themes_enabler() {
 		}
 
 		update_site_option( 'wp_auto_update_themes', $wp_auto_update_themes );
-		wp_redirect( self_admin_url( "themes.php?$action_type" ) );
+		$theme_status = '';
+		if ( is_multisite() && is_network_admin() ) {
+			$theme_status = ! empty( $_GET['theme_status'] ) ? "theme_status=" . $_GET['theme_status'] : '';
+		}
+		if ( 'themes.php' === $pagenow ) {
+			wp_redirect( self_admin_url( "themes.php?$action_type&$theme_status" ) );
+		}
+		else {
+			$id = ! empty( esc_html( $_GET['id'] ) ) ? wp_unslash( esc_html( $_GET['id'] ) ) : '';
+			wp_redirect( self_admin_url( "site-themes.php?id=$id&$action_type&$theme_status" ) );
+		}
 		exit;
 	}
 }
@@ -397,7 +415,7 @@ function wp_autoupdates_enabler() {
 	if ( 'plugins.php' === $pagenow ) {
 		wp_autoupdates_plugins_enabler();
 	}
-	else if ( 'themes.php' === $pagenow ) {
+	else if ( 'themes.php' === $pagenow || 'site-themes.php' === $pagenow ) {
 		wp_autoupdates_themes_enabler();
 	}
 }
@@ -539,11 +557,12 @@ function wp_autoupdates_notices() {
 	if ( 'plugins.php' === $pagenow ) {
 		wp_autoupdates_plugins_notices();
 	}
-	else if ( 'themes.php' === $pagenow ) {
+	else if ( 'themes.php' === $pagenow || 'site-themes.php' === $pagenow ) {
 		wp_autoupdates_themes_notices();
-	}	
+	}
 }
 add_action( 'admin_notices', 'wp_autoupdates_notices' );
+add_action( 'network_admin_notices', 'wp_autoupdates_notices' );
 
 /**
  * Add views for auto-update enabled/disabled.
@@ -1036,3 +1055,205 @@ function wp_autoupdates_get_update_message() {
 		);
 	}
 }
+
+
+/**
+ * Add autoupdate column to network themes screen.
+ */
+function wp_autoupdates_add_themes_autoupdates_column( $columns ) {
+	if ( ! current_user_can( 'update_themes' ) || ! wp_autoupdates_is_themes_auto_update_enabled() ) {
+		return $columns;
+	}
+	if ( ! isset( $_GET['theme_status'] ) || 'broken' !== $_GET['theme_status'] ) {
+		$columns['autoupdates_column'] = __( 'Automatic updates', 'wp-autoupdates' );
+	}
+	return $columns;
+}
+add_filter( 'manage_themes-network_columns', 'wp_autoupdates_add_themes_autoupdates_column' );
+
+
+/**
+ * Render autoupdate column’s content.
+ */
+function wp_autoupdates_add_themes_autoupdates_column_content( $column_name, $stylesheet, $theme ) {
+	$pagenow = $GLOBALS['pagenow'];
+
+	if ( ! current_user_can( 'update_themes' ) || ! wp_autoupdates_is_themes_auto_update_enabled() ) {
+		return;
+	}
+	if ( 'autoupdates_column' !== $column_name ) {
+		return;
+	}
+	$themes         = wp_get_themes();
+	$themes_updates = get_site_transient( 'update_themes' );
+	$page           = isset( $_GET['paged'] ) && ! empty( $_GET['paged'] ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
+	$theme_status   = isset( $_GET['theme_status'] ) && ! empty( $_GET['theme_status'] ) ? wp_unslash( esc_html( $_GET['theme_status'] ) ) : '';
+	if ( 'themes.php' === $pagenow ) {
+		$base_url = 'themes.php?action=autoupdate&amp;theme=' . urlencode( $stylesheet ) . '&amp;paged=' . $page . '&amp;theme_status=' . $theme_status;
+	} else {
+		$id       = isset( $_GET['id'] ) && ! empty( esc_html( $_GET['id'] ) ) ? wp_unslash( esc_html( $_GET['id'] ) ) : '';
+		$base_url = 'site-themes.php?id=' . $id . '&amp;action=autoupdate&amp;theme=' . urlencode( $stylesheet ) . '&amp;paged=' . $page . '&amp;theme_status=' . $theme_status;
+	}
+	if ( wp_autoupdates_is_themes_auto_update_enabled() ) {
+		if ( ! isset( $themes[ $stylesheet ] ) ) {
+			return;
+		}
+		$wp_auto_update_themes = get_site_option( 'wp_auto_update_themes', array() );
+		if ( in_array( $stylesheet, $wp_auto_update_themes, true ) ) {
+			$aria_label = esc_attr(
+				sprintf(
+					/* translators: Theme name. */
+					_x( 'Disable automatic updates for %s', 'theme', 'wp-autoupdates' ),
+					esc_html( $themes[ $stylesheet ]->get( 'Name' ) )
+				)
+			);
+			echo '<p>';
+			echo '<span class="theme-autoupdate-enabled">' . __( 'Auto-updates enabled', 'wp-autoupdates' ) . '</span>';
+			echo '<br />';
+
+			$update_message = wp_autoupdates_get_update_message();
+			if ( isset( $themes_updates->response[ $stylesheet ] ) ) {
+				echo '<span class="theme-autoupdate-time">';
+				echo $update_message;
+				echo '<br />';
+				echo '</span>';
+			}
+			if ( current_user_can( 'update_themes', $stylesheet ) ) {
+				echo sprintf(
+					'<a href="%s" class="theme-autoupdate-disable" aria-label="%s">%s</a>',
+					wp_nonce_url( $base_url, 'autoupdate-theme_' . $stylesheet ),
+					$aria_label,
+					__( 'Disable', 'wp-autoupdates' )
+				);
+			}
+			echo '</p>';
+		} else {
+			if ( current_user_can( 'update_themes', $stylesheet ) ) {
+				$aria_label = esc_attr(
+					sprintf(
+						/* translators: Theme name. */
+						_x( 'Enable automatic updates for %s', 'theme', 'wp-autoupdates' ),
+						esc_html( $themes[ $stylesheet ]->get( 'Name' ) )
+					)
+				);
+				echo '<p class="theme-autoupdate-disabled">';
+				echo sprintf(
+					'<a href="%s" class="edit" aria-label="%s"><span class="dashicons dashicons-update" aria-hidden="true"></span> %s</a>',
+					wp_nonce_url( $base_url, 'autoupdate-theme_' . $stylesheet ),
+					$aria_label,
+					__( 'Enable', 'wp-autoupdates' )
+				);
+				echo '</p>';
+			}
+		}
+	}
+}
+add_action( 'manage_themes_custom_column' , 'wp_autoupdates_add_themes_autoupdates_column_content', 10, 3 );
+
+
+/**
+ * Add themes autoupdates bulk actions
+ */
+function wp_autoupdates_themes_bulk_actions( $actions ) {
+	$actions['enable-autoupdate-selected']  = __( 'Enable auto-updates', 'wp-autoupdates' );
+	$actions['disable-autoupdate-selected'] = __( 'Disable auto-updates', 'wp-autoupdates' );
+	return $actions;
+}
+add_action( 'bulk_actions-themes-network', 'wp_autoupdates_themes_bulk_actions' );
+add_action( 'bulk_actions-site-themes-network', 'wp_autoupdates_themes_bulk_actions' );
+
+
+/**
+ * Handle themes autoupdates bulk actions
+ */
+function wp_autoupdates_themes_bulk_actions_handle( $redirect_to, $doaction, $items ) {
+	$pagenow = $GLOBALS['pagenow'];
+
+	if ( 'enable-autoupdate-selected' === $doaction ) {
+		if ( ! current_user_can( 'update_themes' ) || ! wp_autoupdates_is_themes_auto_update_enabled() ) {
+			wp_die( __( 'Sorry, you are not allowed to enable themes automatic updates.', 'wp-autoupdates' ) );
+		}
+
+		if ( is_multisite() && ! is_network_admin() ) {
+			wp_die( __( 'Please connect to your network admin to manage themes automatic updates.', 'wp-autoupdates' ) );
+		}
+
+		check_admin_referer( 'bulk-themes' );
+
+		$themes = ! empty( $items ) ? (array) wp_unslash( $items ) : array();
+		$page    = isset( $_GET['paged'] ) && ! empty( esc_html( $_GET['paged'] ) ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
+		$status  = isset( $_GET['theme_status'] ) && ! empty( esc_html( $_GET['theme_status'] ) ) ? wp_unslash( esc_html( $_GET['theme_status'] ) ) : '';
+		$s       = isset( $_GET['s'] ) && ! empty( esc_html( $_GET['s'] ) ) ? wp_unslash( esc_html( $_GET['s'] ) ) : '';
+		$id      = isset( $_GET['id'] ) && ! empty( esc_html( $_GET['id'] ) ) ? wp_unslash( esc_html( $_GET['id'] ) ) : '';
+
+		if ( empty( $themes ) ) {
+			if ( 'themes.php' === $pagenow ) {
+				$redirect_to = self_admin_url( "themes.php?theme_status=$status&paged=$page&s=$s" );
+			}
+			else {
+				$redirect_to = self_admin_url( "site-themes.php?id=$id&theme_status=$status&paged=$page&s=$s" );
+			}
+			return $redirect_to;
+		}
+
+		$previous_autoupdated_themes = get_site_option( 'wp_auto_update_themes', array() );
+
+		$new_autoupdated_themes = array_merge( $previous_autoupdated_themes, $themes );
+		$new_autoupdated_themes = array_unique( $new_autoupdated_themes );
+
+		update_site_option( 'wp_auto_update_themes', $new_autoupdated_themes );
+
+		if ( 'themes.php' === $pagenow ) {
+			$redirect_to = self_admin_url( "themes.php?enable-autoupdate=true&theme_status=$status&paged=$page&s=$s" );
+		}
+		else {
+			$redirect_to = self_admin_url( "site-themes.php?id=$id&enable-autoupdate=true&theme_status=$status&paged=$page&s=$s" );
+		}
+		return $redirect_to;
+	}
+
+	if ( 'disable-autoupdate-selected' === $doaction ) {
+		if ( ! current_user_can( 'update_themes' ) || ! wp_autoupdates_is_themes_auto_update_enabled() ) {
+			wp_die( __( 'Sorry, you are not allowed to enable themes automatic updates.', 'wp-autoupdates' ) );
+		}
+
+		if ( is_multisite() && ! is_network_admin() ) {
+			wp_die( __( 'Please connect to your network admin to manage themes automatic updates.', 'wp-autoupdates' ) );
+		}
+
+		check_admin_referer( 'bulk-themes' );
+
+		$themes = ! empty( $items ) ? (array) wp_unslash( $items ) : array();
+		$page    = isset( $_GET['paged'] ) && ! empty( esc_html( $_GET['paged'] ) ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
+		$status  = isset( $_GET['theme_status'] ) && ! empty( esc_html( $_GET['theme_status'] ) ) ? wp_unslash( esc_html( $_GET['theme_status'] ) ) : '';
+		$s       = isset( $_GET['s'] ) && ! empty( esc_html( $_GET['s'] ) ) ? wp_unslash( esc_html( $_GET['s'] ) ) : '';
+		$id      = isset( $_GET['id'] ) && ! empty( esc_html( $_GET['id'] ) ) ? wp_unslash( esc_html( $_GET['id'] ) ) : '';
+
+		if ( empty( $themes ) ) {
+			if ( 'themes.php' === $pagenow ) {
+				$redirect_to = self_admin_url( "themes.php?theme_status=$status&paged=$page&s=$s" );
+			}
+			else {
+				$redirect_to = self_admin_url( "site-themes.php?id=$id&theme_status=$status&paged=$page&s=$s" );
+			}
+			return $redirect_to;
+		}
+
+		$previous_autoupdated_themes = get_site_option( 'wp_auto_update_themes', array() );
+
+		$new_autoupdated_themes = array_diff( $previous_autoupdated_themes, $themes );
+		$new_autoupdated_themes = array_unique( $new_autoupdated_themes );
+
+		update_site_option( 'wp_auto_update_themes', $new_autoupdated_themes );
+
+		if ( 'themes.php' === $pagenow ) {
+			$redirect_to = self_admin_url( "themes.php?disable-autoupdate=true&theme_status=$status&paged=$page&s=$s" );
+		}
+		else {
+			$redirect_to = self_admin_url( "site-themes.php?id=$id&disable-autoupdate=true&theme_status=$status&paged=$page&s=$s" );
+		}
+		return $redirect_to;
+	}
+}
+add_action( 'handle_network_bulk_actions-themes-network', 'wp_autoupdates_themes_bulk_actions_handle', 10, 3 );
+add_action( 'handle_network_bulk_actions-site-themes-network', 'wp_autoupdates_themes_bulk_actions_handle', 10, 3 );
