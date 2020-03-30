@@ -46,6 +46,7 @@ Thanks to everyone who contributed to this feature plugin!
 - [@jeffpaul](https://profiles.wordpress.org/jeffpaul/)
 - [@mukesh27](https://profiles.wordpress.org/mukesh27/)
 - [@whyisjake](https://profiles.wordpress.org/whyisjake/)
+- [@azaozz](https://profiles.wordpress.org/azaozz/)
 
 ## Documentation 📚
 
