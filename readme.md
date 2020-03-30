@@ -72,6 +72,18 @@ Work in progress.
 
 ## Changelog 🗓
 
+## 0.4.0 🌹
+March, 30, 2020
+This release brings full support for Themes auto-updates.
+It also changes the plugin structure to allow self deactivation when the feature gets merged into WordPress Core.
+Please note: the development repository was also migrated from @audrasjb’s personal GitHub account to WordPress.org official GitHub account.
+Other changes:
+- Change plugin structure to ensure it can self-deactivate when the feature is merged into Core - [#37](https://github.com/WordPress/wp-autoupdates/pull/37)
+- Handle both themes and plugins email notifications - [#36](https://github.com/WordPress/wp-autoupdates/pull/36)
+- i18n: Merge similar translation strings - [#35](https://github.com/WordPress/wp-autoupdates/pull/35)
+- Add and populate Automatic updates column, add and handle enable/disable auto-updates bulk actions to the multisite themes list table - [#33](https://github.com/WordPress/wp-autoupdates/pull/33)
+- Avoid duplicate Updating… dialog - [#32](https://github.com/WordPress/wp-autoupdates/pull/32)
+
 ## 0.3.0 🦉
 March 16, 2020
 - Add functions to handle plugins updates notification emails - [#54](https://github.com/audrasjb/wp-autoupdates/pull/54)

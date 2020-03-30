@@ -1,9 +1,9 @@
 === WordPress Auto-updates ===
-Contributors: wordpressdotorg, audrasjb, whodunitagency, pbiron, xkon, karmatosed, mapk
+Contributors: wordpressdotorg, audrasjb, whodunitagency, pbiron, xkon, karmatosed, mapk, jeffpaul, bookdude13
 Requires at least: 5.3
 Tested up to: 5.4
 Requires PHP: 5.6
-Stable tag: 0.3.0
+Stable tag: 0.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -21,15 +21,34 @@ In 2018, Matt Mullenweg posted 9 projects for Core to focus on in 2019. We didn�
 
 For full details, see the [Feature Plugin proposal published on Make/Core](https://make.wordpress.org/core/2020/02/26/feature-plugin-wp-auto-updates/).
 
-- [See also: Update on the 9 projects for 2019](https://make.wordpress.org/core/2019/12/06/update-9-projects-for-2019/):
+Weekly meetings summaries:
+
+- [Auto-updates feature meeting summary: March 17th, 2020](https://make.wordpress.org/core/2020/03/18/auto-updates-feature-meeting-summary-march-17th-2020/)
+- [https://make.wordpress.org/core/2020/03/11/auto-updates-feature-meeting-summary-march-10th-2020-kick-off-meeting/](https://make.wordpress.org/core/2020/03/11/auto-updates-feature-meeting-summary-march-10th-2020-kick-off-meeting/)
+
+See also:
+
+- [Update on the 9 projects for 2019](https://make.wordpress.org/core/2019/12/06/update-9-projects-for-2019/):
 - [Related Trac ticket for plugins auto-updates](https://core.trac.wordpress.org/ticket/48850)
 - [Related Trac ticket for themes auto-updates](https://core.trac.wordpress.org/ticket/48850)
 
-[This project is currently developed on GitHub](https://github.com/audrasjb/wp-autoupdates)
+This project is currently driven by [Jb Audras](https://profiles.wordpress.org/audrasjb/) & [Paul Biron](https://profiles.wordpress.org/pbiron/) and it’s being [developed on GitHub](https://github.com/WordPress/wp-autoupdates).
 
 Interested in contributing to this plugin? Feel free to join us in `#core-auto-updates` channel on Make WordPress Slack Team. We’ll host weekly meetings on Slack every Tuesdays at 18:00 UTC.
 
 == Changelog ==
+
+= 0.4.0 =
+March, 30, 2020
+This release brings full support for Themes auto-updates.
+It also changes the plugin structure to allow self deactivation when the feature gets merged into WordPress Core.
+Please note: the development repository was also migrated from @audrasjb’s personal GitHub account to WordPress.org official GitHub account.
+Other changes:
+- Change plugin structure to ensure it can self-deactivate when the feature is merged into Core - [#37](https://github.com/WordPress/wp-autoupdates/pull/37)
+- Handle both themes and plugins email notifications - [#36](https://github.com/WordPress/wp-autoupdates/pull/36)
+- i18n: Merge similar translation strings - [#35](https://github.com/WordPress/wp-autoupdates/pull/35)
+- Add and populate Automatic updates column, add and handle enable/disable auto-updates bulk actions to the multisite themes list table - [#33](https://github.com/WordPress/wp-autoupdates/pull/33)
+- Avoid duplicate Updating… dialog - [#32](https://github.com/WordPress/wp-autoupdates/pull/32)
 
 = 0.3.0 =
 March 16, 2020
