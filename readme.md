@@ -54,21 +54,33 @@ Work in progress.
 
 ## Screenshots 🖼
 
-### Plugins Admin screen - screenshot
+### Plugins screen - Auto-updates activated
 
-![Plugins Admin screen - screenshot](https://jeanbaptisteaudras.com/images/wp-autoupdates-plugins-01.png)
+![Plugins screen - Auto-updates activated](https://jeanbaptisteaudras.com/share/wp-auto-updates/wp-auto-updates-1-plugins.png)
 
-### Plugins Admin screen - Toggle update single plugin - screenshot
+### Plugins screen - Available updates
 
-![Plugins Admin screen - Toggle update single plugin - animated screenshot](https://jeanbaptisteaudras.com/images/wp-autoupdates-togglesingleplugin-01.gif)
+![Plugins screen - Available updates](https://jeanbaptisteaudras.com/share/wp-auto-updates/wp-auto-updates-2-plugins.png)
 
-### Plugins Admin screen - Bulk Edit - animated screenshot
+### Themes screen - Enable auto-updates
 
-![Plugins Admin screen - Bulk Edit - animated screenshot](https://jeanbaptisteaudras.com/images/wp-autoupdates-bulkeditplugins-01.gif)
+![Themes screen - Enable auto-updates](https://jeanbaptisteaudras.com/share/wp-auto-updates/wp-auto-updates-3-themes.png)
 
-### Update Core Admin Screen
+### Themes screen - Available update
 
-![Update Core Admin screen - screenshot](https://jeanbaptisteaudras.com/images/wp-autoupdates-updatecore-01.png)
+![Themes screen - Available update](https://jeanbaptisteaudras.com/share/wp-auto-updates/wp-auto-updates-4-themes.png)
+
+### Updates screen - Available updates
+
+![Updates screen - Available updates](https://jeanbaptisteaudras.com/share/wp-auto-updates/wp-auto-updates-5-update-screen.png)
+
+### Site health screen - Auto-updates informations for themes and plugins
+
+![Site health screen - Auto-updates informations for themes and plugins](https://jeanbaptisteaudras.com/share/wp-auto-updates/wp-auto-updates-6-site-health-screen.png)
+
+### Email notification example
+
+![Email notification example](https://jeanbaptisteaudras.com/share/wp-auto-updates/wp-auto-updates-7-email-notification.png)
 
 ## Changelog 🗓
 
