@@ -84,7 +84,8 @@ function wp_autoupdates_enqueues( $hook ) {
  			$aria_label_disable = sprintf( _x( 'Disable automatic update for %s', 'theme' ), '{{ data.name }}' );
 
 			// Put the enable/disable link below the author and before the update box.
-			$autoupdate_text = '<p class="theme-autoupdate"> <# if ( data.autoupdate ) { #>';
+			$autoupdate_text  = '<p class="theme-autoupdate">';
+			$autoupdate_text .= '<# if ( data.autoupdate ) { #>';
 			$autoupdate_text .= '<span class="theme-autoupdate-disabled">';
 			$autoupdate_text .= '<a href="{{{ data.actions.autoupdate }}}" aria-label="' . $aria_label_disable . '"><span class="dashicons dashicons-update" aria-hidden="true"></span> ' . __( 'Disable automatic updates' ) . '</a>';
 			$autoupdate_text .= '</span>';
@@ -92,10 +93,15 @@ function wp_autoupdates_enqueues( $hook ) {
 			$autoupdate_text .= '<span class="theme-autoupdate-enabled">';
 			$autoupdate_text .= '<a href="{{{ data.actions.autoupdate }}}" aria-label="' . $aria_label_enable . '"><span class="dashicons dashicons-update" aria-hidden="true"></span> ' . __( 'Enable automatic updates' ) . '</a>';
 			$autoupdate_text .= '</span>';
-			$autoupdate_text .= '<# } #> </p>';
+			$autoupdate_text .= '<# } #>';
+
+			$update_message  = wp_autoupdates_get_update_message();
+			$autoupdate_text .= '<# if ( data.hasUpdate && data.autoupdate ) { #>';
+			$autoupdate_text .= '<br /><span class="theme-autoupdate-enabled">' . $update_message . '</span>';
+			$autoupdate_text .= '<# } #>';
+			$autoupdate_text .= '</p>';
 
 			$script .= '	const theme_template_single = jQuery( "#tmpl-theme-single" );
-
 				// Pull template into new html element, manipulate, then put back.
 				// Props https://stackoverflow.com/a/42248980.
 				function insert_into_template(positioning_text, added_text, insert_before) {
@@ -111,19 +117,8 @@ function wp_autoupdates_enqueues( $hook ) {
 					}
 				}
 
-				const position_beginning_of_update_box = "<# if \\\\( data.hasUpdate \\\\) { #>";
+				const position_beginning_of_update_box = \'<p class="theme-description">\';
 				insert_into_template(position_beginning_of_update_box, "' . str_replace('"', '\"', $autoupdate_text) . '", true);
-			';
-
-			// Put the time until next update within the data.hasUpdate block.
-			$update_message = wp_autoupdates_get_update_message();
-			$autoupdate_time_text = '<# if ( data.autoupdate ) { #>';
-			$autoupdate_time_text .= '<p class="theme-autoupdate-enabled">' . $update_message . '</p>';
-			$autoupdate_time_text .= '<# } #>';
-
-			$script .= '
-				const position_data_update = "{{{ data.update }}}";
-				insert_into_template(position_data_update, "' . str_replace('"', '\"', $autoupdate_time_text) . '", false);
 			';
 
 			$script .= '});';
