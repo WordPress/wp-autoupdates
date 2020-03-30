@@ -36,6 +36,16 @@ This project is currently driven by [Jb Audras](https://profiles.wordpress.org/a
 
 Interested in contributing to this plugin? Feel free to join us in `#core-auto-updates` channel on Make WordPress Slack Team. We’ll host weekly meetings on Slack every Tuesdays at 18:00 UTC.
 
+== Screenshots ==
+
+1. Plugins screen - Auto-updates activated
+2. Plugins screen - Available updates
+3. Themes screen - Enable auto-updates
+4. Themes screen - Available update
+5. Updates screen - Available updates
+6. Site health screen - Auto-updates informations for themes and plugins
+7. Email notification example
+
 == Changelog ==
 
 = 0.4.0 =
