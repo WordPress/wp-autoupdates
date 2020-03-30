@@ -86,9 +86,13 @@ Work in progress.
 
 ## 0.4.0 🌹
 March, 30, 2020
+
 This release brings full support for Themes auto-updates.
+
 It also changes the plugin structure to allow self deactivation when the feature gets merged into WordPress Core.
+
 Please note: the development repository was also migrated from @audrasjb’s personal GitHub account to WordPress.org official GitHub account.
+
 Other changes:
 - Change plugin structure to ensure it can self-deactivate when the feature is merged into Core - [#37](https://github.com/WordPress/wp-autoupdates/pull/37)
 - Handle both themes and plugins email notifications - [#36](https://github.com/WordPress/wp-autoupdates/pull/36)
