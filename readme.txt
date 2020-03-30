@@ -24,7 +24,7 @@ For full details, see the [Feature Plugin proposal published on Make/Core](https
 Weekly meetings summaries:
 
 - [Auto-updates feature meeting summary: March 17th, 2020](https://make.wordpress.org/core/2020/03/18/auto-updates-feature-meeting-summary-march-17th-2020/)
-- [https://make.wordpress.org/core/2020/03/11/auto-updates-feature-meeting-summary-march-10th-2020-kick-off-meeting/](https://make.wordpress.org/core/2020/03/11/auto-updates-feature-meeting-summary-march-10th-2020-kick-off-meeting/)
+- [Auto-updates feature meeting summary: March 10th, 2019 – Kick-off meeting](https://make.wordpress.org/core/2020/03/11/auto-updates-feature-meeting-summary-march-10th-2020-kick-off-meeting/)
 
 See also:
 
