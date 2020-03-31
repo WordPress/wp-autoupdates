@@ -5,6 +5,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 /**
+ * Safely get array option of themes or plugins to auto update
+ */
+function wp_autoupdates_get_site_option_array( $themes_plugins ) {
+	$extensions = get_site_option( 'wp_auto_update_' . $themes_plugins, array() );
+	return is_array( $extensions ) ? $extensions : array();
+}
+
+/**
  * Enqueue styles and scripts
  */
 function wp_autoupdates_enqueues( $hook ) {
@@ -19,7 +27,7 @@ function wp_autoupdates_enqueues( $hook ) {
 		$script = 'jQuery( document ).ready(function() {';
 
 		if ( wp_autoupdates_is_themes_auto_update_enabled() ) {
-			$wp_auto_update_themes = get_site_option( 'wp_auto_update_themes', array() );
+			$wp_auto_update_themes = wp_autoupdates_get_site_option_array( 'themes' );
 
 			$update_message = wp_autoupdates_get_update_message();
 			foreach ( $wp_auto_update_themes as $theme ) {
@@ -31,7 +39,7 @@ function wp_autoupdates_enqueues( $hook ) {
 		}
 
 		if ( wp_autoupdates_is_plugins_auto_update_enabled() ) {
-			$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
+			$wp_auto_update_plugins = wp_autoupdates_get_site_option_array( 'plugins' );
 
 			$update_message = wp_autoupdates_get_update_message();
 			foreach ( $wp_auto_update_plugins as $plugin ) {
@@ -122,7 +130,7 @@ add_action( 'admin_enqueue_scripts', 'wp_autoupdates_enqueues' );
  * Filter the themes prepared for JavaScript, for themes.php.
  */
 function wp_autoupdates_prepare_themes_for_js( $prepared_themes ) {
-	$wp_auto_update_themes = get_option( 'wp_auto_update_themes', array() );
+	$wp_auto_update_themes = wp_autoupdates_get_site_option_array( 'themes' );
 	foreach( $prepared_themes as $theme ) {
 		// Set extra data for use in the template.
 		$slug = $theme['id'];
@@ -173,7 +181,7 @@ function wp_autoupdates_is_themes_auto_update_enabled() {
  * Autoupdate selected plugins.
  */
 function wp_autoupdates_selected_plugins( $update, $item ) {
-	$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
+	$wp_auto_update_plugins = wp_autoupdates_get_site_option_array( 'plugins' );
 	if ( in_array( $item->plugin, $wp_auto_update_plugins, true ) && wp_autoupdates_is_plugins_auto_update_enabled() ) {
 		return true;
 	} else {
@@ -187,7 +195,7 @@ add_filter( 'auto_update_plugin', 'wp_autoupdates_selected_plugins', 10, 2 );
  * Autoupdate selected themes.
  */
 function wp_autoupdates_selected_themes( $update, $item ) {
-	$wp_auto_update_themes = get_site_option( 'wp_auto_update_themes', array() );
+	$wp_auto_update_themes = wp_autoupdates_get_site_option_array( 'themes' );
 	if ( in_array( $item->theme, $wp_auto_update_themes, true ) && wp_autoupdates_is_themes_auto_update_enabled() ) {
 		return true;
 	} else {
@@ -229,7 +237,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 		if ( ! isset( $plugins[ $plugin_file ] ) ) {
 			return;
 		}
-		$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
+		$wp_auto_update_plugins = wp_autoupdates_get_site_option_array( 'plugins' );
 		if ( in_array( $plugin_file, $wp_auto_update_plugins, true ) ) {
 			$aria_label = esc_attr(
 				sprintf(
@@ -319,7 +327,7 @@ function wp_autoupdates_plugins_enabler() {
 		}
 
 		check_admin_referer( 'autoupdate-plugin_' . $plugin );
-		$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
+		$wp_auto_update_plugins = wp_autoupdates_get_site_option_array( 'plugins' );
 
 		if ( in_array( $plugin, $wp_auto_update_plugins, true ) ) {
 			$wp_auto_update_plugins = array_diff( $wp_auto_update_plugins, array( $plugin ) );
@@ -364,7 +372,7 @@ function wp_autoupdates_themes_enabler() {
 		}
 
 		check_admin_referer( 'autoupdate-theme_' . $theme );
-		$wp_auto_update_themes = get_site_option( 'wp_auto_update_themes', array() );
+		$wp_auto_update_themes = wp_autoupdates_get_site_option_array( 'themes' );
 
 		if ( in_array( $theme, $wp_auto_update_themes, true ) ) {
 			$wp_auto_update_themes = array_diff( $wp_auto_update_themes, array( $theme ) );
@@ -489,7 +497,7 @@ function wp_autoupdates_plugin_deleted( $plugin_file, $deleted ) {
 	}
 
 	// Remove settings
-	$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
+	$wp_auto_update_plugins = wp_autoupdates_get_site_option_array( 'plugins' );
 	if ( in_array( $plugin_file, $wp_auto_update_plugins, true ) ) {
 		$wp_auto_update_plugins = array_diff( $wp_auto_update_plugins, array( $plugin_file ) );
 		update_site_option( 'wp_auto_update_plugins', $wp_auto_update_plugins );
@@ -649,7 +657,7 @@ function wp_autoupdates_plugins_filter_plugins_by_status( $plugins ) {
 		return;
 	}
 
-	$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
+	$wp_auto_update_plugins = wp_autoupdates_get_site_option_array( 'plugins' );
 	$_plugins = array();
 	foreach ( $plugins as $plugin_file => $plugin_data ) {
 		switch ( $_REQUEST['plugin_status'] ) {
@@ -699,7 +707,7 @@ function wp_autoupdates_debug_information( $info ) {
 	// Plugins
 	if ( wp_autoupdates_is_plugins_auto_update_enabled() ) {
 		// Populate plugins informations
-		$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
+		$wp_auto_update_plugins = wp_autoupdates_get_site_option_array( 'plugins' );
 
 		$plugins        = get_plugins();
 		$plugin_updates = get_plugin_updates();
@@ -758,7 +766,7 @@ function wp_autoupdates_debug_information( $info ) {
 
 	if ( wp_autoupdates_is_themes_auto_update_enabled() ) {
 		// Populate themes informations
-		$wp_auto_update_themes = get_site_option( 'wp_auto_update_themes', array() );
+		$wp_auto_update_themes = wp_autoupdates_get_site_option_array( 'themes' );
 
 		$themes       = wp_get_themes();
 		$active_theme = wp_get_theme();
@@ -1085,7 +1093,7 @@ function wp_autoupdates_add_themes_autoupdates_column_content( $column_name, $st
 		if ( ! isset( $themes[ $stylesheet ] ) ) {
 			return;
 		}
-		$wp_auto_update_themes = get_site_option( 'wp_auto_update_themes', array() );
+		$wp_auto_update_themes = wp_autoupdates_get_site_option_array( 'themes' );
 		if ( in_array( $stylesheet, $wp_auto_update_themes, true ) ) {
 			$aria_label = esc_attr(
 				sprintf(
