@@ -114,6 +114,27 @@ function wp_autoupdates_enqueues( $hook ) {
 			wp_add_inline_script( 'jquery', $script );
 		}
 	}
+
+	if ( 'themes.php' === $hook || 'plugins.php' === $hook ) {
+		wp_enqueue_script(
+			'wp-autoupdates',
+			plugin_dir_url( __FILE__ ) . 'js/wp-autoupdates.js',
+			array( 'jquery', 'wp-ajax-response' ),
+			'1.0.0',
+			true
+		);
+		wp_localize_script(
+			'wp-autoupdates',
+			'wp_autoupdates',
+			array(
+				'enable'       => __( 'Enable', 'wp-autoupdates' ),
+				'enabling'     => __( 'Enabling', 'wp-autoupdates' ),
+				'disable'      => __( 'Disable', 'wp-autoupdates' ),
+				'disabling'    => __( 'Disabling', 'wp-autoupdates' ),
+				'auto_enabled' => __( 'Auto-updates enabled', 'wp-autoupdates' ),
+			)
+		);
+	}
 }
 add_action( 'admin_enqueue_scripts', 'wp_autoupdates_enqueues' );
 
@@ -1244,3 +1265,36 @@ function wp_autoupdates_themes_bulk_actions_handle( $redirect_to, $doaction, $it
 }
 add_action( 'handle_network_bulk_actions-themes-network', 'wp_autoupdates_themes_bulk_actions_handle', 10, 3 );
 add_action( 'handle_network_bulk_actions-site-themes-network', 'wp_autoupdates_themes_bulk_actions_handle', 10, 3 );
+
+/**
+ * Disable auto updates via Ajax.
+ */
+function wp_autoupdates_disable_auto_updates() {
+	$nonce = filter_input( INPUT_POST, 'nonce' );
+	$type  = filter_input( INPUT_POST, 'type' );
+	$asset = urldecode( filter_input( INPUT_POST, 'asset' ) );
+	if ( ! wp_verify_nonce(
+		$nonce,
+		sprintf(
+			'autoupdate-%s_%s',
+			$type,
+			$asset
+		)
+	) ) {
+		wp_send_json_error();
+	}
+
+	// Capability check.
+	if ( 'plugin' === $type ) {
+		if ( ! current_user_can( 'update_plugins' ) ) {
+			wp_send_json_error();
+		}
+	}
+	if ( 'theme' === $type ) {
+		if ( ! current_user_can( 'update_themes' ) ) {
+			wp_send_json_error();
+		}
+	}
+	wp_send_json_success();
+}
+add_action( 'wp_ajax_disable_auto_updates', 'wp_autoupdates_disable_auto_updates' );
