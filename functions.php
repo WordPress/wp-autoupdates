@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Enqueue styles and scripts
  */
 function wp_autoupdates_enqueues( $hook ) {
-	if ( ! in_array( $hook, array( 'plugins.php', 'themes.php', 'update-core.php' ) ) ) {
+	if ( ! in_array( $hook, array( 'plugins.php', 'themes.php', 'site-themes.php', 'update-core.php' ) ) ) {
 		return;
 	}
 	wp_register_style( 'wp-autoupdates', plugin_dir_url( __FILE__ ) . 'css/wp-autoupdates.css', array() );
@@ -1057,6 +1057,7 @@ function wp_autoupdates_add_themes_autoupdates_column( $columns ) {
 	return $columns;
 }
 add_filter( 'manage_themes-network_columns', 'wp_autoupdates_add_themes_autoupdates_column' );
+add_filter( 'manage_site-themes-network_columns', 'wp_autoupdates_add_themes_autoupdates_column' );
 
 
 /**
