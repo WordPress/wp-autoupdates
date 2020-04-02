@@ -84,8 +84,12 @@ Work in progress.
 
 ## Changelog 🗓
 
+## 0.4.1 🍺
+April 2, 2020
+- Network > Sites > Edit > Themes screen doesn’t have the Autoupdates column - [#50](https://github.com/WordPress/wp-autoupdates/pull/50)
+
 ## 0.4.0 🌹
-March, 30, 2020
+March 30, 2020
 
 This release brings full support for Themes auto-updates.
 
