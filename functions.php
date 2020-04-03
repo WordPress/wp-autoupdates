@@ -5,7 +5,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 /**
- * Enqueue styles and scripts
+ * Enqueue styles and scripts.
+ *
+ * @param string $hook The current admin page.
  */
 function wp_autoupdates_enqueues( $hook ) {
 	if ( ! in_array( $hook, array( 'plugins.php', 'themes.php', 'site-themes.php', 'update-core.php' ) ) ) {
@@ -120,6 +122,9 @@ add_action( 'admin_enqueue_scripts', 'wp_autoupdates_enqueues' );
 
 /**
  * Filter the themes prepared for JavaScript, for themes.php.
+ *
+ * @paran array $prepared_themes Array of theme data.
+ * @return array
  */
 function wp_autoupdates_prepare_themes_for_js( $prepared_themes ) {
 	$wp_auto_update_themes = get_option( 'wp_auto_update_themes', array() );
@@ -141,6 +146,8 @@ add_action( 'wp_prepare_themes_for_js', 'wp_autoupdates_prepare_themes_for_js' )
 
 /**
  * Checks whether plugins manual auto-update is enabled.
+ *
+ * @return bool True if plugins auto-update is enabled, false otherwise.
  */
 function wp_autoupdates_is_plugins_auto_update_enabled() {
 	$enabled = ! defined( 'WP_DISABLE_PLUGINS_AUTO_UPDATE' ) || ! WP_DISABLE_PLUGINS_AUTO_UPDATE;
@@ -156,6 +163,8 @@ function wp_autoupdates_is_plugins_auto_update_enabled() {
 
 /**
  * Checks whether themes manual auto-update is enabled.
+ *
+ * @return bool True if themes auto-update is enabled, false otherwise.
  */
 function wp_autoupdates_is_themes_auto_update_enabled() {
 	$enabled = ! defined( 'WP_DISABLE_THEMES_AUTO_UPDATE' ) || ! WP_DISABLE_THEMES_AUTO_UPDATE;
@@ -171,6 +180,10 @@ function wp_autoupdates_is_themes_auto_update_enabled() {
 
 /**
  * Autoupdate selected plugins.
+ *
+ * @param bool $update Whether to update.
+ * @param object The update offer.
+ * @return bool
  */
 function wp_autoupdates_selected_plugins( $update, $item ) {
 	$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
@@ -185,6 +198,10 @@ add_filter( 'auto_update_plugin', 'wp_autoupdates_selected_plugins', 10, 2 );
 
 /**
  * Autoupdate selected themes.
+ *
+ * @param bool $update Whether to update.
+ * @param object The update offer.
+ * @return bool
  */
 function wp_autoupdates_selected_themes( $update, $item ) {
 	$wp_auto_update_themes = get_site_option( 'wp_auto_update_themes', array() );
@@ -199,6 +216,9 @@ add_filter( 'auto_update_theme', 'wp_autoupdates_selected_themes', 10, 2 );
 
 /**
  * Add autoupdate column to plugins screen.
+ *
+ * @param string[] The column header labels keyed by column ID.
+ * @return string[]
  */
 function wp_autoupdates_add_plugins_autoupdates_column( $columns ) {
 	if ( ! current_user_can( 'update_plugins' ) || ! wp_autoupdates_is_plugins_auto_update_enabled() ) {
@@ -213,6 +233,10 @@ add_filter( is_multisite() ? 'manage_plugins-network_columns' : 'manage_plugins_
 
 /**
  * Render autoupdate column’s content.
+ *
+ * @param string              Name of the column.
+ * @param string $plugin_file Path to the plugin file relative to the plugins directory.
+ * @param array $plugin_data  An array of plugin data.
  */
 function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $plugin_file, $plugin_data ) {
 	if ( ! current_user_can( 'update_plugins' ) || ! wp_autoupdates_is_plugins_auto_update_enabled() ) {
@@ -283,7 +307,10 @@ add_action( 'manage_plugins_custom_column' , 'wp_autoupdates_add_plugins_autoupd
 
 
 /**
- * Add plugins autoupdates bulk actions
+ * Add plugins autoupdates bulk actions.
+ *
+ * @param string[] $actions An array of the available bulk actions.
+ * @return string[]
  */
 function wp_autoupdates_plugins_bulk_actions( $actions ) {
     $actions['enable-autoupdate-selected']  = __( 'Enable auto-updates', 'wp-autoupdates' );
@@ -295,7 +322,7 @@ add_action( 'bulk_actions-plugins-network', 'wp_autoupdates_plugins_bulk_actions
 
 
 /**
- * Handles auto-updates enabling for plugins
+ * Handles auto-updates enabling for plugins.
  */
 function wp_autoupdates_plugins_enabler() {
 	$action = isset( $_GET['action'] ) && ! empty( esc_html( $_GET['action'] ) ) ? wp_unslash( esc_html( $_GET['action'] ) ) : '';
@@ -336,7 +363,7 @@ function wp_autoupdates_plugins_enabler() {
 
 
 /**
- * Handles auto-updates enabling for themes
+ * Handles auto-updates enabling for themes.
  */
 function wp_autoupdates_themes_enabler() {
 	$pagenow = $GLOBALS['pagenow'];
@@ -392,7 +419,7 @@ function wp_autoupdates_themes_enabler() {
 
 
 /**
- * Handle autoupdates enabling
+ * Handle autoupdates enabling.
  */
 function wp_autoupdates_enabler() {
 	$pagenow = $GLOBALS['pagenow'];
@@ -407,7 +434,12 @@ add_action( 'admin_init', 'wp_autoupdates_enabler' );
 
 
 /**
- * Handle plugins autoupdates bulk actions
+ * Handle plugins autoupdates bulk actions.
+ *
+ * @param string $redirect_to The redirect URL.
+ * @param string $doaction    The action being taken.
+ * @param array $items 	      The items to take the action on. Accepts an array of plugins.
+ * @return string
  */
 function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $items ) {
 	if ( 'enable-autoupdate-selected' === $doaction ) {
@@ -480,7 +512,10 @@ add_action( 'handle_bulk_actions-plugins-network', 'wp_autoupdates_plugins_bulk_
 
 
 /**
- * Handle cleanup when plugin deleted
+ * Handle cleanup when plugin deleted.
+ *
+ * @param string $plugin_file Path to the plugin file relative to the plugins directory.
+ * @param bool $deleted       Whether the plugin deletion was successful.
  */
 function wp_autoupdates_plugin_deleted( $plugin_file, $deleted ) {
 	// Do nothing if the plugin wasn't deleted
@@ -499,7 +534,7 @@ add_action( 'deleted_plugin', 'wp_autoupdates_plugin_deleted', 10, 2 );
 
 
 /**
- * Auto-update notices for plugins
+ * Auto-update notices for plugins.
  */
 function wp_autoupdates_plugins_notices() {
 	if ( isset( $_GET['enable-autoupdate'] ) ) {
@@ -516,7 +551,7 @@ function wp_autoupdates_plugins_notices() {
 
 
 /**
- * Auto-update notices for themes
+ * Auto-update notices for themes.
  */
 function wp_autoupdates_themes_notices() {
 	if ( isset( $_GET['enable-autoupdate'] ) ) {
@@ -533,7 +568,7 @@ function wp_autoupdates_themes_notices() {
 
 
 /**
- * Auto-update notices
+ * Auto-update notices.
  */
 function wp_autoupdates_notices() {
 	// Plugins screen
@@ -556,6 +591,8 @@ add_action( 'network_admin_notices', 'wp_autoupdates_notices' );
  * then this should be encorporated there.
  *
  * @global array  $totals Counts by plugin_status, set in `WP_Plugins_List_Table::prepare_items()`.
+ *
+ * @param string[] $status_links An array of available list table views.
  */
 function wp_autoupdates_plugins_status_links( $status_links ) {
 	global $totals;
@@ -633,6 +670,8 @@ add_action( is_multisite() ? 'views_plugins-network' : 'views_plugins', 'wp_auto
  *
  * @global WP_Plugins_List_Table $wp_list_table The global list table object.  Set in `wp-admin/plugins.php`.
  * @global int                   $page          The current page of plugins displayed.  Set in WP_Plugins_List_Table::__construct().
+ *
+ * @param array[] $plugins An array of arrays containing information on all installed plugins.
  */
 function wp_autoupdates_plugins_filter_plugins_by_status( $plugins ) {
 	global $wp_list_table, $page;
@@ -692,8 +731,37 @@ function wp_autoupdates_plugins_filter_plugins_by_status( $plugins ) {
 add_action( 'pre_current_active_plugins', 'wp_autoupdates_plugins_filter_plugins_by_status' );
 
 
-/*
- * Populate site health informations
+/**
+ * Populate site health informations.
+ *
+ * @param array $args {
+ *     The debug information to be added to the core information page.
+ *
+ *     This is an associative multi-dimensional array, up to three levels deep. The topmost array holds the sections.
+ *     Each section has a `$fields` associative array (see below), and each `$value` in `$fields` can be
+ *     another associative array of name/value pairs when there is more structured data to display.
+ *
+ *     @type string  $label        The title for this section of the debug output.
+ *     @type string  $description  Optional. A description for your information section which may contain basic HTML
+ *                                 markup, inline tags only as it is outputted in a paragraph.
+ *     @type boolean $show_count   Optional. If set to `true` the amount of fields will be included in the title for
+ *                                 this section.
+ *     @type boolean $private      Optional. If set to `true` the section and all associated fields will be excluded
+ *                                 from the copied data.
+ *     @type array   $fields {
+ *         An associative array containing the data to be displayed.
+ *
+ *         @type string  $label    The label for this piece of information.
+ *         @type string  $value    The output that is displayed for this field. Text should be translated. Can be
+ *                                 an associative array that is displayed as name/value pairs.
+ *         @type string  $debug    Optional. The output that is used for this field when the user copies the data.
+ *                                 It should be more concise and not translated. If not set, the content of `$value` is used.
+ *                                 Note that the array keys are used as labels for the copied data.
+ *         @type boolean $private  Optional. If set to `true` the field will not be included in the copied data
+ *                                 allowing you to show, for example, API keys here.
+ *     }
+ * }
+ * @return array
  */
 function wp_autoupdates_debug_information( $info ) {
 	// Plugins
@@ -1016,6 +1084,7 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 
 	/**
 	 * Filters the email sent following an automatic background plugin update.
+	 *
 	 * @param array $email {
 	 *     Array of email arguments that will be passed to wp_mail().
 	 *
@@ -1076,6 +1145,9 @@ function wp_autoupdates_get_update_message() {
 
 /**
  * Add autoupdate column to network themes screen.
+ *
+ * @param string[] The column header labels keyed by column ID.
+ * @return string[]
  */
 function wp_autoupdates_add_themes_autoupdates_column( $columns ) {
 	if ( ! current_user_can( 'update_themes' ) || ! wp_autoupdates_is_themes_auto_update_enabled() ) {
@@ -1092,6 +1164,10 @@ add_filter( 'manage_site-themes-network_columns', 'wp_autoupdates_add_themes_aut
 
 /**
  * Render autoupdate column’s content.
+ *
+ * @param string             Name of the column.
+ * @param string $stylesheet Directory name of the theme.
+ * @param WP_Theme $theme    Current WP_Theme object.
  */
 function wp_autoupdates_add_themes_autoupdates_column_content( $column_name, $stylesheet, $theme ) {
 	$pagenow = $GLOBALS['pagenow'];
@@ -1170,7 +1246,10 @@ add_action( 'manage_themes_custom_column' , 'wp_autoupdates_add_themes_autoupdat
 
 
 /**
- * Add themes autoupdates bulk actions
+ * Add themes autoupdates bulk actions.
+ *
+ * @param string[] $actions An array of the available bulk actions.
+ * @return string[]
  */
 function wp_autoupdates_themes_bulk_actions( $actions ) {
 	$actions['enable-autoupdate-selected']  = __( 'Enable auto-updates', 'wp-autoupdates' );
@@ -1182,7 +1261,12 @@ add_action( 'bulk_actions-site-themes-network', 'wp_autoupdates_themes_bulk_acti
 
 
 /**
- * Handle themes autoupdates bulk actions
+ * Handle themes autoupdates bulk actions.
+ *
+ * @param string $redirect_to The redirect URL.
+ * @param string $doaction    The action being taken.
+ * @param array $items 	      The items to take the action on. Accepts an array of themes.
+ * @return string
  */
 function wp_autoupdates_themes_bulk_actions_handle( $redirect_to, $doaction, $items ) {
 	$pagenow = $GLOBALS['pagenow'];
