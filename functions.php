@@ -809,10 +809,10 @@ function wp_autoupdates_debug_information( $info ) {
 
 				if ( in_array( $theme_path, $wp_auto_update_themes ) ) {
 					$theme_version_string       .= ' | ' . sprintf( __( 'Auto-updates enabled', 'wp-autoupdates' ) );
-					$theme_version_string_debug .= sprintf( __( 'auto-updates enabled', 'wp-autoupdates' ) );
+					$theme_version_string_debug .= sprintf( __( 'Auto-updates enabled', 'wp-autoupdates' ) );
 				} else {
 					$theme_version_string       .= ' | ' . sprintf( __( 'Auto-updates disabled', 'wp-autoupdates' ) );
-					$theme_version_string_debug .= sprintf( __( 'auto-updates disabled', 'wp-autoupdates' ) );
+					$theme_version_string_debug .= sprintf( __( 'Auto-updates disabled', 'wp-autoupdates' ) );
 				}
 
 				$theme_name = sanitize_text_field( $theme['Name'] );
