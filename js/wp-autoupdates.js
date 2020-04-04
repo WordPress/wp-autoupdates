@@ -4,6 +4,9 @@ jQuery(function ($) {
 		var $anchor = $(e.target);
 		var href = wpAjax.unserialize(e.target.href);
 
+		// Show loading status.
+		$anchor.html( wp_autoupdates.disabling );
+
 		$.post(
 			ajaxurl,
 			{
