@@ -847,6 +847,36 @@ add_filter( 'debug_information', 'wp_autoupdates_debug_information' );
 
 
 /**
+ * Checks whether plugins auto-update email notifications are enabled.
+ */
+function wp_autoupdates_is_plugins_auto_update_email_enabled() {
+	$enabled = ! defined( 'WP_DISABLE_PLUGINS_AUTO_UPDATE_EMAIL' ) || ! WP_DISABLE_PLUGINS_AUTO_UPDATE;
+
+	/**
+	 * Filters whether plugins auto-update email notifications are enabled.
+	 *
+	 * @param bool $enabled True if plugins notifications are enabled, false otherwise.
+	 */
+	return apply_filters( 'send_plugins_auto_update_email', $enabled );
+}
+
+
+/**
+ * Checks whether themes auto-update email notifications are enabled.
+ */
+function wp_autoupdates_is_themes_auto_update_email_enabled() {
+	$enabled = ! defined( 'WP_DISABLE_THEMES_AUTO_UPDATE_EMAIL' ) || ! WP_DISABLE_THEMES_AUTO_UPDATE;
+
+	/**
+	 * Filters whether themes auto-update email notifications are enabled.
+	 *
+	 * @param bool $enabled True if themes notifications are enabled, false otherwise.
+	 */
+	return apply_filters( 'send_themes_auto_update_email', $enabled );
+}
+
+
+/**
  * If we tried to perform plugin or theme updates, check if we should send an email.
  *
  * @param object $results The result of updates tasks.
@@ -854,7 +884,7 @@ add_filter( 'debug_information', 'wp_autoupdates_debug_information' );
 function wp_autoupdates_automatic_updates_complete_notification( $results ) {
 	$successful_updates = array();
 	$failed_updates = array();
-	if ( isset( $results['plugin'] ) ) {
+	if ( isset( $results['plugin'] ) && wp_autoupdates_is_plugins_auto_update_email_enabled() ) {
 		foreach ( $results['plugin'] as $update_result ) {
 			if ( true === $update_result->result ) {
 				$successful_updates['plugin'][] = $update_result;
@@ -863,7 +893,7 @@ function wp_autoupdates_automatic_updates_complete_notification( $results ) {
 			}
 		}
 	}
-	if ( isset( $results['theme'] ) ) {
+	if ( isset( $results['theme'] ) && wp_autoupdates_is_themes_auto_update_enabled() ) {
 		foreach ( $results['theme'] as $update_result ) {
 			if ( true === $update_result->result ) {
 				$successful_updates['theme'][] = $update_result;
