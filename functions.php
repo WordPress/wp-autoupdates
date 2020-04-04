@@ -290,7 +290,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 				);
 				echo '<p class="plugin-autoupdate-disabled">';
 				echo sprintf(
-					'<a href="%s" class="edit" aria-label="%s"><span class="dashicons dashicons-update" aria-hidden="true"></span> %s</a>',
+					'<a href="%s" class="edit plugin-autoupdate-enable" aria-label="%s"><span class="dashicons dashicons-update" aria-hidden="true"></span> <span class="plugin-autoupdate-label">%s</span></a>',
 					wp_nonce_url( 'plugins.php?action=autoupdate&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page . '&amp;plugin_status=' . $plugin_status, 'autoupdate-plugin_' . $plugin_file ),
 					$aria_label,
 					__( 'Enable', 'wp-autoupdates' )
@@ -1281,20 +1281,181 @@ function wp_autoupdates_disable_auto_updates() {
 			$asset
 		)
 	) ) {
-		wp_send_json_error();
+		wp_send_json_error(
+			array(
+				'error' => __( 'Nonce verification failed.', 'wp-autoupdate' ),
+			)
+		);
 	}
 
 	// Capability check.
 	if ( 'plugin' === $type ) {
 		if ( ! current_user_can( 'update_plugins' ) ) {
-			wp_send_json_error();
+			wp_send_json_error(
+				array(
+					'error' => __( 'You do not have permission to modify plugins.', 'wp-autoupdate' ),
+				)
+			);
 		}
 	}
 	if ( 'theme' === $type ) {
 		if ( ! current_user_can( 'update_themes' ) ) {
-			wp_send_json_error();
+			wp_send_json_error(
+				array(
+					'error' => __( 'You do not have permission to modify themes.', 'wp-autoupdate' ),
+				)
+			);
 		}
 	}
-	wp_send_json_success();
+
+	// Check Asset Type.
+	if ( 'plugin' === $type ) {
+		$wp_autoupdate_plugins = get_site_option( 'wp_auto_update_plugins', array() );
+		if ( is_array( $wp_autoupdate_plugins ) && ! empty( $wp_autoupdate_plugins ) ) {
+			foreach ( $wp_autoupdate_plugins as $index => $plugin_file ) {
+				if ( $plugin_file === $asset ) {
+					unset( $wp_autoupdate_plugins[ $index ] );
+					update_site_option( 'wp_auto_update_plugins', $wp_autoupdate_plugins );
+
+					/** This filter is documented in wp-admin/includes/class-wp-plugins-list-table.php */
+					$all_plugins           = apply_filters( 'all_plugins', get_plugins() );
+					$wp_autoupdate_plugins = array_intersect( $wp_autoupdate_plugins, array_keys( $all_plugins ) );
+					$enabled_count         = count( $wp_autoupdate_plugins );
+					$plugin_name           = $all_plugins[ $asset ]['Name'];
+
+					$plugin_url = add_query_arg(
+						array(
+							'action'   => 'autoupdate',
+							'plugin'   => $asset,
+							'_wpnonce' => wp_create_nonce( 'autoupdate-plugin_' . $asset ),
+						),
+						'plugins.php'
+					);
+
+					$return_html = sprintf(
+						'<p class="plugin-autoupdate-disabled"><a href="%s" class="edit plugin-autoupdate-enable" aria-label="%s"><span class="dashicons dashicons-update" aria-hidden="true"></span> <span class="plugin-autoupdate-label">%s</span></a></p>',
+						esc_url_raw( $plugin_url ),
+						esc_html__( 'Enable automatic updates for', 'wp-autoupdate' ) . ' ' . esc_html( $plugin_name ),
+						esc_html__( 'Enable', 'wp-autoupdates' )
+					);
+
+					wp_send_json_success(
+						array(
+							'enabled_count'  => '(' . $enabled_count . ')',
+							'disabled_count' => '(' . absint( count( $all_plugins ) - $enabled_count ) . ')',
+							'return_html'    => $return_html,
+							'type'           => 'plugin',
+						)
+					);
+					break;
+				}
+			}
+		}
+	}
+	wp_send_json_error(
+		array(
+			'error' => __( 'Could not disable auto-updates for the plugin', 'wp-autoupdates' ),
+		)
+	);
 }
 add_action( 'wp_ajax_disable_auto_updates', 'wp_autoupdates_disable_auto_updates' );
+/**
+ * Enable auto updates via Ajax.
+ */
+function wp_autoupdates_enable_auto_updates() {
+	$nonce = filter_input( INPUT_POST, 'nonce' );
+	$type  = filter_input( INPUT_POST, 'type' );
+	$asset = urldecode( filter_input( INPUT_POST, 'asset' ) );
+	if ( ! wp_verify_nonce(
+		$nonce,
+		sprintf(
+			'autoupdate-%s_%s',
+			$type,
+			$asset
+		)
+	) ) {
+		wp_send_json_error(
+			array(
+				'error' => __( 'Nonce verification failed.', 'wp-autoupdate' ),
+			)
+		);
+	}
+
+	// Capability check.
+	if ( 'plugin' === $type ) {
+		if ( ! current_user_can( 'update_plugins' ) ) {
+			wp_send_json_error(
+				array(
+					'error' => __( 'You do not have permission to modify plugins.', 'wp-autoupdate' ),
+				)
+			);
+		}
+	}
+	if ( 'theme' === $type ) {
+		if ( ! current_user_can( 'update_themes' ) ) {
+			wp_send_json_error(
+				array(
+					'error' => __( 'You do not have permission to modify themes.', 'wp-autoupdate' ),
+				)
+			);
+		}
+	}
+
+	// Check Asset Type.
+	if ( 'plugin' === $type ) {
+		$wp_autoupdate_plugins = get_site_option( 'wp_auto_update_plugins', array() );
+		if ( is_array( $wp_autoupdate_plugins ) ) {
+			$wp_autoupdate_plugins[] = $asset;
+			array_unique( $wp_autoupdate_plugins );
+			update_site_option( 'wp_auto_update_plugins', $wp_autoupdate_plugins );
+
+			/** This filter is documented in wp-admin/includes/class-wp-plugins-list-table.php */
+			$all_plugins           = apply_filters( 'all_plugins', get_plugins() );
+			$wp_autoupdate_plugins = array_intersect( $wp_autoupdate_plugins, array_keys( $all_plugins ) );
+			$enabled_count         = count( $wp_autoupdate_plugins );
+			$plugin_name           = $all_plugins[ $asset ]['Name'];
+
+			$plugin_url = add_query_arg(
+				array(
+					'action'   => 'autoupdate',
+					'plugin'   => $asset,
+					'_wpnonce' => wp_create_nonce( 'autoupdate-plugin_' . $asset ),
+				),
+				'plugins.php'
+			);
+
+			$aria_label = esc_attr(
+				sprintf(
+					/* translators: Plugin name. */
+					_x( 'Enable automatic updates for %s', 'plugin', 'wp-autoupdates' ),
+					esc_html( $plugin_name )
+				)
+			);
+			$return_html  = '<p>';
+			$return_html .= '<span class="plugin-autoupdate-enabled">' . esc_html__( 'Auto-updates enabled', 'wp-autoupdates' ) . '</span>';
+			$return_html .= '<br />';
+			$return_html .= sprintf(
+				'<a href="%s" class="plugin-autoupdate-disable" aria-label="%s">%s</a>',
+				esc_url_raw( $plugin_url ),
+				$aria_label,
+				esc_html__( 'Disable', 'wp-autoupdates' )
+			);
+			$return_html .= '</p>';
+
+			wp_send_json_success(
+				array(
+					'enabled_count'  => '(' . $enabled_count . ')',
+					'disabled_count' => '(' . absint( count( $all_plugins ) - $enabled_count ) . ')',
+					'return_html'    => $return_html,
+					'type'           => 'plugin',
+				)
+			);
+		}
+	}
+	wp_send_json_error(
+		array(
+			'error' => __( 'Could not enable auto-updates for the plugin', 'wp-autoupdates' ),
+		)
+	);
+}
+add_action( 'wp_ajax_enable_auto_updates', 'wp_autoupdates_enable_auto_updates' );
