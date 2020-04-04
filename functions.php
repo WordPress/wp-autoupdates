@@ -948,7 +948,7 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 			break;
 		case 'mixed':
 			/* translators: %s: Site title. */
-			$subject = __( '[%s] Some plugins/themes have automatically updated', 'wp-autoupdates' );
+			$subject = __( '[%s] Some plugins or themes have automatically updated', 'wp-autoupdates' );
 			$body[] = sprintf(
 				/* translators: %s: Home URL. */
 				__( 'Howdy! There were some failures while attempting to update plugins/themes on your site at %s.', 'wp-autoupdates' ),
