@@ -933,7 +933,7 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 	switch ( $type ) {
 		case 'success':
 			/* translators: %s: Site title. */
-			$subject = __( '[%s] Some plugins or themes have automatically updated', 'wp-autoupdates' );
+			$subject = __( '[%s] Some plugins or themes have been automatically updated', 'wp-autoupdates' );
 			break;
 		case 'fail':
 			/* translators: %s: Site title. */
@@ -948,7 +948,7 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 			break;
 		case 'mixed':
 			/* translators: %s: Site title. */
-			$subject = __( '[%s] Some plugins or themes have automatically updated', 'wp-autoupdates' );
+			$subject = __( '[%s] Some plugins or themes have been automatically updated', 'wp-autoupdates' );
 			$body[] = sprintf(
 				/* translators: %s: Home URL. */
 				__( 'Howdy! Failures occurred when attempting to update plugins/themes on your site at %s.', 'wp-autoupdates' ),
