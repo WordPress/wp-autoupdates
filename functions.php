@@ -951,7 +951,7 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 			$subject = __( '[%s] Some plugins or themes have automatically updated', 'wp-autoupdates' );
 			$body[] = sprintf(
 				/* translators: %s: Home URL. */
-				__( 'Howdy! There were some failures while attempting to update plugins/themes on your site at %s.', 'wp-autoupdates' ),
+				__( 'Howdy! Failures occurred when attempting to update plugins/themes on your site at %s.', 'wp-autoupdates' ),
 				home_url()
 			);
 			$body[] = "\n";
