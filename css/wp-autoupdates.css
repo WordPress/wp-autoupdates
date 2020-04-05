@@ -10,7 +10,8 @@
 	from {transform:rotate(0deg);}
 	to {transform:rotate(360deg);}
 }
-.plugin-autoupdate-enable.spin .dashicons-update {
+.plugin-autoupdate-enable.spin .dashicons-update,
+.theme-autoupdate-enable.spin .dashicons-update {
 	-webkit-animation-name: autoupdate-spin;
 	-webkit-animation-duration: 1000ms;
 	-webkit-animation-iteration-count: infinite;
