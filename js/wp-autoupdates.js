@@ -136,7 +136,7 @@ jQuery(function ($) {
 		});
 	});
 	// Disable auto-updates for a theme.
-	$('.theme-autoupdate').on('click', 'a.theme-autoupdate-disable', function (e) {
+	$('.theme-overlay').on('click', 'a.theme-autoupdate-disable', function (e) {
 		e.preventDefault();
 		var $anchor = $( this );
 		var href = wpAjax.unserialize($anchor.attr( 'href' ) );
@@ -168,7 +168,7 @@ jQuery(function ($) {
 		});
 	});
 	// Enable auto-updates for a theme.
-	$('.theme-autoupdate').on('click', 'a.theme-autoupdate-enable', function (e) {
+	$('.theme-overlay').on('click', 'a.theme-autoupdate-enable', function (e) {
 		e.preventDefault();
 		var $anchor = $( this );
 		var href = wpAjax.unserialize( $anchor.attr( 'href' ) );
