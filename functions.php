@@ -70,11 +70,11 @@ function wp_autoupdates_enqueues( $hook ) {
 			// Put the enable/disable link below the author and before the update box.
 			$autoupdate_text = '<p class="theme-autoupdate"> <# if ( data.autoupdate ) { #>';
 			$autoupdate_text .= '<span class="theme-autoupdate-disabled">';
-			$autoupdate_text .= '<a href="{{{ data.actions.autoupdate }}}" aria-label="' . $aria_label_disable . '"><span class="dashicons dashicons-update" aria-hidden="true"></span> ' . __( 'Disable automatic updates' ) . '</a>';
+			$autoupdate_text .= '<a class="theme-autoupdate-disable" href="{{{ data.actions.autoupdate }}}" aria-label="' . $aria_label_disable . '"><span class="dashicons dashicons-update" aria-hidden="true"></span> <span class="theme-autoupdate-label">' . __( 'Disable automatic updates' ) . '</span></a>';
 			$autoupdate_text .= '</span>';
 			$autoupdate_text .= '<# } else { #>';
 			$autoupdate_text .= '<span class="theme-autoupdate-enabled">';
-			$autoupdate_text .= '<a href="{{{ data.actions.autoupdate }}}" aria-label="' . $aria_label_enable . '"><span class="dashicons dashicons-update" aria-hidden="true"></span> ' . __( 'Enable automatic updates' ) . '</a>';
+			$autoupdate_text .= '<a class="theme-autoupdate-enable" href="{{{ data.actions.autoupdate }}}" aria-label="' . $aria_label_enable . '"><span class="dashicons dashicons-update" aria-hidden="true"></span><span class="theme-autoupdate-label"> ' . __( 'Enable automatic updates' ) . '</span></a>';
 			$autoupdate_text .= '</span>';
 			$autoupdate_text .= '<# } #> </p>';
 
