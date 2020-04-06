@@ -8,6 +8,7 @@
 }
 
 .autoupdates_column .plugin-autoupdate-disable,
+.autoupdates_column .theme-autoupdate-disable,
 .theme-overlay .theme-autoupdate-disabled a {
 	color: #a00;
 }
