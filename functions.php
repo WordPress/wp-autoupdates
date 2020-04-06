@@ -878,10 +878,10 @@ function wp_autoupdates_debug_information( $info ) {
 
 				if ( in_array( $theme_path, $wp_auto_update_themes ) ) {
 					$theme_version_string       .= ' | ' . sprintf( __( 'Auto-updates enabled', 'wp-autoupdates' ) );
-					$theme_version_string_debug .= sprintf( __( 'auto-updates enabled', 'wp-autoupdates' ) );
+					$theme_version_string_debug .= sprintf( __( 'Auto-updates enabled', 'wp-autoupdates' ) );
 				} else {
 					$theme_version_string       .= ' | ' . sprintf( __( 'Auto-updates disabled', 'wp-autoupdates' ) );
-					$theme_version_string_debug .= sprintf( __( 'auto-updates disabled', 'wp-autoupdates' ) );
+					$theme_version_string_debug .= sprintf( __( 'Auto-updates disabled', 'wp-autoupdates' ) );
 				}
 
 				$theme_name = sanitize_text_field( $theme['Name'] );
@@ -1006,7 +1006,7 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 	switch ( $type ) {
 		case 'success':
 			/* translators: %s: Site title. */
-			$subject = __( '[%s] Some plugins or themes have automatically updated', 'wp-autoupdates' );
+			$subject = __( '[%s] Some plugins or themes were automatically updated', 'wp-autoupdates' );
 			break;
 		case 'fail':
 			/* translators: %s: Site title. */
@@ -1021,10 +1021,10 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 			break;
 		case 'mixed':
 			/* translators: %s: Site title. */
-			$subject = __( '[%s] Some plugins/themes have automatically updated', 'wp-autoupdates' );
+			$subject = __( '[%s] Some plugins or themes were automatically updated', 'wp-autoupdates' );
 			$body[] = sprintf(
 				/* translators: %s: Home URL. */
-				__( 'Howdy! There were some failures while attempting to update plugins/themes on your site at %s.', 'wp-autoupdates' ),
+				__( 'Howdy! Failures occurred when attempting to update plugins/themes on your site at %s.', 'wp-autoupdates' ),
 				home_url()
 			);
 			$body[] = "\n";
