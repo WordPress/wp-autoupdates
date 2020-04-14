@@ -2,21 +2,6 @@
 	min-width: 200px;
 }
 
-.plugins .plugin-title .plugin-autoupdate-enabled .dashicons,
-#update-themes-table .plugin-title .dashicons {
-	float: none;
-	padding: 0;
-	width: auto;
-	height: auto;
-}
-
-.plugins .plugin-title .plugin-autoupdate-enabled .dashicons:before {
-	padding: 0;
-	background: transparent;
-	box-shadow: none;
-	font-size: 20px;
-}
-
 .theme-overlay .theme-autoupdate a {
 	text-decoration: none;
 }

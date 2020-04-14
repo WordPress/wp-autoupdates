@@ -25,9 +25,7 @@ function wp_autoupdates_enqueues( $hook ) {
 
 			$update_message = wp_autoupdates_get_update_message();
 			foreach ( $wp_auto_update_themes as $theme ) {
-				$autoupdate_text = ' <span class="plugin-autoupdate-enabled"><span class="dashicons dashicons-update" aria-hidden="true"></span> ';
-				$autoupdate_text .= $update_message;
-				$autoupdate_text .= '</span> ';
+				$autoupdate_text = '| <span class="plugin-autoupdate-enabled">' . $update_message . '</span> ';
 				$script .= 'jQuery(".check-column input[value=\'' . $theme . '\']").closest("tr").find(".plugin-title > p").append(\'' . $autoupdate_text . '\');';
 			}
 		}
@@ -37,9 +35,7 @@ function wp_autoupdates_enqueues( $hook ) {
 
 			$update_message = wp_autoupdates_get_update_message();
 			foreach ( $wp_auto_update_plugins as $plugin ) {
-				$autoupdate_text = ' <span class="plugin-autoupdate-enabled"><span class="dashicons dashicons-update" aria-hidden="true"></span> ';
-				$autoupdate_text .= $update_message;
-				$autoupdate_text .= '</span> ';
+				$autoupdate_text = ' | <span class="plugin-autoupdate-enabled">' . $update_message . '</span> ';
 				$script .= 'jQuery(".check-column input[value=\'' . $plugin . '\']").closest("tr").find(".plugin-title > p").append(\'' . $autoupdate_text . '\');';
 			}
 		}
@@ -72,11 +68,11 @@ function wp_autoupdates_enqueues( $hook ) {
 			// Put the enable/disable link below the author and before the update box.
 			$autoupdate_text = '<p class="theme-autoupdate"> <# if ( data.autoupdate ) { #>';
 			$autoupdate_text .= '<span class="theme-autoupdate-disabled">';
-			$autoupdate_text .= '<a href="{{{ data.actions.autoupdate }}}" aria-label="' . $aria_label_disable . '"><span class="dashicons dashicons-update" aria-hidden="true"></span> ' . __( 'Disable automatic updates' ) . '</a>';
+			$autoupdate_text .= '<a href="{{{ data.actions.autoupdate }}}" aria-label="' . $aria_label_disable . '">' . __( 'Disable automatic updates' ) . '</a>';
 			$autoupdate_text .= '</span>';
 			$autoupdate_text .= '<# } else { #>';
 			$autoupdate_text .= '<span class="theme-autoupdate-enabled">';
-			$autoupdate_text .= '<a href="{{{ data.actions.autoupdate }}}" aria-label="' . $aria_label_enable . '"><span class="dashicons dashicons-update" aria-hidden="true"></span> ' . __( 'Enable automatic updates' ) . '</a>';
+			$autoupdate_text .= '<a href="{{{ data.actions.autoupdate }}}" aria-label="' . $aria_label_enable . '">' . __( 'Enable automatic updates' ) . '</a>';
 			$autoupdate_text .= '</span>';
 			$autoupdate_text .= '<# } #> </p>';
 
@@ -293,7 +289,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 				);
 				echo '<p class="plugin-autoupdate-disabled">';
 				echo sprintf(
-					'<a href="%s" class="edit" aria-label="%s"><span class="dashicons dashicons-update" aria-hidden="true"></span> %s</a>',
+					'<a href="%s" class="edit" aria-label="%s">%s</a>',
 					wp_nonce_url( 'plugins.php?action=autoupdate&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page . '&amp;plugin_status=' . $plugin_status, 'autoupdate-plugin_' . $plugin_file ),
 					$aria_label,
 					__( 'Enable', 'wp-autoupdates' )
@@ -1237,7 +1233,7 @@ function wp_autoupdates_add_themes_autoupdates_column_content( $column_name, $st
 				);
 				echo '<p class="theme-autoupdate-disabled">';
 				echo sprintf(
-					'<a href="%s" class="edit" aria-label="%s"><span class="dashicons dashicons-update" aria-hidden="true"></span> %s</a>',
+					'<a href="%s" class="edit" aria-label="%s">%s</a>',
 					wp_nonce_url( $base_url, 'autoupdate-theme_' . $stylesheet ),
 					$aria_label,
 					__( 'Enable', 'wp-autoupdates' )
