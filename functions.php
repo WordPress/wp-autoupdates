@@ -16,7 +16,7 @@ function wp_autoupdates_enqueues( $hook ) {
 	wp_register_style( 'wp-autoupdates', plugin_dir_url( __FILE__ ) . 'css/wp-autoupdates.css', array() );
 	wp_enqueue_style( 'wp-autoupdates' );
 
-	// Update core screen JS hack (due to lack of filters)
+	// Update core screen JS hack (due to lack of filters).
 	if ( 'update-core.php' === $hook ) {
 		$script = 'jQuery( document ).ready(function() {';
 
@@ -67,7 +67,7 @@ function wp_autoupdates_enqueues( $hook ) {
 
 			/* translators: %s: Theme name. */
 			$aria_label_enable  = sprintf( _x( 'Enable automatic update for %s', 'theme' ), '{{ data.name }}' );
- 			$aria_label_disable = sprintf( _x( 'Disable automatic update for %s', 'theme' ), '{{ data.name }}' );
+			$aria_label_disable = sprintf( _x( 'Disable automatic update for %s', 'theme' ), '{{ data.name }}' );
 
 			// Put the enable/disable link below the author and before the update box.
 			$autoupdate_text = '<p class="theme-autoupdate"> <# if ( data.autoupdate ) { #>';
@@ -123,7 +123,7 @@ add_action( 'admin_enqueue_scripts', 'wp_autoupdates_enqueues' );
 /**
  * Filter the themes prepared for JavaScript, for themes.php.
  *
- * @paran array $prepared_themes Array of theme data.
+ * @param array $prepared_themes Array of theme data.
  * @return array
  */
 function wp_autoupdates_prepare_themes_for_js( $prepared_themes ) {
@@ -363,7 +363,7 @@ function wp_autoupdates_plugins_enabler() {
 
 
 /**
- * Handles auto-updates enabling for themes
+ * Handles auto-updates enabling for themes.
  */
 function wp_autoupdates_themes_enabler() {
 	$pagenow = $GLOBALS['pagenow'];
@@ -438,7 +438,7 @@ add_action( 'admin_init', 'wp_autoupdates_enabler' );
  *
  * @param string $redirect_to The redirect URL.
  * @param string $doaction    The action being taken.
- * @param array $items 	      The items to take the action on. Accepts an array of plugins.
+ * @param array  $items       The items to take the action on. Accepts an array of plugins.
  * @return string
  */
 function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $items ) {
@@ -515,7 +515,7 @@ add_action( 'handle_bulk_actions-plugins-network', 'wp_autoupdates_plugins_bulk_
  * Handle cleanup when plugin deleted.
  *
  * @param string $plugin_file Path to the plugin file relative to the plugins directory.
- * @param bool $deleted       Whether the plugin deletion was successful.
+ * @param bool   $deleted     Whether the plugin deletion was successful.
  */
 function wp_autoupdates_plugin_deleted( $plugin_file, $deleted ) {
 	// Do nothing if the plugin wasn't deleted
@@ -571,7 +571,7 @@ function wp_autoupdates_themes_notices() {
  * Auto-update notices.
  */
 function wp_autoupdates_notices() {
-	// Plugins screen
+	// Plugins screen.
 	$pagenow = $GLOBALS['pagenow'];
 	if ( 'plugins.php' === $pagenow ) {
 		wp_autoupdates_plugins_notices();
@@ -767,7 +767,7 @@ add_action( 'pre_current_active_plugins', 'wp_autoupdates_plugins_filter_plugins
 function wp_autoupdates_debug_information( $info ) {
 	// Plugins
 	if ( wp_autoupdates_is_plugins_auto_update_enabled() ) {
-		// Populate plugins informations
+		// Populate plugins informations.
 		$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
 
 		$plugins        = get_plugins();
@@ -826,7 +826,7 @@ function wp_autoupdates_debug_information( $info ) {
 	}
 
 	if ( wp_autoupdates_is_themes_auto_update_enabled() ) {
-		// Populate themes informations
+		// Populate themes informations.
 		$wp_auto_update_themes = get_site_option( 'wp_auto_update_themes', array() );
 
 		$themes       = wp_get_themes();
@@ -895,7 +895,7 @@ function wp_autoupdates_debug_information( $info ) {
 		}
 	}
 
-	// Populate constants informations
+	// Populate constants informations.
 	$plugins_enabled = defined( 'WP_DISABLE_PLUGINS_AUTO_UPDATE' ) ? WP_DISABLE_PLUGINS_AUTO_UPDATE : __( 'Undefined', 'wp-autoupdates' );
 	$info['wp-constants']['fields']['WP_DISABLE_PLUGINS_AUTO_UPDATE'] = array(
 		'label' => 'WP_DISABLE_PLUGINS_AUTO_UPDATE',
@@ -1101,7 +1101,7 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 	 * }
 	 * @param string $type               The type of email being sent. Can be one of
 	 *                                   'success', 'fail', 'mixed'.
-	 * @param object $successful_updates The updates that succeded.
+	 * @param object $successful_updates The updates that succeeded.
 	 * @param object $failed_updates     The updates that failed.
 	 */
 	$email = apply_filters( 'wp_autoupdates_notifications_email', $email, $type, $successful_updates, $failed_updates );
