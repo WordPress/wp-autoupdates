@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param string $hook The current admin page.
  */
 function wp_autoupdates_enqueues( $hook ) {
-	if ( ! in_array( $hook, array( 'plugins.php', 'themes.php', 'site-themes.php', 'update-core.php' ) ) ) {
+	if ( ! in_array( $hook, array( 'plugins.php', 'themes.php', 'update-core.php' ) ) ) {
 		return;
 	}
 	wp_register_style( 'wp-autoupdates', plugin_dir_url( __FILE__ ) . 'css/wp-autoupdates.css', array() );
@@ -376,13 +376,7 @@ function wp_autoupdates_themes_enabler() {
 
 		$theme = ! empty( esc_html( $_GET['theme'] ) ) ? wp_unslash( esc_html( $_GET['theme'] ) ) : '';
 		if ( empty( $theme ) ) {
-			if ( 'themes.php' === $pagenow ) {
-				wp_redirect( self_admin_url( 'themes.php' ) );
-			}
-			else {
-				$id = ! empty( esc_html( $_GET['id'] ) ) ? wp_unslash( esc_html( $_GET['id'] ) ) : '';
-				wp_redirect( self_admin_url( "site-themes.php?id=$id" ) );
-			}
+			wp_redirect( self_admin_url( 'themes.php' ) );
 			exit;
 		}
 
@@ -402,13 +396,7 @@ function wp_autoupdates_themes_enabler() {
 		if ( is_multisite() && is_network_admin() ) {
 			$theme_status = ! empty( $_GET['theme_status'] ) ? "theme_status=" . $_GET['theme_status'] : '';
 		}
-		if ( 'themes.php' === $pagenow ) {
-			wp_redirect( self_admin_url( "themes.php?$action_type&$theme_status" ) );
-		}
-		else {
-			$id = ! empty( esc_html( $_GET['id'] ) ) ? wp_unslash( esc_html( $_GET['id'] ) ) : '';
-			wp_redirect( self_admin_url( "site-themes.php?id=$id&$action_type&$theme_status" ) );
-		}
+		wp_redirect( self_admin_url( "themes.php?$action_type&$theme_status" ) );
 		exit;
 	}
 }
@@ -422,7 +410,7 @@ function wp_autoupdates_enabler() {
 	if ( 'plugins.php' === $pagenow ) {
 		wp_autoupdates_plugins_enabler();
 	}
-	else if ( 'themes.php' === $pagenow || 'site-themes.php' === $pagenow ) {
+	else if ( 'themes.php' === $pagenow ) {
 		wp_autoupdates_themes_enabler();
 	}
 }
@@ -572,7 +560,7 @@ function wp_autoupdates_notices() {
 	if ( 'plugins.php' === $pagenow ) {
 		wp_autoupdates_plugins_notices();
 	}
-	else if ( 'themes.php' === $pagenow || 'site-themes.php' === $pagenow ) {
+	else if ( 'themes.php' === $pagenow ) {
 		wp_autoupdates_themes_notices();
 	}
 }
@@ -1160,7 +1148,6 @@ function wp_autoupdates_add_themes_autoupdates_column( $columns ) {
 	return $columns;
 }
 add_filter( 'manage_themes-network_columns', 'wp_autoupdates_add_themes_autoupdates_column' );
-add_filter( 'manage_site-themes-network_columns', 'wp_autoupdates_add_themes_autoupdates_column' );
 
 
 /**
@@ -1183,12 +1170,8 @@ function wp_autoupdates_add_themes_autoupdates_column_content( $column_name, $st
 	$themes_updates = get_site_transient( 'update_themes' );
 	$page           = isset( $_GET['paged'] ) && ! empty( $_GET['paged'] ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
 	$theme_status   = isset( $_GET['theme_status'] ) && ! empty( $_GET['theme_status'] ) ? wp_unslash( esc_html( $_GET['theme_status'] ) ) : '';
-	if ( 'themes.php' === $pagenow ) {
-		$base_url = 'themes.php?action=autoupdate&amp;theme=' . urlencode( $stylesheet ) . '&amp;paged=' . $page . '&amp;theme_status=' . $theme_status;
-	} else {
-		$id       = isset( $_GET['id'] ) && ! empty( esc_html( $_GET['id'] ) ) ? wp_unslash( esc_html( $_GET['id'] ) ) : '';
-		$base_url = 'site-themes.php?id=' . $id . '&amp;action=autoupdate&amp;theme=' . urlencode( $stylesheet ) . '&amp;paged=' . $page . '&amp;theme_status=' . $theme_status;
-	}
+	$base_url = 'themes.php?action=autoupdate&amp;theme=' . urlencode( $stylesheet ) . '&amp;paged=' . $page . '&amp;theme_status=' . $theme_status;
+
 	if ( wp_autoupdates_is_themes_auto_update_enabled() ) {
 		if ( ! isset( $themes[ $stylesheet ] ) ) {
 			return;
@@ -1258,7 +1241,6 @@ function wp_autoupdates_themes_bulk_actions( $actions ) {
 	return $actions;
 }
 add_action( 'bulk_actions-themes-network', 'wp_autoupdates_themes_bulk_actions' );
-add_action( 'bulk_actions-site-themes-network', 'wp_autoupdates_themes_bulk_actions' );
 
 
 /**
@@ -1287,15 +1269,9 @@ function wp_autoupdates_themes_bulk_actions_handle( $redirect_to, $doaction, $it
 		$page    = isset( $_GET['paged'] ) && ! empty( esc_html( $_GET['paged'] ) ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
 		$status  = isset( $_GET['theme_status'] ) && ! empty( esc_html( $_GET['theme_status'] ) ) ? wp_unslash( esc_html( $_GET['theme_status'] ) ) : '';
 		$s       = isset( $_GET['s'] ) && ! empty( esc_html( $_GET['s'] ) ) ? wp_unslash( esc_html( $_GET['s'] ) ) : '';
-		$id      = isset( $_GET['id'] ) && ! empty( esc_html( $_GET['id'] ) ) ? wp_unslash( esc_html( $_GET['id'] ) ) : '';
 
 		if ( empty( $themes ) ) {
-			if ( 'themes.php' === $pagenow ) {
-				$redirect_to = self_admin_url( "themes.php?theme_status=$status&paged=$page&s=$s" );
-			}
-			else {
-				$redirect_to = self_admin_url( "site-themes.php?id=$id&theme_status=$status&paged=$page&s=$s" );
-			}
+			$redirect_to = self_admin_url( "themes.php?theme_status=$status&paged=$page&s=$s" );
 			return $redirect_to;
 		}
 
@@ -1306,12 +1282,7 @@ function wp_autoupdates_themes_bulk_actions_handle( $redirect_to, $doaction, $it
 
 		update_site_option( 'wp_auto_update_themes', $new_autoupdated_themes );
 
-		if ( 'themes.php' === $pagenow ) {
-			$redirect_to = self_admin_url( "themes.php?enable-autoupdate=true&theme_status=$status&paged=$page&s=$s" );
-		}
-		else {
-			$redirect_to = self_admin_url( "site-themes.php?id=$id&enable-autoupdate=true&theme_status=$status&paged=$page&s=$s" );
-		}
+		$redirect_to = self_admin_url( "themes.php?enable-autoupdate=true&theme_status=$status&paged=$page&s=$s" );
 		return $redirect_to;
 	}
 
@@ -1330,15 +1301,9 @@ function wp_autoupdates_themes_bulk_actions_handle( $redirect_to, $doaction, $it
 		$page    = isset( $_GET['paged'] ) && ! empty( esc_html( $_GET['paged'] ) ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
 		$status  = isset( $_GET['theme_status'] ) && ! empty( esc_html( $_GET['theme_status'] ) ) ? wp_unslash( esc_html( $_GET['theme_status'] ) ) : '';
 		$s       = isset( $_GET['s'] ) && ! empty( esc_html( $_GET['s'] ) ) ? wp_unslash( esc_html( $_GET['s'] ) ) : '';
-		$id      = isset( $_GET['id'] ) && ! empty( esc_html( $_GET['id'] ) ) ? wp_unslash( esc_html( $_GET['id'] ) ) : '';
 
 		if ( empty( $themes ) ) {
-			if ( 'themes.php' === $pagenow ) {
-				$redirect_to = self_admin_url( "themes.php?theme_status=$status&paged=$page&s=$s" );
-			}
-			else {
-				$redirect_to = self_admin_url( "site-themes.php?id=$id&theme_status=$status&paged=$page&s=$s" );
-			}
+			$redirect_to = self_admin_url( "themes.php?theme_status=$status&paged=$page&s=$s" );
 			return $redirect_to;
 		}
 
@@ -1349,14 +1314,8 @@ function wp_autoupdates_themes_bulk_actions_handle( $redirect_to, $doaction, $it
 
 		update_site_option( 'wp_auto_update_themes', $new_autoupdated_themes );
 
-		if ( 'themes.php' === $pagenow ) {
-			$redirect_to = self_admin_url( "themes.php?disable-autoupdate=true&theme_status=$status&paged=$page&s=$s" );
-		}
-		else {
-			$redirect_to = self_admin_url( "site-themes.php?id=$id&disable-autoupdate=true&theme_status=$status&paged=$page&s=$s" );
-		}
+		$redirect_to = self_admin_url( "themes.php?disable-autoupdate=true&theme_status=$status&paged=$page&s=$s" );
 		return $redirect_to;
 	}
 }
 add_action( 'handle_network_bulk_actions-themes-network', 'wp_autoupdates_themes_bulk_actions_handle', 10, 3 );
-add_action( 'handle_network_bulk_actions-site-themes-network', 'wp_autoupdates_themes_bulk_actions_handle', 10, 3 );
