@@ -3,7 +3,7 @@ Contributors: wordpressdotorg, audrasjb, whodunitagency, pbiron, xkon, karmatose
 Requires at least: 5.3
 Tested up to: 5.4
 Requires PHP: 5.6
-Stable tag: 0.4.1
+Stable tag: 0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,22 @@ Interested in contributing to this plugin? Feel free to join us in `#core-auto-u
 7. Email notification example
 
 == Changelog ==
+
+= 0.5 =
+April 15, 2020
+- Replace Disable strings with Disable auto-updates - [#78](https://github.com/WordPress/wp-autoupdates/pull/78)
+- Update confirmation message wording - [#77](https://github.com/WordPress/wp-autoupdates/pull/77)
+- Remove Automatic Updates column from the Network Admin > Sites > Edit > Themes screen - [#76](https://github.com/WordPress/wp-autoupdates/pull/76)
+- Replace "Enable" string with "Enable auto-updates" - [#75](https://github.com/WordPress/wp-autoupdates/pull/75)
+- Remove dashicons from the UI - [#74](https://github.com/WordPress/wp-autoupdates/pull/74)
+- Fix documentation and comment standards - [#73](https://github.com/WordPress/wp-autoupdates/pull/73)
+- Remove green and red colors on texts and links - [#70](https://github.com/WordPress/wp-autoupdates/pull/70)
+- Don't display the Enable/Disable link in the Theme Details modal on a subsite in multisite - [#68](https://github.com/WordPress/wp-autoupdates/pull/68)
+- Documentation: Improve DocBlocks - [#62](https://github.com/WordPress/wp-autoupdates/pull/62)
+- I18n - Merge with similar string - [#60](https://github.com/WordPress/wp-autoupdates/pull/60)
+- Add filters and constant to allow developers to disable plugins and themes autoupdate email notifications - [#57](https://github.com/WordPress/wp-autoupdates/pull/57)
+- Switch disable link to red on Multisite Themes Screen - [#54](https://github.com/WordPress/wp-autoupdates/pull/54)
+- Wrong kick off year in readme.txt - [#42](https://github.com/WordPress/wp-autoupdates/pull/60)
 
 = 0.4.1 =
 April 2, 2020
