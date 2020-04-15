@@ -274,7 +274,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 					'<a href="%s" class="plugin-autoupdate-disable" aria-label="%s">%s</a>',
 					wp_nonce_url( 'plugins.php?action=autoupdate&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page . '&amp;plugin_status=' . $plugin_status, 'autoupdate-plugin_' . $plugin_file ),
 					$aria_label,
-					__( 'Disable', 'wp-autoupdates' )
+					__( 'Disable auto-updates', 'wp-autoupdates' )
 				);
 			}
 			echo '</p>';
@@ -1201,7 +1201,7 @@ function wp_autoupdates_add_themes_autoupdates_column_content( $column_name, $st
 					'<a href="%s" class="theme-autoupdate-disable" aria-label="%s">%s</a>',
 					wp_nonce_url( $base_url, 'autoupdate-theme_' . $stylesheet ),
 					$aria_label,
-					__( 'Disable', 'wp-autoupdates' )
+					__( 'Disable auto-updates', 'wp-autoupdates' )
 				);
 			}
 			echo '</p>';
