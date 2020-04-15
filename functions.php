@@ -57,7 +57,7 @@ function wp_autoupdates_enqueues( $hook ) {
 		wp_add_inline_script( 'jquery', $script );
 	}
 
-	if ( 'themes.php' === $hook ) {
+	if ( 'themes.php' === $hook && ! is_multisite() ) {
 		if ( wp_autoupdates_is_themes_auto_update_enabled() ) {
 			$script = 'jQuery( document ).ready( function() {';
 
