@@ -523,12 +523,12 @@ add_action( 'deleted_plugin', 'wp_autoupdates_plugin_deleted', 10, 2 );
 function wp_autoupdates_plugins_notices() {
 	if ( isset( $_GET['enable-autoupdate'] ) ) {
 		echo '<div id="message" class="notice notice-success is-dismissible"><p>';
-		_e( 'The selected plugins will now update automatically.', 'wp-autoupdates' );
+		_e( 'Selected plugins will be auto-updated.', 'wp-autoupdates' );
 		echo '</p></div>';
 	}
 	if ( isset( $_GET['disable-autoupdate'] ) ) {
 		echo '<div id="message" class="notice notice-success is-dismissible"><p>';
-		_e( 'The selected plugins won’t automatically update anymore.', 'wp-autoupdates' );
+		_e( 'Selected plugins will no longer be auto-updated.', 'wp-autoupdates' );
 		echo '</p></div>';
 	}
 }
@@ -540,12 +540,12 @@ function wp_autoupdates_plugins_notices() {
 function wp_autoupdates_themes_notices() {
 	if ( isset( $_GET['enable-autoupdate'] ) ) {
 		echo '<div id="message" class="notice notice-success is-dismissible"><p>';
-		_e( 'The selected themes will now update automatically.', 'wp-autoupdates' );
+		_e( 'Selected themes will be auto-updated.', 'wp-autoupdates' );
 		echo '</p></div>';
 	}
 	if ( isset( $_GET['disable-autoupdate'] ) ) {
 		echo '<div id="message" class="notice notice-success is-dismissible"><p>';
-		_e( 'The selected themes won’t automatically update anymore.', 'wp-autoupdates' );
+		_e( 'Selected themes will no longer be auto-updated.', 'wp-autoupdates' );
 		echo '</p></div>';
 	}
 }
