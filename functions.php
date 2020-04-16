@@ -310,7 +310,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 				);
 				echo '<p class="plugin-autoupdate-disabled">';
 				echo sprintf(
-					'<a href="%s" class="edit" aria-label="%s">%s</a>',
+					'<a href="%s" class="edit plugin-autoupdate-enable" aria-label="%s"><span class="plugin-autoupdate-label">%s</span></a>',
 					wp_nonce_url( 'plugins.php?action=autoupdate&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page . '&amp;plugin_status=' . $plugin_status, 'autoupdate-plugin_' . $plugin_file ),
 					$aria_label,
 					__( 'Enable auto-updates', 'wp-autoupdates' )
@@ -1237,7 +1237,7 @@ function wp_autoupdates_add_themes_autoupdates_column_content( $column_name, $st
 				);
 				echo '<p class="theme-autoupdate-disabled">';
 				echo sprintf(
-					'<a href="%s" class="edit" aria-label="%s">%s</a>',
+					'<a href="%s" class="edit theme-autoupdate-enable" aria-label="%s"><span class="theme-autoupdate-label">%s</span></a>',
 					wp_nonce_url( $base_url, 'autoupdate-theme_' . $stylesheet ),
 					$aria_label,
 					__( 'Enable auto-updates', 'wp-autoupdates' )
@@ -1408,10 +1408,10 @@ function wp_autoupdates_disable_auto_updates() {
 					);
 
 					$return_html = sprintf(
-						'<p class="plugin-autoupdate-disabled"><a href="%s" class="edit plugin-autoupdate-enable" aria-label="%s"><span class="dashicons dashicons-update" aria-hidden="true"></span> <span class="plugin-autoupdate-label">%s</span></a></p>',
+						'<p class="plugin-autoupdate-disabled"><a href="%s" class="edit plugin-autoupdate-enable" aria-label="%s"><span class="plugin-autoupdate-label">%s</span></a></p>',
 						esc_url_raw( $plugin_url ),
-						esc_html__( 'Enable automatic updates for', 'wp-autoupdate' ) . ' ' . esc_html( $plugin_name ),
-						esc_html__( 'Enable', 'wp-autoupdates' )
+						esc_html__( 'Auto-updates enabled', 'wp-autoupdate' ),
+						esc_html__( 'Enable auto-updates', 'wp-autoupdates' )
 					);
 
 					wp_send_json_success(
@@ -1450,10 +1450,10 @@ function wp_autoupdates_disable_auto_updates() {
 					);
 
 					$return_html = sprintf(
-						'<p class="theme-autoupdate-disabled"><a href="%s" class="edit theme-autoupdate-enable" aria-label="%s"><span class="dashicons dashicons-update" aria-hidden="true"></span> <span class="theme-autoupdate-label">%s</span></a></p>',
+						'<p class="theme-autoupdate-disabled"><a href="%s" class="edit theme-autoupdate-enable" aria-label="%s"><span class="theme-autoupdate-label">%s</span></a></p>',
 						esc_url_raw( $theme_url ),
 						esc_html__( 'Enable automatic updates for', 'wp-autoupdate' ) . ' ' . esc_html( $theme_name ),
-						esc_html__( 'Enable', 'wp-autoupdates' )
+						esc_html__( 'Enable auto-updates', 'wp-autoupdates' )
 					);
 
 					wp_send_json_success(
@@ -1555,7 +1555,7 @@ function wp_autoupdates_enable_auto_updates() {
 				'<a href="%s" class="plugin-autoupdate-disable" aria-label="%s">%s</a>',
 				esc_url_raw( $plugin_url ),
 				$aria_label,
-				esc_html__( 'Disable', 'wp-autoupdates' )
+				esc_html__( 'Disable auto-updates', 'wp-autoupdates' )
 			);
 			$return_html .= '</p>';
 
@@ -1603,7 +1603,7 @@ function wp_autoupdates_enable_auto_updates() {
 				'<a href="%s" class="theme-autoupdate-disable" aria-label="%s">%s</a>',
 				esc_url_raw( $theme_url ),
 				$aria_label,
-				esc_html__( 'Disable', 'wp-autoupdates' )
+				esc_html__( 'Disable auto-updates', 'wp-autoupdates' )
 			);
 			$return_html .= '</p>';
 
