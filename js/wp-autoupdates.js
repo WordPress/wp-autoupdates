@@ -175,7 +175,7 @@ jQuery(function ($) {
 		var $parent = $anchor.parents( '.theme-autoupdate' );
 
 		// Show loading status.
-		$anchor.addClass( 'spin' ).find( '.theme-autoupdate-label' ).html( wp_autoupdates.enabling );
+		$parent.find( '.theme-autoupdate-label' ).html( wp_autoupdates.enabling );
 
 		$.post(
 			ajaxurl,
