@@ -3,7 +3,7 @@ Contributors: wordpressdotorg, audrasjb, whodunitagency, pbiron, xkon, karmatose
 Requires at least: 5.3
 Tested up to: 5.4
 Requires PHP: 5.6
-Stable tag: 0.5.0
+Stable tag: 0.5.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,10 @@ Interested in contributing to this plugin? Feel free to join us in `#core-auto-u
 7. Email notification example
 
 == Changelog ==
+
+= 0.5.1 =
+April 16, 2020
+- Add the plugin version when enqueueing styles, for cache busting - [#79](https://github.com/WordPress/wp-autoupdates/pull/79)
 
 = 0.5 =
 April 15, 2020

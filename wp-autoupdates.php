@@ -5,7 +5,7 @@
  * Plugin Name: WordPress Auto-updates
  * Plugin URI: https://wordpress.org/plugins/wp-autoupdates
  * Description: A feature plugin to integrate Plugins & Themes automatic updates in WordPress Core.
- * Version: 0.5.0
+ * Version: 0.5.1
  * Requires at least: 5.3
  * Requires PHP: 5.6
  * Tested up to: 5.4
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Invalid request.' );
 }
 
-define( 'WP_AUTO_UPDATES_VERSION', '0.5.0' );
+define( 'WP_AUTO_UPDATES_VERSION', '0.5.1' );
 
 /**
  * Load only when needed.
