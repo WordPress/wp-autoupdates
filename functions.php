@@ -125,10 +125,10 @@ function wp_autoupdates_enqueues( $hook ) {
 			'wp-autoupdates',
 			'wp_autoupdates',
 			array(
-				'enable'       => __( 'Enable', 'wp-autoupdates' ),
-				'enabling'     => __( 'Enabling', 'wp-autoupdates' ),
-				'disable'      => __( 'Disable', 'wp-autoupdates' ),
-				'disabling'    => __( 'Disabling', 'wp-autoupdates' ),
+				'enable'       => __( 'Enable auto-updates', 'wp-autoupdates' ),
+				'enabling'     => __( 'Enabling auto-updates', 'wp-autoupdates' ),
+				'disable'      => __( 'Disable auto -updates', 'wp-autoupdates' ),
+				'disabling'    => __( 'Disabling auto updates', 'wp-autoupdates' ),
 				'auto_enabled' => __( 'Auto-updates enabled', 'wp-autoupdates' ),
 			)
 		);
