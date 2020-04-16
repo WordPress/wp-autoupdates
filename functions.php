@@ -13,7 +13,7 @@ function wp_autoupdates_enqueues( $hook ) {
 	if ( ! in_array( $hook, array( 'plugins.php', 'themes.php', 'update-core.php' ) ) ) {
 		return;
 	}
-	wp_register_style( 'wp-autoupdates', plugin_dir_url( __FILE__ ) . 'css/wp-autoupdates.css', array() );
+	wp_register_style( 'wp-autoupdates', plugin_dir_url( __FILE__ ) . 'css/wp-autoupdates.css', array(), WP_AUTO_UPDATES_VERSION );
 	wp_enqueue_style( 'wp-autoupdates' );
 
 	// Update core screen JS hack (due to lack of filters).
