@@ -46,7 +46,10 @@ Thanks to everyone who contributed to this feature plugin!
 - [@jeffpaul](https://profiles.wordpress.org/jeffpaul/)
 - [@mukesh27](https://profiles.wordpress.org/mukesh27/)
 - [@whyisjake](https://profiles.wordpress.org/whyisjake/)
-- [@azaozz](https://profiles.wordpress.org/azaozz/)
+- [@paaljoachim](https://profiles.wordpress.org/paaljoachim/)
+- [@ronalfy](https://profiles.wordpress.org/ronalfy/)
+- [@paaljoachim](https://profiles.wordpress.org/paaljoachim/)
+- [@timothybjacobs](https://profiles.wordpress.org/timothybjacobs/)
 
 ## Documentation 📚
 
@@ -84,7 +87,11 @@ Work in progress.
 
 ## Changelog 🗓
 
-## 0.5 🦚
+### 0.5
+April 16, 2020
+- Add the plugin version when enqueueing styles, for cache busting - [#79](https://github.com/WordPress/wp-autoupdates/pull/79)
+
+### 0.5 🦚
 April 15, 2020
 - Replace Disable strings with Disable auto-updates - [#78](https://github.com/WordPress/wp-autoupdates/pull/78)
 - Update confirmation message wording - [#77](https://github.com/WordPress/wp-autoupdates/pull/77)
@@ -100,11 +107,11 @@ April 15, 2020
 - Switch disable link to red on Multisite Themes Screen - [#54](https://github.com/WordPress/wp-autoupdates/pull/54)
 - Wrong kick off year in readme.txt - [#42](https://github.com/WordPress/wp-autoupdates/pull/60)
 
-## 0.4.1 🍺
+### 0.4.1 🍺
 April 2, 2020
 - Network > Sites > Edit > Themes screen doesn’t have the Autoupdates column - [#50](https://github.com/WordPress/wp-autoupdates/pull/50)
 
-## 0.4.0 🌹
+### 0.4.0 🌹
 March 30, 2020
 
 This release brings full support for Themes auto-updates.
@@ -120,7 +127,7 @@ Other changes:
 - Add and populate Automatic updates column, add and handle enable/disable auto-updates bulk actions to the multisite themes list table - [#33](https://github.com/WordPress/wp-autoupdates/pull/33)
 - Avoid duplicate Updating… dialog - [#32](https://github.com/WordPress/wp-autoupdates/pull/32)
 
-## 0.3.0 🦉
+### 0.3.0 🦉
 March 16, 2020
 - Add functions to handle plugins updates notification emails - [#54](https://github.com/audrasjb/wp-autoupdates/pull/54)
 - Remove update time text after manual update - [#43](https://github.com/audrasjb/wp-autoupdates/pull/43)
@@ -128,7 +135,7 @@ March 16, 2020
 - Specific messages for delayed or disabled cron events - [#58](https://github.com/audrasjb/wp-autoupdates/pull/58)
 - Prevent mis-match between count in Auto-updates Enabled view and the number of plugins displayed for that view by applying 'all_plugins' filter before computing that count. - [#59](https://github.com/audrasjb/wp-autoupdates/pull/59)
 
-## 0.2.1 🐜
+### 0.2.1 🐜
 March 11, 2020
 - Prevent "PHP Notice: Undefined index: plugin_status" when adding the autoupdates_column - [#47](https://github.com/audrasjb/wp-autoupdates/pull/47)
 - Add plugin_status query arg to the enable/disable links in the Automatic Updates column - [#48](https://github.com/audrasjb/wp-autoupdates/pull/48)
