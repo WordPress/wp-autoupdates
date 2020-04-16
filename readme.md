@@ -87,11 +87,11 @@ Work in progress.
 
 ## Changelog 🗓
 
-### 0.5
+### 0.5.1 🦒
 April 16, 2020
 - Add the plugin version when enqueueing styles, for cache busting - [#79](https://github.com/WordPress/wp-autoupdates/pull/79)
 
-### 0.5 🦚
+### 0.5.0 🦚
 April 15, 2020
 - Replace Disable strings with Disable auto-updates - [#78](https://github.com/WordPress/wp-autoupdates/pull/78)
 - Update confirmation message wording - [#77](https://github.com/WordPress/wp-autoupdates/pull/77)
