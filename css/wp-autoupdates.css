@@ -35,37 +35,6 @@
 	min-width: 200px;
 }
 
-.autoupdates_column .plugin-autoupdate-enabled,
-.theme-overlay .theme-autoupdate-enabled a {
-	color: #006505;
-}
-
-.autoupdates_column .plugin-autoupdate-disable,
-.theme-overlay .theme-autoupdate-disabled a {
-	color: #a00;
-}
-
-.plugin-autoupdate-enabled,
-.theme-autoupdate-enabled {
-	color: #006505;
-}
-
-.plugins .plugin-title .plugin-autoupdate-enabled .dashicons,
-#update-themes-table .plugin-title .dashicons {
-	float: none;
-	padding: 0;
-	width: auto;
-	height: auto;
-}
-
-.plugins .plugin-title .plugin-autoupdate-enabled .dashicons:before {
-	padding: 0;
-	background: transparent;
-	box-shadow: none;
-	font-size: 20px;
-	color: #006505;
-}
-
 .theme-overlay .theme-autoupdate a {
 	text-decoration: none;
 }

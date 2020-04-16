@@ -5,16 +5,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 /**
- * Enqueue styles and scripts
+ * Enqueue styles and scripts.
+ *
+ * @param string $hook The current admin page.
  */
 function wp_autoupdates_enqueues( $hook ) {
 	if ( ! in_array( $hook, array( 'plugins.php', 'themes.php', 'update-core.php' ) ) ) {
 		return;
 	}
-	wp_register_style( 'wp-autoupdates', plugin_dir_url( __FILE__ ) . 'css/wp-autoupdates.css', array() );
+	wp_register_style( 'wp-autoupdates', plugin_dir_url( __FILE__ ) . 'css/wp-autoupdates.css', array(), WP_AUTO_UPDATES_VERSION );
 	wp_enqueue_style( 'wp-autoupdates' );
 
-	// Update core screen JS hack (due to lack of filters)
+	// Update core screen JS hack (due to lack of filters).
 	if ( 'update-core.php' === $hook ) {
 		$script = 'jQuery( document ).ready(function() {';
 
@@ -23,9 +25,7 @@ function wp_autoupdates_enqueues( $hook ) {
 
 			$update_message = wp_autoupdates_get_update_message();
 			foreach ( $wp_auto_update_themes as $theme ) {
-				$autoupdate_text = ' <span class="plugin-autoupdate-enabled"><span class="dashicons dashicons-update" aria-hidden="true"></span> ';
-				$autoupdate_text .= $update_message;
-				$autoupdate_text .= '</span> ';
+				$autoupdate_text = '| <span class="plugin-autoupdate-enabled">' . $update_message . '</span> ';
 				$script .= 'jQuery(".check-column input[value=\'' . $theme . '\']").closest("tr").find(".plugin-title > p").append(\'' . $autoupdate_text . '\');';
 			}
 		}
@@ -35,9 +35,7 @@ function wp_autoupdates_enqueues( $hook ) {
 
 			$update_message = wp_autoupdates_get_update_message();
 			foreach ( $wp_auto_update_plugins as $plugin ) {
-				$autoupdate_text = ' <span class="plugin-autoupdate-enabled"><span class="dashicons dashicons-update" aria-hidden="true"></span> ';
-				$autoupdate_text .= $update_message;
-				$autoupdate_text .= '</span> ';
+				$autoupdate_text = ' | <span class="plugin-autoupdate-enabled">' . $update_message . '</span> ';
 				$script .= 'jQuery(".check-column input[value=\'' . $plugin . '\']").closest("tr").find(".plugin-title > p").append(\'' . $autoupdate_text . '\');';
 			}
 		}
@@ -59,22 +57,22 @@ function wp_autoupdates_enqueues( $hook ) {
 		wp_add_inline_script( 'jquery', $script );
 	}
 
-	if ( 'themes.php' === $hook ) {
+	if ( 'themes.php' === $hook && ! is_multisite() ) {
 		if ( wp_autoupdates_is_themes_auto_update_enabled() ) {
 			$script = 'jQuery( document ).ready( function() {';
 
 			/* translators: %s: Theme name. */
 			$aria_label_enable  = sprintf( _x( 'Enable automatic update for %s', 'theme' ), '{{ data.name }}' );
- 			$aria_label_disable = sprintf( _x( 'Disable automatic update for %s', 'theme' ), '{{ data.name }}' );
+			$aria_label_disable = sprintf( _x( 'Disable automatic update for %s', 'theme' ), '{{ data.name }}' );
 
 			// Put the enable/disable link below the author and before the update box.
 			$autoupdate_text = '<p class="theme-autoupdate"> <# if ( data.autoupdate ) { #>';
 			$autoupdate_text .= '<span class="theme-autoupdate-disabled">';
-			$autoupdate_text .= '<a class="theme-autoupdate-disable" href="{{{ data.actions.autoupdate }}}" aria-label="' . $aria_label_disable . '"><span class="dashicons dashicons-update" aria-hidden="true"></span> <span class="theme-autoupdate-label">' . __( 'Disable automatic updates' ) . '</span></a>';
+			$autoupdate_text .= '<a href="{{{ data.actions.autoupdate }}}" aria-label="' . $aria_label_disable . '">' . __( 'Disable automatic updates' ) . '</a>';
 			$autoupdate_text .= '</span>';
 			$autoupdate_text .= '<# } else { #>';
 			$autoupdate_text .= '<span class="theme-autoupdate-enabled">';
-			$autoupdate_text .= '<a class="theme-autoupdate-enable" href="{{{ data.actions.autoupdate }}}" aria-label="' . $aria_label_enable . '"><span class="dashicons dashicons-update" aria-hidden="true"></span><span class="theme-autoupdate-label"> ' . __( 'Enable automatic updates' ) . '</span></a>';
+			$autoupdate_text .= '<a href="{{{ data.actions.autoupdate }}}" aria-label="' . $aria_label_enable . '">' . __( 'Enable automatic updates' ) . '</a>';
 			$autoupdate_text .= '</span>';
 			$autoupdate_text .= '<# } #> </p>';
 
@@ -141,6 +139,9 @@ add_action( 'admin_enqueue_scripts', 'wp_autoupdates_enqueues' );
 
 /**
  * Filter the themes prepared for JavaScript, for themes.php.
+ *
+ * @param array $prepared_themes Array of theme data.
+ * @return array
  */
 function wp_autoupdates_prepare_themes_for_js( $prepared_themes ) {
 	$wp_auto_update_themes = get_option( 'wp_auto_update_themes', array() );
@@ -162,6 +163,8 @@ add_action( 'wp_prepare_themes_for_js', 'wp_autoupdates_prepare_themes_for_js' )
 
 /**
  * Checks whether plugins manual auto-update is enabled.
+ *
+ * @return bool True if plugins auto-update is enabled, false otherwise.
  */
 function wp_autoupdates_is_plugins_auto_update_enabled() {
 	$enabled = ! defined( 'WP_DISABLE_PLUGINS_AUTO_UPDATE' ) || ! WP_DISABLE_PLUGINS_AUTO_UPDATE;
@@ -177,6 +180,8 @@ function wp_autoupdates_is_plugins_auto_update_enabled() {
 
 /**
  * Checks whether themes manual auto-update is enabled.
+ *
+ * @return bool True if themes auto-update is enabled, false otherwise.
  */
 function wp_autoupdates_is_themes_auto_update_enabled() {
 	$enabled = ! defined( 'WP_DISABLE_THEMES_AUTO_UPDATE' ) || ! WP_DISABLE_THEMES_AUTO_UPDATE;
@@ -192,6 +197,10 @@ function wp_autoupdates_is_themes_auto_update_enabled() {
 
 /**
  * Autoupdate selected plugins.
+ *
+ * @param bool $update Whether to update.
+ * @param object The update offer.
+ * @return bool
  */
 function wp_autoupdates_selected_plugins( $update, $item ) {
 	$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
@@ -206,6 +215,10 @@ add_filter( 'auto_update_plugin', 'wp_autoupdates_selected_plugins', 10, 2 );
 
 /**
  * Autoupdate selected themes.
+ *
+ * @param bool $update Whether to update.
+ * @param object The update offer.
+ * @return bool
  */
 function wp_autoupdates_selected_themes( $update, $item ) {
 	$wp_auto_update_themes = get_site_option( 'wp_auto_update_themes', array() );
@@ -220,6 +233,9 @@ add_filter( 'auto_update_theme', 'wp_autoupdates_selected_themes', 10, 2 );
 
 /**
  * Add autoupdate column to plugins screen.
+ *
+ * @param string[] The column header labels keyed by column ID.
+ * @return string[]
  */
 function wp_autoupdates_add_plugins_autoupdates_column( $columns ) {
 	if ( ! current_user_can( 'update_plugins' ) || ! wp_autoupdates_is_plugins_auto_update_enabled() ) {
@@ -233,7 +249,11 @@ function wp_autoupdates_add_plugins_autoupdates_column( $columns ) {
 add_filter( is_multisite() ? 'manage_plugins-network_columns' : 'manage_plugins_columns', 'wp_autoupdates_add_plugins_autoupdates_column' );
 
 /**
- * Render autoupdate column’s content.
+ * Render autoupdate column's content.
+ *
+ * @param string              Name of the column.
+ * @param string $plugin_file Path to the plugin file relative to the plugins directory.
+ * @param array $plugin_data  An array of plugin data.
  */
 function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $plugin_file, $plugin_data ) {
 	if ( ! current_user_can( 'update_plugins' ) || ! wp_autoupdates_is_plugins_auto_update_enabled() ) {
@@ -275,7 +295,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 					'<a href="%s" class="plugin-autoupdate-disable" aria-label="%s">%s</a>',
 					wp_nonce_url( 'plugins.php?action=autoupdate&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page . '&amp;plugin_status=' . $plugin_status, 'autoupdate-plugin_' . $plugin_file ),
 					$aria_label,
-					__( 'Disable', 'wp-autoupdates' )
+					__( 'Disable auto-updates', 'wp-autoupdates' )
 				);
 			}
 			echo '</p>';
@@ -290,10 +310,10 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 				);
 				echo '<p class="plugin-autoupdate-disabled">';
 				echo sprintf(
-					'<a href="%s" class="edit plugin-autoupdate-enable" aria-label="%s"><span class="dashicons dashicons-update" aria-hidden="true"></span> <span class="plugin-autoupdate-label">%s</span></a>',
+					'<a href="%s" class="edit" aria-label="%s">%s</a>',
 					wp_nonce_url( 'plugins.php?action=autoupdate&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page . '&amp;plugin_status=' . $plugin_status, 'autoupdate-plugin_' . $plugin_file ),
 					$aria_label,
-					__( 'Enable', 'wp-autoupdates' )
+					__( 'Enable auto-updates', 'wp-autoupdates' )
 				);
 				echo '</p>';
 			}
@@ -304,7 +324,10 @@ add_action( 'manage_plugins_custom_column' , 'wp_autoupdates_add_plugins_autoupd
 
 
 /**
- * Add plugins autoupdates bulk actions
+ * Add plugins autoupdates bulk actions.
+ *
+ * @param string[] $actions An array of the available bulk actions.
+ * @return string[]
  */
 function wp_autoupdates_plugins_bulk_actions( $actions ) {
     $actions['enable-autoupdate-selected']  = __( 'Enable auto-updates', 'wp-autoupdates' );
@@ -316,7 +339,7 @@ add_action( 'bulk_actions-plugins-network', 'wp_autoupdates_plugins_bulk_actions
 
 
 /**
- * Handles auto-updates enabling for plugins
+ * Handles auto-updates enabling for plugins.
  */
 function wp_autoupdates_plugins_enabler() {
 	$action = isset( $_GET['action'] ) && ! empty( esc_html( $_GET['action'] ) ) ? wp_unslash( esc_html( $_GET['action'] ) ) : '';
@@ -357,7 +380,7 @@ function wp_autoupdates_plugins_enabler() {
 
 
 /**
- * Handles auto-updates enabling for themes
+ * Handles auto-updates enabling for themes.
  */
 function wp_autoupdates_themes_enabler() {
 	$pagenow = $GLOBALS['pagenow'];
@@ -374,13 +397,7 @@ function wp_autoupdates_themes_enabler() {
 
 		$theme = ! empty( esc_html( $_GET['theme'] ) ) ? wp_unslash( esc_html( $_GET['theme'] ) ) : '';
 		if ( empty( $theme ) ) {
-			if ( 'themes.php' === $pagenow ) {
-				wp_redirect( self_admin_url( 'themes.php' ) );
-			}
-			else {
-				$id = ! empty( esc_html( $_GET['id'] ) ) ? wp_unslash( esc_html( $_GET['id'] ) ) : '';
-				wp_redirect( self_admin_url( "site-themes.php?id=$id" ) );
-			}
+			wp_redirect( self_admin_url( 'themes.php' ) );
 			exit;
 		}
 
@@ -400,27 +417,21 @@ function wp_autoupdates_themes_enabler() {
 		if ( is_multisite() && is_network_admin() ) {
 			$theme_status = ! empty( $_GET['theme_status'] ) ? "theme_status=" . $_GET['theme_status'] : '';
 		}
-		if ( 'themes.php' === $pagenow ) {
-			wp_redirect( self_admin_url( "themes.php?$action_type&$theme_status" ) );
-		}
-		else {
-			$id = ! empty( esc_html( $_GET['id'] ) ) ? wp_unslash( esc_html( $_GET['id'] ) ) : '';
-			wp_redirect( self_admin_url( "site-themes.php?id=$id&$action_type&$theme_status" ) );
-		}
+		wp_redirect( self_admin_url( "themes.php?$action_type&$theme_status" ) );
 		exit;
 	}
 }
 
 
 /**
- * Handle autoupdates enabling
+ * Handle autoupdates enabling.
  */
 function wp_autoupdates_enabler() {
 	$pagenow = $GLOBALS['pagenow'];
 	if ( 'plugins.php' === $pagenow ) {
 		wp_autoupdates_plugins_enabler();
 	}
-	else if ( 'themes.php' === $pagenow || 'site-themes.php' === $pagenow ) {
+	else if ( 'themes.php' === $pagenow ) {
 		wp_autoupdates_themes_enabler();
 	}
 }
@@ -428,7 +439,12 @@ add_action( 'admin_init', 'wp_autoupdates_enabler' );
 
 
 /**
- * Handle plugins autoupdates bulk actions
+ * Handle plugins autoupdates bulk actions.
+ *
+ * @param string $redirect_to The redirect URL.
+ * @param string $doaction    The action being taken.
+ * @param array  $items       The items to take the action on. Accepts an array of plugins.
+ * @return string
  */
 function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $items ) {
 	if ( 'enable-autoupdate-selected' === $doaction ) {
@@ -501,7 +517,10 @@ add_action( 'handle_bulk_actions-plugins-network', 'wp_autoupdates_plugins_bulk_
 
 
 /**
- * Handle cleanup when plugin deleted
+ * Handle cleanup when plugin deleted.
+ *
+ * @param string $plugin_file Path to the plugin file relative to the plugins directory.
+ * @param bool   $deleted     Whether the plugin deletion was successful.
  */
 function wp_autoupdates_plugin_deleted( $plugin_file, $deleted ) {
 	// Do nothing if the plugin wasn't deleted
@@ -520,49 +539,49 @@ add_action( 'deleted_plugin', 'wp_autoupdates_plugin_deleted', 10, 2 );
 
 
 /**
- * Auto-update notices for plugins
+ * Auto-update notices for plugins.
  */
 function wp_autoupdates_plugins_notices() {
 	if ( isset( $_GET['enable-autoupdate'] ) ) {
 		echo '<div id="message" class="notice notice-success is-dismissible"><p>';
-		_e( 'The selected plugins will now update automatically.', 'wp-autoupdates' );
+		_e( 'Selected plugins will be auto-updated.', 'wp-autoupdates' );
 		echo '</p></div>';
 	}
 	if ( isset( $_GET['disable-autoupdate'] ) ) {
 		echo '<div id="message" class="notice notice-success is-dismissible"><p>';
-		_e( 'The selected plugins won’t automatically update anymore.', 'wp-autoupdates' );
+		_e( 'Selected plugins will no longer be auto-updated.', 'wp-autoupdates' );
 		echo '</p></div>';
 	}
 }
 
 
 /**
- * Auto-update notices for themes
+ * Auto-update notices for themes.
  */
 function wp_autoupdates_themes_notices() {
 	if ( isset( $_GET['enable-autoupdate'] ) ) {
 		echo '<div id="message" class="notice notice-success is-dismissible"><p>';
-		_e( 'The selected themes will now update automatically.', 'wp-autoupdates' );
+		_e( 'Selected themes will be auto-updated.', 'wp-autoupdates' );
 		echo '</p></div>';
 	}
 	if ( isset( $_GET['disable-autoupdate'] ) ) {
 		echo '<div id="message" class="notice notice-success is-dismissible"><p>';
-		_e( 'The selected themes won’t automatically update anymore.', 'wp-autoupdates' );
+		_e( 'Selected themes will no longer be auto-updated.', 'wp-autoupdates' );
 		echo '</p></div>';
 	}
 }
 
 
 /**
- * Auto-update notices
+ * Auto-update notices.
  */
 function wp_autoupdates_notices() {
-	// Plugins screen
+	// Plugins screen.
 	$pagenow = $GLOBALS['pagenow'];
 	if ( 'plugins.php' === $pagenow ) {
 		wp_autoupdates_plugins_notices();
 	}
-	else if ( 'themes.php' === $pagenow || 'site-themes.php' === $pagenow ) {
+	else if ( 'themes.php' === $pagenow ) {
 		wp_autoupdates_themes_notices();
 	}
 }
@@ -577,6 +596,9 @@ add_action( 'network_admin_notices', 'wp_autoupdates_notices' );
  * then this should be encorporated there.
  *
  * @global array  $totals Counts by plugin_status, set in `WP_Plugins_List_Table::prepare_items()`.
+ *
+ * @param string[] $status_links An array of available list table views.
+ * @return string[]
  */
 function wp_autoupdates_plugins_status_links( $status_links ) {
 	global $totals;
@@ -654,6 +676,8 @@ add_action( is_multisite() ? 'views_plugins-network' : 'views_plugins', 'wp_auto
  *
  * @global WP_Plugins_List_Table $wp_list_table The global list table object.  Set in `wp-admin/plugins.php`.
  * @global int                   $page          The current page of plugins displayed.  Set in WP_Plugins_List_Table::__construct().
+ *
+ * @param array[] $plugins An array of arrays containing information on all installed plugins.
  */
 function wp_autoupdates_plugins_filter_plugins_by_status( $plugins ) {
 	global $wp_list_table, $page;
@@ -713,13 +737,42 @@ function wp_autoupdates_plugins_filter_plugins_by_status( $plugins ) {
 add_action( 'pre_current_active_plugins', 'wp_autoupdates_plugins_filter_plugins_by_status' );
 
 
-/*
- * Populate site health informations
+/**
+ * Populate site health informations.
+ *
+ * @param array $args {
+ *     The debug information to be added to the core information page.
+ *
+ *     This is an associative multi-dimensional array, up to three levels deep. The topmost array holds the sections.
+ *     Each section has a `$fields` associative array (see below), and each `$value` in `$fields` can be
+ *     another associative array of name/value pairs when there is more structured data to display.
+ *
+ *     @type string  $label        The title for this section of the debug output.
+ *     @type string  $description  Optional. A description for your information section which may contain basic HTML
+ *                                 markup, inline tags only as it is outputted in a paragraph.
+ *     @type boolean $show_count   Optional. If set to `true` the amount of fields will be included in the title for
+ *                                 this section.
+ *     @type boolean $private      Optional. If set to `true` the section and all associated fields will be excluded
+ *                                 from the copied data.
+ *     @type array   $fields {
+ *         An associative array containing the data to be displayed.
+ *
+ *         @type string  $label    The label for this piece of information.
+ *         @type string  $value    The output that is displayed for this field. Text should be translated. Can be
+ *                                 an associative array that is displayed as name/value pairs.
+ *         @type string  $debug    Optional. The output that is used for this field when the user copies the data.
+ *                                 It should be more concise and not translated. If not set, the content of `$value` is used.
+ *                                 Note that the array keys are used as labels for the copied data.
+ *         @type boolean $private  Optional. If set to `true` the field will not be included in the copied data
+ *                                 allowing you to show, for example, API keys here.
+ *     }
+ * }
+ * @return array
  */
 function wp_autoupdates_debug_information( $info ) {
 	// Plugins
 	if ( wp_autoupdates_is_plugins_auto_update_enabled() ) {
-		// Populate plugins informations
+		// Populate plugins informations.
 		$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
 
 		$plugins        = get_plugins();
@@ -778,7 +831,7 @@ function wp_autoupdates_debug_information( $info ) {
 	}
 
 	if ( wp_autoupdates_is_themes_auto_update_enabled() ) {
-		// Populate themes informations
+		// Populate themes informations.
 		$wp_auto_update_themes = get_site_option( 'wp_auto_update_themes', array() );
 
 		$themes       = wp_get_themes();
@@ -792,7 +845,7 @@ function wp_autoupdates_debug_information( $info ) {
 				$theme_part = 'wp-active-theme';
 
 				if ( in_array( $theme_path, $wp_auto_update_themes ) ) {
-					$theme_auto_update_string       = sprintf( __( 'Enabled', 'wp-autoupdates' ) );
+					$theme_auto_update_string = sprintf( __( 'Enabled', 'wp-autoupdates' ) );
 				} else {
 					$theme_auto_update_string = sprintf( __( 'Disabled', 'wp-autoupdates' ) );
 				}
@@ -830,10 +883,10 @@ function wp_autoupdates_debug_information( $info ) {
 
 				if ( in_array( $theme_path, $wp_auto_update_themes ) ) {
 					$theme_version_string       .= ' | ' . sprintf( __( 'Auto-updates enabled', 'wp-autoupdates' ) );
-					$theme_version_string_debug .= sprintf( __( 'auto-updates enabled', 'wp-autoupdates' ) );
+					$theme_version_string_debug .= sprintf( __( 'Auto-updates enabled', 'wp-autoupdates' ) );
 				} else {
 					$theme_version_string       .= ' | ' . sprintf( __( 'Auto-updates disabled', 'wp-autoupdates' ) );
-					$theme_version_string_debug .= sprintf( __( 'auto-updates disabled', 'wp-autoupdates' ) );
+					$theme_version_string_debug .= sprintf( __( 'Auto-updates disabled', 'wp-autoupdates' ) );
 				}
 
 				$theme_name = sanitize_text_field( $theme['Name'] );
@@ -847,7 +900,7 @@ function wp_autoupdates_debug_information( $info ) {
 		}
 	}
 
-	// Populate constants informations
+	// Populate constants informations.
 	$plugins_enabled = defined( 'WP_DISABLE_PLUGINS_AUTO_UPDATE' ) ? WP_DISABLE_PLUGINS_AUTO_UPDATE : __( 'Undefined', 'wp-autoupdates' );
 	$info['wp-constants']['fields']['WP_DISABLE_PLUGINS_AUTO_UPDATE'] = array(
 		'label' => 'WP_DISABLE_PLUGINS_AUTO_UPDATE',
@@ -868,6 +921,40 @@ add_filter( 'debug_information', 'wp_autoupdates_debug_information' );
 
 
 /**
+ * Checks whether plugins auto-update email notifications are enabled.
+ *
+ * @return bool True if plugins notifications are enabled, false otherwise.
+ */
+function wp_autoupdates_is_plugins_auto_update_email_enabled() {
+	$enabled = ! defined( 'WP_DISABLE_PLUGINS_AUTO_UPDATE_EMAIL' ) || ! WP_DISABLE_PLUGINS_AUTO_UPDATE;
+
+	/**
+	 * Filters whether plugins auto-update email notifications are enabled.
+	 *
+	 * @param bool $enabled True if plugins notifications are enabled, false otherwise.
+	 */
+	return apply_filters( 'send_plugins_auto_update_email', $enabled );
+}
+
+
+/**
+ * Checks whether themes auto-update email notifications are enabled.
+ *
+ * @return bool True if themes notifications are enabled, false otherwise.
+ */
+function wp_autoupdates_is_themes_auto_update_email_enabled() {
+	$enabled = ! defined( 'WP_DISABLE_THEMES_AUTO_UPDATE_EMAIL' ) || ! WP_DISABLE_THEMES_AUTO_UPDATE;
+
+	/**
+	 * Filters whether themes auto-update email notifications are enabled.
+	 *
+	 * @param bool $enabled True if themes notifications are enabled, false otherwise.
+	 */
+	return apply_filters( 'send_themes_auto_update_email', $enabled );
+}
+
+
+/**
  * If we tried to perform plugin or theme updates, check if we should send an email.
  *
  * @param object $results The result of updates tasks.
@@ -875,7 +962,7 @@ add_filter( 'debug_information', 'wp_autoupdates_debug_information' );
 function wp_autoupdates_automatic_updates_complete_notification( $results ) {
 	$successful_updates = array();
 	$failed_updates = array();
-	if ( isset( $results['plugin'] ) ) {
+	if ( isset( $results['plugin'] ) && wp_autoupdates_is_plugins_auto_update_email_enabled() ) {
 		foreach ( $results['plugin'] as $update_result ) {
 			if ( true === $update_result->result ) {
 				$successful_updates['plugin'][] = $update_result;
@@ -884,7 +971,7 @@ function wp_autoupdates_automatic_updates_complete_notification( $results ) {
 			}
 		}
 	}
-	if ( isset( $results['theme'] ) ) {
+	if ( isset( $results['theme'] ) && wp_autoupdates_is_themes_auto_update_enabled() ) {
 		foreach ( $results['theme'] as $update_result ) {
 			if ( true === $update_result->result ) {
 				$successful_updates['theme'][] = $update_result;
@@ -924,7 +1011,7 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 	switch ( $type ) {
 		case 'success':
 			/* translators: %s: Site title. */
-			$subject = __( '[%s] Some plugins or themes have automatically updated', 'wp-autoupdates' );
+			$subject = __( '[%s] Some plugins or themes were automatically updated', 'wp-autoupdates' );
 			break;
 		case 'fail':
 			/* translators: %s: Site title. */
@@ -939,10 +1026,10 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 			break;
 		case 'mixed':
 			/* translators: %s: Site title. */
-			$subject = __( '[%s] Some plugins/themes have automatically updated', 'wp-autoupdates' );
+			$subject = __( '[%s] Some plugins or themes were automatically updated', 'wp-autoupdates' );
 			$body[] = sprintf(
 				/* translators: %s: Home URL. */
-				__( 'Howdy! There were some failures while attempting to update plugins/themes on your site at %s.', 'wp-autoupdates' ),
+				__( 'Howdy! Failures occurred when attempting to update plugins/themes on your site at %s.', 'wp-autoupdates' ),
 				home_url()
 			);
 			$body[] = "\n";
@@ -1007,6 +1094,7 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 
 	/**
 	 * Filters the email sent following an automatic background plugin update.
+	 *
 	 * @param array $email {
 	 *     Array of email arguments that will be passed to wp_mail().
 	 *
@@ -1018,7 +1106,7 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 	 * }
 	 * @param string $type               The type of email being sent. Can be one of
 	 *                                   'success', 'fail', 'mixed'.
-	 * @param object $successful_updates The updates that succeded.
+	 * @param object $successful_updates The updates that succeeded.
 	 * @param object $failed_updates     The updates that failed.
 	 */
 	$email = apply_filters( 'wp_autoupdates_notifications_email', $email, $type, $successful_updates, $failed_updates );
@@ -1067,6 +1155,9 @@ function wp_autoupdates_get_update_message() {
 
 /**
  * Add autoupdate column to network themes screen.
+ *
+ * @param string[] The column header labels keyed by column ID.
+ * @return string[]
  */
 function wp_autoupdates_add_themes_autoupdates_column( $columns ) {
 	if ( ! current_user_can( 'update_themes' ) || ! wp_autoupdates_is_themes_auto_update_enabled() ) {
@@ -1081,7 +1172,11 @@ add_filter( 'manage_themes-network_columns', 'wp_autoupdates_add_themes_autoupda
 
 
 /**
- * Render autoupdate column’s content.
+ * Render autoupdate column's content.
+ *
+ * @param string             Name of the column.
+ * @param string $stylesheet Directory name of the theme.
+ * @param WP_Theme $theme    Current WP_Theme object.
  */
 function wp_autoupdates_add_themes_autoupdates_column_content( $column_name, $stylesheet, $theme ) {
 	$pagenow = $GLOBALS['pagenow'];
@@ -1096,12 +1191,8 @@ function wp_autoupdates_add_themes_autoupdates_column_content( $column_name, $st
 	$themes_updates = get_site_transient( 'update_themes' );
 	$page           = isset( $_GET['paged'] ) && ! empty( $_GET['paged'] ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
 	$theme_status   = isset( $_GET['theme_status'] ) && ! empty( $_GET['theme_status'] ) ? wp_unslash( esc_html( $_GET['theme_status'] ) ) : '';
-	if ( 'themes.php' === $pagenow ) {
-		$base_url = 'themes.php?action=autoupdate&amp;theme=' . urlencode( $stylesheet ) . '&amp;paged=' . $page . '&amp;theme_status=' . $theme_status;
-	} else {
-		$id       = isset( $_GET['id'] ) && ! empty( esc_html( $_GET['id'] ) ) ? wp_unslash( esc_html( $_GET['id'] ) ) : '';
-		$base_url = 'site-themes.php?id=' . $id . '&amp;action=autoupdate&amp;theme=' . urlencode( $stylesheet ) . '&amp;paged=' . $page . '&amp;theme_status=' . $theme_status;
-	}
+	$base_url = 'themes.php?action=autoupdate&amp;theme=' . urlencode( $stylesheet ) . '&amp;paged=' . $page . '&amp;theme_status=' . $theme_status;
+
 	if ( wp_autoupdates_is_themes_auto_update_enabled() ) {
 		if ( ! isset( $themes[ $stylesheet ] ) ) {
 			return;
@@ -1131,7 +1222,7 @@ function wp_autoupdates_add_themes_autoupdates_column_content( $column_name, $st
 					'<a href="%s" class="theme-autoupdate-disable" aria-label="%s">%s</a>',
 					wp_nonce_url( $base_url, 'autoupdate-theme_' . $stylesheet ),
 					$aria_label,
-					__( 'Disable', 'wp-autoupdates' )
+					__( 'Disable auto-updates', 'wp-autoupdates' )
 				);
 			}
 			echo '</p>';
@@ -1146,10 +1237,10 @@ function wp_autoupdates_add_themes_autoupdates_column_content( $column_name, $st
 				);
 				echo '<p class="theme-autoupdate-disabled">';
 				echo sprintf(
-					'<a href="%s" class="edit theme-autoupdate-enable" aria-label="%s"><span class="dashicons dashicons-update" aria-hidden="true"></span> %s</a>',
+					'<a href="%s" class="edit" aria-label="%s">%s</a>',
 					wp_nonce_url( $base_url, 'autoupdate-theme_' . $stylesheet ),
 					$aria_label,
-					__( 'Enable', 'wp-autoupdates' )
+					__( 'Enable auto-updates', 'wp-autoupdates' )
 				);
 				echo '</p>';
 			}
@@ -1160,7 +1251,10 @@ add_action( 'manage_themes_custom_column' , 'wp_autoupdates_add_themes_autoupdat
 
 
 /**
- * Add themes autoupdates bulk actions
+ * Add themes autoupdates bulk actions.
+ *
+ * @param string[] $actions An array of the available bulk actions.
+ * @return string[]
  */
 function wp_autoupdates_themes_bulk_actions( $actions ) {
 	$actions['enable-autoupdate-selected']  = __( 'Enable auto-updates', 'wp-autoupdates' );
@@ -1168,11 +1262,15 @@ function wp_autoupdates_themes_bulk_actions( $actions ) {
 	return $actions;
 }
 add_action( 'bulk_actions-themes-network', 'wp_autoupdates_themes_bulk_actions' );
-add_action( 'bulk_actions-site-themes-network', 'wp_autoupdates_themes_bulk_actions' );
 
 
 /**
- * Handle themes autoupdates bulk actions
+ * Handle themes autoupdates bulk actions.
+ *
+ * @param string $redirect_to The redirect URL.
+ * @param string $doaction    The action being taken.
+ * @param array $items 	      The items to take the action on. Accepts an array of themes.
+ * @return string
  */
 function wp_autoupdates_themes_bulk_actions_handle( $redirect_to, $doaction, $items ) {
 	$pagenow = $GLOBALS['pagenow'];
@@ -1192,15 +1290,9 @@ function wp_autoupdates_themes_bulk_actions_handle( $redirect_to, $doaction, $it
 		$page    = isset( $_GET['paged'] ) && ! empty( esc_html( $_GET['paged'] ) ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
 		$status  = isset( $_GET['theme_status'] ) && ! empty( esc_html( $_GET['theme_status'] ) ) ? wp_unslash( esc_html( $_GET['theme_status'] ) ) : '';
 		$s       = isset( $_GET['s'] ) && ! empty( esc_html( $_GET['s'] ) ) ? wp_unslash( esc_html( $_GET['s'] ) ) : '';
-		$id      = isset( $_GET['id'] ) && ! empty( esc_html( $_GET['id'] ) ) ? wp_unslash( esc_html( $_GET['id'] ) ) : '';
 
 		if ( empty( $themes ) ) {
-			if ( 'themes.php' === $pagenow ) {
-				$redirect_to = self_admin_url( "themes.php?theme_status=$status&paged=$page&s=$s" );
-			}
-			else {
-				$redirect_to = self_admin_url( "site-themes.php?id=$id&theme_status=$status&paged=$page&s=$s" );
-			}
+			$redirect_to = self_admin_url( "themes.php?theme_status=$status&paged=$page&s=$s" );
 			return $redirect_to;
 		}
 
@@ -1211,12 +1303,7 @@ function wp_autoupdates_themes_bulk_actions_handle( $redirect_to, $doaction, $it
 
 		update_site_option( 'wp_auto_update_themes', $new_autoupdated_themes );
 
-		if ( 'themes.php' === $pagenow ) {
-			$redirect_to = self_admin_url( "themes.php?enable-autoupdate=true&theme_status=$status&paged=$page&s=$s" );
-		}
-		else {
-			$redirect_to = self_admin_url( "site-themes.php?id=$id&enable-autoupdate=true&theme_status=$status&paged=$page&s=$s" );
-		}
+		$redirect_to = self_admin_url( "themes.php?enable-autoupdate=true&theme_status=$status&paged=$page&s=$s" );
 		return $redirect_to;
 	}
 
@@ -1235,15 +1322,9 @@ function wp_autoupdates_themes_bulk_actions_handle( $redirect_to, $doaction, $it
 		$page    = isset( $_GET['paged'] ) && ! empty( esc_html( $_GET['paged'] ) ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
 		$status  = isset( $_GET['theme_status'] ) && ! empty( esc_html( $_GET['theme_status'] ) ) ? wp_unslash( esc_html( $_GET['theme_status'] ) ) : '';
 		$s       = isset( $_GET['s'] ) && ! empty( esc_html( $_GET['s'] ) ) ? wp_unslash( esc_html( $_GET['s'] ) ) : '';
-		$id      = isset( $_GET['id'] ) && ! empty( esc_html( $_GET['id'] ) ) ? wp_unslash( esc_html( $_GET['id'] ) ) : '';
 
 		if ( empty( $themes ) ) {
-			if ( 'themes.php' === $pagenow ) {
-				$redirect_to = self_admin_url( "themes.php?theme_status=$status&paged=$page&s=$s" );
-			}
-			else {
-				$redirect_to = self_admin_url( "site-themes.php?id=$id&theme_status=$status&paged=$page&s=$s" );
-			}
+			$redirect_to = self_admin_url( "themes.php?theme_status=$status&paged=$page&s=$s" );
 			return $redirect_to;
 		}
 
@@ -1254,17 +1335,11 @@ function wp_autoupdates_themes_bulk_actions_handle( $redirect_to, $doaction, $it
 
 		update_site_option( 'wp_auto_update_themes', $new_autoupdated_themes );
 
-		if ( 'themes.php' === $pagenow ) {
-			$redirect_to = self_admin_url( "themes.php?disable-autoupdate=true&theme_status=$status&paged=$page&s=$s" );
-		}
-		else {
-			$redirect_to = self_admin_url( "site-themes.php?id=$id&disable-autoupdate=true&theme_status=$status&paged=$page&s=$s" );
-		}
+		$redirect_to = self_admin_url( "themes.php?disable-autoupdate=true&theme_status=$status&paged=$page&s=$s" );
 		return $redirect_to;
 	}
 }
 add_action( 'handle_network_bulk_actions-themes-network', 'wp_autoupdates_themes_bulk_actions_handle', 10, 3 );
-add_action( 'handle_network_bulk_actions-site-themes-network', 'wp_autoupdates_themes_bulk_actions_handle', 10, 3 );
 
 /**
  * Disable auto updates via Ajax.

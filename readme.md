@@ -84,8 +84,28 @@ Work in progress.
 
 ## Changelog 🗓
 
+## 0.5 🦚
+April 15, 2020
+- Replace Disable strings with Disable auto-updates - [#78](https://github.com/WordPress/wp-autoupdates/pull/78)
+- Update confirmation message wording - [#77](https://github.com/WordPress/wp-autoupdates/pull/77)
+- Remove Automatic Updates column from the Network Admin > Sites > Edit > Themes screen - [#76](https://github.com/WordPress/wp-autoupdates/pull/76)
+- Replace "Enable" string with "Enable auto-updates" - [#75](https://github.com/WordPress/wp-autoupdates/pull/75)
+- Remove dashicons from the UI - [#74](https://github.com/WordPress/wp-autoupdates/pull/74)
+- Fix documentation and comment standards - [#73](https://github.com/WordPress/wp-autoupdates/pull/73)
+- Remove green and red colors on texts and links - [#70](https://github.com/WordPress/wp-autoupdates/pull/70)
+- Don't display the Enable/Disable link in the Theme Details modal on a subsite in multisite - [#68](https://github.com/WordPress/wp-autoupdates/pull/68)
+- Documentation: Improve DocBlocks - [#62](https://github.com/WordPress/wp-autoupdates/pull/62)
+- I18n - Merge with similar string - [#60](https://github.com/WordPress/wp-autoupdates/pull/60)
+- Add filters and constant to allow developers to disable plugins and themes autoupdate email notifications - [#57](https://github.com/WordPress/wp-autoupdates/pull/57)
+- Switch disable link to red on Multisite Themes Screen - [#54](https://github.com/WordPress/wp-autoupdates/pull/54)
+- Wrong kick off year in readme.txt - [#42](https://github.com/WordPress/wp-autoupdates/pull/60)
+
+## 0.4.1 🍺
+April 2, 2020
+- Network > Sites > Edit > Themes screen doesn’t have the Autoupdates column - [#50](https://github.com/WordPress/wp-autoupdates/pull/50)
+
 ## 0.4.0 🌹
-March, 30, 2020
+March 30, 2020
 
 This release brings full support for Themes auto-updates.
 
