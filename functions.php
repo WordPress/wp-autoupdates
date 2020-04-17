@@ -118,7 +118,7 @@ function wp_autoupdates_enqueues( $hook ) {
 			'wp-autoupdates',
 			plugin_dir_url( __FILE__ ) . 'js/wp-autoupdates.js',
 			array( 'jquery', 'wp-ajax-response' ),
-			'1.0.0',
+			WP_AUTO_UPDATES_VERSION,
 			true
 		);
 		wp_localize_script(
