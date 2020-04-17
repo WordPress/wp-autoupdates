@@ -3,11 +3,12 @@ jQuery(function ($) {
 	$('.autoupdates_column').on('click', 'a.plugin-autoupdate-disable', function (e) {
 		e.preventDefault();
 		var $anchor = $( this );
+		$anchor.blur();
 		var href = wpAjax.unserialize($anchor.attr( 'href' ) );
 		var $parent = $anchor.parents( '.autoupdates_column' );
 
 		// Show loading status.
-		$anchor.html( wp_autoupdates.disabling );
+		$anchor.html( '<span class="dashicons dashicons-update spin"></span> ' + wp_autoupdates.disabling );
 
 		$.post(
 			ajaxurl,
@@ -25,6 +26,7 @@ jQuery(function ($) {
 			$( '.autoupdate_enabled span' ).html( response.data.enabled_count );
 			$( '.autoupdate_disabled span' ).html( response.data.disabled_count );
 			$parent.html( response.data.return_html );
+			$parent.find('.plugin-autoupdate-enable').focus();
 		})
 		.fail(function (response) {
 			// todo - Better error handling.
@@ -37,11 +39,12 @@ jQuery(function ($) {
 	$('.autoupdates_column').on('click', 'a.plugin-autoupdate-enable', function (e) {
 		e.preventDefault();
 		var $anchor = $( this );
+		$anchor.blur();
 		var href = wpAjax.unserialize( $anchor.attr( 'href' ) );
 		var $parent = $anchor.parents( '.autoupdates_column' );
 
 		// Show loading status.
-		$anchor.addClass( 'spin' ).find( '.plugin-autoupdate-label' ).html( wp_autoupdates.enabling );
+		$anchor.addClass( 'spin' ).find( '.plugin-autoupdate-label' ).html( '<span class="dashicons dashicons-update spin"></span> ' + wp_autoupdates.enabling );
 
 		$.post(
 			ajaxurl,
@@ -59,6 +62,7 @@ jQuery(function ($) {
 			$( '.autoupdate_enabled span' ).html( response.data.enabled_count );
 			$( '.autoupdate_disabled span' ).html( response.data.disabled_count );
 			$parent.html( response.data.return_html );
+			$parent.find('.plugin-autoupdate-disable').focus();
 		})
 		.fail(function (response) {
 			// todo - Better error handling.
@@ -71,11 +75,12 @@ jQuery(function ($) {
 	$('.autoupdates_column').on('click', 'a.theme-autoupdate-disable', function (e) {
 		e.preventDefault();
 		var $anchor = $( this );
+		$anchor.blur();
 		var href = wpAjax.unserialize($anchor.attr( 'href' ) );
 		var $parent = $anchor.parents( '.autoupdates_column' );
 
 		// Show loading status.
-		$anchor.html( wp_autoupdates.disabling );
+		$anchor.html( '<span class="dashicons dashicons-update spin"></span> ' + wp_autoupdates.disabling );
 
 		$.post(
 			ajaxurl,
@@ -93,6 +98,7 @@ jQuery(function ($) {
 			$( '.autoupdate_enabled span' ).html( response.data.enabled_count );
 			$( '.autoupdate_disabled span' ).html( response.data.disabled_count );
 			$parent.html( response.data.return_html );
+			$parent.find('.theme-autoupdate-enable').focus();
 		})
 		.fail(function (response) {
 			// todo - Better error handling.
@@ -105,11 +111,12 @@ jQuery(function ($) {
 	$('.autoupdates_column').on('click', 'a.theme-autoupdate-enable', function (e) {
 		e.preventDefault();
 		var $anchor = $( this );
+		$anchor.blur();
 		var href = wpAjax.unserialize( $anchor.attr( 'href' ) );
 		var $parent = $anchor.parents( '.autoupdates_column' );
 
 		// Show loading status.
-		$anchor.addClass( 'spin' ).find( '.theme-autoupdate-label' ).html( wp_autoupdates.enabling );
+		$anchor.addClass( 'spin' ).find( '.theme-autoupdate-label' ).html( '<span class="dashicons dashicons-update spin"></span> ' + wp_autoupdates.enabling );
 
 		$.post(
 			ajaxurl,
@@ -127,6 +134,7 @@ jQuery(function ($) {
 			$( '.autoupdate_enabled span' ).html( response.data.enabled_count );
 			$( '.autoupdate_disabled span' ).html( response.data.disabled_count );
 			$parent.html( response.data.return_html );
+			$parent.find('.theme-autoupdate-disable').focus();
 		})
 		.fail(function (response) {
 			// todo - Better error handling.
@@ -139,11 +147,12 @@ jQuery(function ($) {
 	$('.theme-overlay').on('click', 'a.theme-autoupdate-disable', function (e) {
 		e.preventDefault();
 		var $anchor = $( this );
+		$anchor.blur();
 		var href = wpAjax.unserialize($anchor.attr( 'href' ) );
 		var $parent = $anchor.parents( '.theme-autoupdate' );
 
 		// Show loading status.
-		$anchor.html( wp_autoupdates.disabling );
+		$anchor.html( '<span class="dashicons dashicons-update spin"></span> ' + wp_autoupdates.disabling );
 
 		$.post(
 			ajaxurl,
@@ -159,6 +168,7 @@ jQuery(function ($) {
 		)
 		.done(function (response) {
 			$parent.html( response.data.return_html );
+			$parent.find('.theme-autoupdate-enable').focus();
 		})
 		.fail(function (response) {
 			// todo - Better error handling.
@@ -171,11 +181,12 @@ jQuery(function ($) {
 	$('.theme-overlay').on('click', 'a.theme-autoupdate-enable', function (e) {
 		e.preventDefault();
 		var $anchor = $( this );
+		$anchor.blur();
 		var href = wpAjax.unserialize( $anchor.attr( 'href' ) );
 		var $parent = $anchor.parents( '.theme-autoupdate' );
 
 		// Show loading status.
-		$parent.find( '.theme-autoupdate-label' ).html( wp_autoupdates.enabling );
+		$parent.find( '.theme-autoupdate-label' ).html( '<span class="dashicons dashicons-update spin"></span> ' + wp_autoupdates.enabling );
 
 		$.post(
 			ajaxurl,
@@ -191,6 +202,7 @@ jQuery(function ($) {
 		)
 		.done(function (response) {
 			$parent.html( response.data.return_html );
+			$parent.find('.theme-autoupdate-disable').focus();
 		})
 		.fail(function (response) {
 			// todo - Better error handling.
