@@ -126,9 +126,9 @@ function wp_autoupdates_enqueues( $hook ) {
 			'wp_autoupdates',
 			array(
 				'enable'       => __( 'Enable auto-updates', 'wp-autoupdates' ),
-				'enabling'     => __( 'Enabling auto-updates', 'wp-autoupdates' ),
+				'enabling'     => __( 'Enabling auto-updates...', 'wp-autoupdates' ),
 				'disable'      => __( 'Disable auto-updates', 'wp-autoupdates' ),
-				'disabling'    => __( 'Disabling auto-updates', 'wp-autoupdates' ),
+				'disabling'    => __( 'Disabling auto-updates...', 'wp-autoupdates' ),
 				'auto_enabled' => __( 'Auto-updates enabled', 'wp-autoupdates' ),
 			)
 		);
