@@ -113,7 +113,7 @@ function wp_autoupdates_enqueues( $hook ) {
 		}
 	}
 
-	if ( 'themes.php' === $hook || 'plugins.php' === $hook ) {
+	if ( ( 'themes.php' === $hook || 'plugins.php' === $hook ) && ( ! is_multisite() || is_network_admin() ) ) {
 		wp_enqueue_script(
 			'wp-autoupdates',
 			plugin_dir_url( __FILE__ ) . 'js/wp-autoupdates.js',
