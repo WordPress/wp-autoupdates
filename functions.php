@@ -1345,9 +1345,9 @@ add_action( 'handle_network_bulk_actions-themes-network', 'wp_autoupdates_themes
  * Disable auto updates via Ajax.
  */
 function wp_autoupdates_disable_auto_updates() {
-	$nonce = filter_input( INPUT_POST, 'nonce' );
-	$type  = filter_input( INPUT_POST, 'type' );
-	$asset = urldecode( filter_input( INPUT_POST, 'asset' ) );
+	$nonce = sanitize_text_field( $_POST['nonce'] );
+	$type  = sanitize_text_field( $_POST['type'] );
+	$asset = sanitize_text_field( urldecode( $_POST['asset'] ) );
 	if ( ! wp_verify_nonce(
 		$nonce,
 		sprintf(
@@ -1480,9 +1480,9 @@ add_action( 'wp_ajax_disable_auto_updates', 'wp_autoupdates_disable_auto_updates
  * Enable auto updates via Ajax.
  */
 function wp_autoupdates_enable_auto_updates() {
-	$nonce = filter_input( INPUT_POST, 'nonce' );
-	$type  = filter_input( INPUT_POST, 'type' );
-	$asset = urldecode( filter_input( INPUT_POST, 'asset' ) );
+	$nonce = sanitize_text_field( $_POST['nonce'] );
+	$type  = sanitize_text_field( $_POST['type'] );
+	$asset = sanitize_text_field( urldecode( $_POST['asset'] ) );
 	if ( ! wp_verify_nonce(
 		$nonce,
 		sprintf(
