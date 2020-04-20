@@ -14,7 +14,7 @@ jQuery(function ($) {
 			ajaxurl,
 			{
 				action: 'disable_auto_updates',
-				nonce: href._wpnonce,
+				_ajax_nonce: href._wpnonce,
 				type: 'plugin',
 				asset: href.plugin
 			},
@@ -50,7 +50,7 @@ jQuery(function ($) {
 			ajaxurl,
 			{
 				action: 'enable_auto_updates',
-				nonce: href._wpnonce,
+				_ajax_nonce: href._wpnonce,
 				type: 'plugin',
 				asset: href.plugin
 			},
@@ -86,7 +86,7 @@ jQuery(function ($) {
 			ajaxurl,
 			{
 				action: 'disable_auto_updates',
-				nonce: href._wpnonce,
+				_ajax_nonce: href._wpnonce,
 				type: 'theme',
 				asset: href.theme
 			},
@@ -122,7 +122,7 @@ jQuery(function ($) {
 			ajaxurl,
 			{
 				action: 'enable_auto_updates',
-				nonce: href._wpnonce,
+				_ajax_nonce: href._wpnonce,
 				type: 'theme',
 				asset: href.theme
 			},
@@ -158,7 +158,7 @@ jQuery(function ($) {
 			ajaxurl,
 			{
 				action: 'disable_auto_updates',
-				nonce: href._wpnonce,
+				_ajax_nonce: href._wpnonce,
 				type: 'theme',
 				asset: href.theme
 			},
@@ -192,7 +192,7 @@ jQuery(function ($) {
 			ajaxurl,
 			{
 				action: 'enable_auto_updates',
-				nonce: href._wpnonce,
+				_ajax_nonce: href._wpnonce,
 				type: 'theme',
 				asset: href.theme
 			},

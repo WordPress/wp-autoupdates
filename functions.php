@@ -1345,23 +1345,15 @@ add_action( 'handle_network_bulk_actions-themes-network', 'wp_autoupdates_themes
  * Disable auto updates via Ajax.
  */
 function wp_autoupdates_disable_auto_updates() {
-	$nonce = sanitize_text_field( $_POST['nonce'] );
 	$type  = sanitize_text_field( $_POST['type'] );
 	$asset = sanitize_text_field( urldecode( $_POST['asset'] ) );
-	if ( ! wp_verify_nonce(
-		$nonce,
+	check_ajax_referer(
 		sprintf(
 			'autoupdate-%s_%s',
 			$type,
 			$asset
 		)
-	) ) {
-		wp_send_json_error(
-			array(
-				'error' => __( 'Nonce verification failed.', 'wp-autoupdate' ),
-			)
-		);
-	}
+	);
 
 	// Capability check.
 	if ( 'plugin' === $type ) {
@@ -1480,23 +1472,15 @@ add_action( 'wp_ajax_disable_auto_updates', 'wp_autoupdates_disable_auto_updates
  * Enable auto updates via Ajax.
  */
 function wp_autoupdates_enable_auto_updates() {
-	$nonce = sanitize_text_field( $_POST['nonce'] );
 	$type  = sanitize_text_field( $_POST['type'] );
 	$asset = sanitize_text_field( urldecode( $_POST['asset'] ) );
-	if ( ! wp_verify_nonce(
-		$nonce,
+	check_ajax_referer(
 		sprintf(
 			'autoupdate-%s_%s',
 			$type,
 			$asset
 		)
-	) ) {
-		wp_send_json_error(
-			array(
-				'error' => __( 'Nonce verification failed.', 'wp-autoupdate' ),
-			)
-		);
-	}
+	);
 
 	// Capability check.
 	if ( 'plugin' === $type ) {
