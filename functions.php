@@ -1408,9 +1408,9 @@ function wp_autoupdates_disable_auto_updates() {
 
 					wp_send_json_success(
 						array(
-							'enabled_count'  => '(' . $enabled_count . ')',
+							'enabled_count'  => '(' . absint( $enabled_count ) . ')',
 							'disabled_count' => '(' . absint( count( $all_plugins ) - $enabled_count ) . ')',
-							'return_html'    => $return_html,
+							'return_html'    => wp_kses_post( $return_html ),
 							'type'           => 'plugin',
 						)
 					);
@@ -1450,9 +1450,9 @@ function wp_autoupdates_disable_auto_updates() {
 
 					wp_send_json_success(
 						array(
-							'enabled_count'  => '(' . $enabled_count . ')',
+							'enabled_count'  => '(' . absint( $enabled_count ) . ')',
 							'disabled_count' => '(' . absint( count( $all_themes ) - $enabled_count ) . ')',
-							'return_html'    => $return_html,
+							'return_html'    => wp_kses_post( $return_html ),
 							'type'           => 'theme',
 						)
 					);
@@ -1545,9 +1545,9 @@ function wp_autoupdates_enable_auto_updates() {
 
 			wp_send_json_success(
 				array(
-					'enabled_count'  => '(' . $enabled_count . ')',
+					'enabled_count'  => '(' . absint( $enabled_count ) . ')',
 					'disabled_count' => '(' . absint( count( $all_plugins ) - $enabled_count ) . ')',
-					'return_html'    => $return_html,
+					'return_html'    => wp_kses_post( $return_html ),
 					'type'           => 'plugin',
 				)
 			);
@@ -1593,9 +1593,9 @@ function wp_autoupdates_enable_auto_updates() {
 
 			wp_send_json_success(
 				array(
-					'enabled_count'  => '(' . $enabled_count . ')',
+					'enabled_count'  => '(' . absint( $enabled_count ) . ')',
 					'disabled_count' => '(' . absint( count( $all_themes ) - $enabled_count ) . ')',
-					'return_html'    => $return_html,
+					'return_html'    => wp_kses_post( $return_html ),
 					'type'           => 'theme',
 				)
 			);
