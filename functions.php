@@ -117,7 +117,7 @@ function wp_autoupdates_enqueues( $hook ) {
 		wp_enqueue_script(
 			'wp-autoupdates',
 			plugin_dir_url( __FILE__ ) . 'js/wp-autoupdates.js',
-			array( 'jquery', 'wp-ajax-response' ),
+			array( 'jquery', 'wp-ajax-response', 'wp-a11y' ),
 			WP_AUTO_UPDATES_VERSION,
 			true
 		);
@@ -130,6 +130,7 @@ function wp_autoupdates_enqueues( $hook ) {
 				'disable'      => __( 'Disable auto-updates', 'wp-autoupdates' ),
 				'disabling'    => __( 'Disabling auto-updates...', 'wp-autoupdates' ),
 				'auto_enabled' => __( 'Auto-updates enabled', 'wp-autoupdates' ),
+				'auto_disabled' => __( 'Auto-updates disabled', 'wp-autoupdates' ),
 			)
 		);
 	}
