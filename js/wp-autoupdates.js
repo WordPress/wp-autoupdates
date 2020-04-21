@@ -27,6 +27,7 @@ jQuery(function ($) {
 			$( '.autoupdate_disabled span' ).html( response.data.disabled_count );
 			$parent.html( response.data.return_html );
 			$parent.find('.plugin-autoupdate-enable').focus();
+			wp.a11y.speak( wp_autoupdates.auto_disabled, 'polite' );
 		})
 		.fail(function (response) {
 			// todo - Better error handling.
@@ -63,6 +64,7 @@ jQuery(function ($) {
 			$( '.autoupdate_disabled span' ).html( response.data.disabled_count );
 			$parent.html( response.data.return_html );
 			$parent.find('.plugin-autoupdate-disable').focus();
+			wp.a11y.speak( wp_autoupdates.auto_enabled, 'polite' );
 		})
 		.fail(function (response) {
 			// todo - Better error handling.
@@ -99,6 +101,7 @@ jQuery(function ($) {
 			$( '.autoupdate_disabled span' ).html( response.data.disabled_count );
 			$parent.html( response.data.return_html );
 			$parent.find('.theme-autoupdate-enable').focus();
+			wp.a11y.speak( wp_autoupdates.auto_disabled, 'polite' );
 		})
 		.fail(function (response) {
 			// todo - Better error handling.
@@ -135,6 +138,7 @@ jQuery(function ($) {
 			$( '.autoupdate_disabled span' ).html( response.data.disabled_count );
 			$parent.html( response.data.return_html );
 			$parent.find('.theme-autoupdate-disable').focus();
+			wp.a11y.speak( wp_autoupdates.auto_enabled, 'polite' );
 		})
 		.fail(function (response) {
 			// todo - Better error handling.
@@ -169,6 +173,7 @@ jQuery(function ($) {
 		.done(function (response) {
 			$parent.html( response.data.return_html );
 			$parent.find('.theme-autoupdate-enable').focus();
+			wp.a11y.speak( wp_autoupdates.auto_disabled, 'polite' );
 		})
 		.fail(function (response) {
 			// todo - Better error handling.
@@ -203,6 +208,7 @@ jQuery(function ($) {
 		.done(function (response) {
 			$parent.html( response.data.return_html );
 			$parent.find('.theme-autoupdate-disable').focus();
+			wp.a11y.speak( wp_autoupdates.auto_enabled, 'polite' );
 		})
 		.fail(function (response) {
 			// todo - Better error handling.
