@@ -1,3 +1,7 @@
+.dashicons-update.spin {
+	animation: rotation 2s infinite linear;
+}
+
 #autoupdates_column {
 	min-width: 200px;
 }
