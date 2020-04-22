@@ -13,6 +13,12 @@ function wp_autoupdates_enqueues( $hook ) {
 	if ( ! in_array( $hook, array( 'plugins.php', 'themes.php', 'update-core.php' ) ) ) {
 		return;
 	}
+
+	// Don't enqueue CSS & JS on sub-site plugins & themes screens in multisite.
+	if ( in_array( $hook, array( 'plugins.php', 'themes.php' ) ) && is_multisite() && ! is_network_admin() ) {
+		return;
+	}
+
 	wp_register_style( 'wp-autoupdates', plugin_dir_url( __FILE__ ) . 'css/wp-autoupdates.css', array(), WP_AUTO_UPDATES_VERSION );
 	wp_enqueue_style( 'wp-autoupdates' );
 
@@ -57,7 +63,7 @@ function wp_autoupdates_enqueues( $hook ) {
 		wp_add_inline_script( 'jquery', $script );
 	}
 
-	if ( 'themes.php' === $hook && ! is_multisite() ) {
+	if ( 'themes.php' === $hook ) {
 		if ( wp_autoupdates_is_themes_auto_update_enabled() ) {
 			$script = 'jQuery( document ).ready( function() {';
 
@@ -113,7 +119,7 @@ function wp_autoupdates_enqueues( $hook ) {
 		}
 	}
 
-	if ( ( 'themes.php' === $hook || 'plugins.php' === $hook ) && ( ! is_multisite() || is_network_admin() ) ) {
+	if ( 'themes.php' === $hook || 'plugins.php' === $hook ) {
 		wp_enqueue_script(
 			'wp-autoupdates',
 			plugin_dir_url( __FILE__ ) . 'js/wp-autoupdates.js',
