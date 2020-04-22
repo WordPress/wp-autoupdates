@@ -125,12 +125,13 @@ function wp_autoupdates_enqueues( $hook ) {
 			'wp-autoupdates',
 			'wp_autoupdates',
 			array(
-				'enable'       => __( 'Enable auto-updates', 'wp-autoupdates' ),
-				'enabling'     => __( 'Enabling auto-updates...', 'wp-autoupdates' ),
-				'disable'      => __( 'Disable auto-updates', 'wp-autoupdates' ),
-				'disabling'    => __( 'Disabling auto-updates...', 'wp-autoupdates' ),
-				'auto_enabled' => __( 'Auto-updates enabled', 'wp-autoupdates' ),
-				'auto_disabled' => __( 'Auto-updates disabled', 'wp-autoupdates' ),
+				'enable'            => __( 'Enable auto-updates', 'wp-autoupdates' ),
+				'enabling'          => __( 'Enabling auto-updates...', 'wp-autoupdates' ),
+				'disable'           => __( 'Disable auto-updates', 'wp-autoupdates' ),
+				'disabling'         => __( 'Disabling auto-updates...', 'wp-autoupdates' ),
+				'auto_enabled'      => __( 'Auto-updates enabled', 'wp-autoupdates' ),
+				'auto_disabled'     => __( 'Auto-updates disabled', 'wp-autoupdates' ),
+				'auto_update_error' => __( 'The request could not be completed', 'wp-autoupdates' ),
 			)
 		);
 	}
