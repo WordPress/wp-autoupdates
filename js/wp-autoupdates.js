@@ -35,7 +35,6 @@ jQuery(function ($) {
 				$( '.autoupdate_enabled span' ).html( response.data.enabled_count );
 				$( '.autoupdate_disabled span' ).html( response.data.disabled_count );
 				$parent.html( response.data.return_html );
-				$parent.find('.plugin-autoupdate-enable').focus();
 				wp.a11y.speak( wp_autoupdates.auto_disabled, 'polite' );
 			} else {
 				var errorHTML = add_error_notice( html, response.data.error );
@@ -82,7 +81,6 @@ jQuery(function ($) {
 				$( '.autoupdate_enabled span' ).html( response.data.enabled_count );
 				$( '.autoupdate_disabled span' ).html( response.data.disabled_count );
 				$parent.html( response.data.return_html );
-				$parent.find('.plugin-autoupdate-disable').focus();
 				wp.a11y.speak( wp_autoupdates.auto_enabled, 'polite' );
 			} else {
 				var errorHTML = add_error_notice( html, response.data.error );
@@ -129,7 +127,6 @@ jQuery(function ($) {
 				$( '.autoupdate_enabled span' ).html( response.data.enabled_count );
 				$( '.autoupdate_disabled span' ).html( response.data.disabled_count );
 				$parent.html( response.data.return_html );
-				$parent.find('.theme-autoupdate-enable').focus();
 				wp.a11y.speak( wp_autoupdates.auto_disabled, 'polite' );
 			} else {
 				var errorHTML = add_error_notice( html, response.data.error );
@@ -176,7 +173,6 @@ jQuery(function ($) {
 				$( '.autoupdate_enabled span' ).html( response.data.enabled_count );
 				$( '.autoupdate_disabled span' ).html( response.data.disabled_count );
 				$parent.html( response.data.return_html );
-				$parent.find('.theme-autoupdate-disable').focus();
 				wp.a11y.speak( wp_autoupdates.auto_enabled, 'polite' );
 			} else {
 				var errorHTML = add_error_notice( html, response.data.error );
@@ -221,7 +217,6 @@ jQuery(function ($) {
 		.done(function (response) {
 			if ( response.success ) {
 				$parent.html( response.data.return_html );
-				$parent.find('.theme-autoupdate-enable').focus();
 				wp.a11y.speak( wp_autoupdates.auto_disabled, 'polite' );
 			} else {
 				var errorHTML = add_error_notice( html, response.data.error );
@@ -266,7 +261,6 @@ jQuery(function ($) {
 		.done(function (response) {
 			if ( response.success ) {
 				$parent.html( response.data.return_html );
-				$parent.find('.theme-autoupdate-disable').focus();
 				wp.a11y.speak( wp_autoupdates.auto_enabled, 'polite' );
 			} else {
 				var errorHTML = add_error_notice( html, response.data.error );
