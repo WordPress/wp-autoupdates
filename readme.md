@@ -50,6 +50,7 @@ Thanks to everyone who contributed to this feature plugin!
 - [@ronalfy](https://profiles.wordpress.org/ronalfy/)
 - [@paaljoachim](https://profiles.wordpress.org/paaljoachim/)
 - [@timothybjacobs](https://profiles.wordpress.org/timothybjacobs/)
+- [@wpamitkumar](https://profiles.wordpress.org/wpamitkumar)
 
 ## Documentation 📚
 
@@ -86,6 +87,13 @@ Work in progress.
 ![Email notification example](https://jeanbaptisteaudras.com/share/wp-auto-updates/wp-auto-updates-7-email-notification.png)
 
 ## Changelog 🗓
+
+### 0.6.0 🦋
+April 22, 2020
+- Add Ajax to Plugin and Themes Screen - [#61](https://github.com/WordPress/wp-autoupdates/pull/61)
+- Accessibility: Communicate AJAX enabling/disabling changes to screen readers - [#85](https://github.com/WordPress/wp-autoupdates/pull/85)
+- Add Better Handling to Ajax Errors - [#90](https://github.com/WordPress/wp-autoupdates/pull/90)
+- Prevent CSS from being enqueued on sub-site plugins & themes screens in multisite - [#91](https://github.com/WordPress/wp-autoupdates/pull/91)
 
 ### 0.5.1 🦒
 April 16, 2020

@@ -5,13 +5,13 @@
  * Plugin Name: WordPress Auto-updates
  * Plugin URI: https://wordpress.org/plugins/wp-autoupdates
  * Description: A feature plugin to integrate Plugins & Themes automatic updates in WordPress Core.
- * Version: 0.5.1
+ * Version: 0.6.0
  * Requires at least: 5.3
  * Requires PHP: 5.6
  * Tested up to: 5.4
  * Author: The WordPress Team
  * Author URI: https://wordpress.org
- * Contributors: wordpressdotorg, audrasjb, whodunitagency, pbiron, xkon, karmatosed, mapk, jeffpaul, bookdude13
+ * Contributors: wordpressdotorg, audrasjb, whodunitagency, pbiron, xkon, mapk, jeffpaul, bookdude13, ronalfy
  * License: GPLv2
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: wp-autoupdates

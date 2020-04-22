@@ -3,7 +3,7 @@ Contributors: wordpressdotorg, audrasjb, whodunitagency, pbiron, xkon, karmatose
 Requires at least: 5.3
 Tested up to: 5.4
 Requires PHP: 5.6
-Stable tag: 0.5.1
+Stable tag: 0.6.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,13 @@ Interested in contributing to this plugin? Feel free to join us in `#core-auto-u
 7. Email notification example
 
 == Changelog ==
+
+= 0.6.0 =
+April 22, 2020
+- Add Ajax to Plugin and Themes Screen - [#61](https://github.com/WordPress/wp-autoupdates/pull/61)
+- Accessibility: Communicate AJAX enabling/disabling changes to screen readers - [#85](https://github.com/WordPress/wp-autoupdates/pull/85)
+- Add Better Handling to Ajax Errors - [#90](https://github.com/WordPress/wp-autoupdates/pull/90)
+- Prevent CSS from being enqueued on sub-site plugins & themes screens in multisite - [#91](https://github.com/WordPress/wp-autoupdates/pull/91)
 
 = 0.5.1 =
 April 16, 2020
