@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Invalid request.' );
 }
 
-define( 'WP_AUTO_UPDATES_VERSION', '0.5.1' );
+define( 'WP_AUTO_UPDATES_VERSION', '0.6.0' );
 
 /**
  * Load only when needed.
