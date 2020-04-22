@@ -1359,7 +1359,7 @@ function wp_autoupdates_disable_auto_updates() {
 
 	// Capability check.
 	if ( 'plugin' === $type ) {
-		if ( true ||  ! current_user_can( 'update_plugins' ) ) {
+		if ( ! current_user_can( 'update_plugins' ) ) {
 			wp_send_json_error(
 				array(
 					'error' => __( 'You do not have permission to modify plugins.', 'wp-autoupdate' ),
