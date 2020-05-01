@@ -1407,7 +1407,7 @@ function wp_autoupdates_disable_auto_updates() {
 			sprintf(
 				/* translators: Plugin name. */
 				_x( 'Enable automatic updates for %s', 'plugin', 'wp-autoupdates' ),
-				esc_html( $all_plugins[ $asset ]['Name'] )
+				$all_plugins[ $asset ]['Name']
 			)
 		);
 
@@ -1420,7 +1420,7 @@ function wp_autoupdates_disable_auto_updates() {
 
 		wp_send_json_success(
 			array(
-				'enabled_count'  => '(' . absint( $enabled_count ) . ')',
+				'enabled_count'  => '(' . $enabled_count . ')',
 				'disabled_count' => '(' . absint( count( $all_plugins ) - $enabled_count ) . ')',
 				'return_html'    => wp_kses_post( $return_html ),
 				'type'           => 'plugin',
@@ -1449,7 +1449,7 @@ function wp_autoupdates_disable_auto_updates() {
 			sprintf(
 				/* translators: Theme name. */
 				_x( 'Enable automatic updates for %s', 'plugin', 'wp-autoupdates' ),
-				esc_html( $all_themes[ $asset ]->get( 'Name' ) )
+				$all_themes[ $asset ]->get( 'Name' )
 			)
 		);
 
@@ -1462,7 +1462,7 @@ function wp_autoupdates_disable_auto_updates() {
 
 		wp_send_json_success(
 			array(
-				'enabled_count'  => '(' . absint( $enabled_count ) . ')',
+				'enabled_count'  => '(' . $enabled_count . ')',
 				'disabled_count' => '(' . absint( count( $all_themes ) - $enabled_count ) . ')',
 				'return_html'    => wp_kses_post( $return_html ),
 				'type'           => 'theme',
