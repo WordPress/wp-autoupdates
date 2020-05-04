@@ -1,286 +1,88 @@
-jQuery(function ($) {
+/* global wp_autoupdates, pagenow */
+( function( $ ) {
+	'use strict';
 
-	function add_error_notice( html, error ) {
-		html += '<div class="notice error"><p><strong>' + error + '</strong></p></div>';
-		return html;
-	}
-	// Disable auto-updates for a plugin.
-	$('.autoupdates_column').on('click', 'a.plugin-autoupdate-disable', function (e) {
-		e.preventDefault();
-		var $anchor = $( this );
-		$anchor.blur();
-		var href = wpAjax.unserialize($anchor.attr( 'href' ) );
-		var $parent = $anchor.parents( '.autoupdates_column' );
-		// Clear errors
-		$parent.find( '.notice' ).remove();
-		var html = $parent.html();
+	$( '.autoupdates_column, .theme-overlay' ).on( 'click', 'a.auto-update', function( event ) {
+		// TODO: Drop use of unserialize, perhaps switch to data-* attr.
+		var data,
+			anchor = $( this ),
+			type   = anchor.hasClass( 'plugin' ) ? 'plugin' : 'theme',
+			action = anchor.hasClass( 'enable' ) ? 'enable' : 'disable',
+			href   = wpAjax.unserialize( anchor.attr( 'href' ) ),
+			label  = anchor.find( '.label' ),
+			parent = anchor.parents( 'themes' !== pagenow ? '.autoupdates_column' : '.theme-autoupdate' );
 
-		// Show loading status.
-		$anchor.html( '<span class="dashicons dashicons-update spin"></span> ' + wp_autoupdates.disabling );
+		event.preventDefault();
 
-		$.post(
-			ajaxurl,
-			{
-				action: 'disable_auto_updates',
-				_ajax_nonce: href._wpnonce,
-				type: 'plugin',
-				asset: href.plugin
-			},
-			function (response) {
-
-			}
-		)
-		.done(function (response) {
-			if ( response.success ) {
-				$( '.autoupdate_enabled span' ).html( response.data.enabled_count );
-				$( '.autoupdate_disabled span' ).html( response.data.disabled_count );
-				$parent.html( response.data.return_html );
-				$parent.find('.plugin-autoupdate-enable').focus();
-				wp.a11y.speak( wp_autoupdates.auto_disabled, 'polite' );
-			} else {
-				var errorHTML = add_error_notice( html, response.data.error );
-				wp.a11y.speak( response.data.error, 'polite' );
-				$parent.html( errorHTML );
-			}
-		})
-		.fail(function (response) {
-			var errorHTML = add_error_notice( html, wp_autoupdates.auto_update_error );
-			wp.a11y.speak( wp_autoupdates.auto_update_error, 'polite' );
-			$parent.html( errorHTML );
-		})
-		.always(function (response) {
-		});
-	});
-	// Enable auto-updates for a plugin.
-	$('.autoupdates_column').on('click', 'a.plugin-autoupdate-enable', function (e) {
-		e.preventDefault();
-		var $anchor = $( this );
-		$anchor.blur();
-		var href = wpAjax.unserialize( $anchor.attr( 'href' ) );
-		var $parent = $anchor.parents( '.autoupdates_column' );
-		// Clear errors
-		$parent.find( '.notice' ).remove();
-		var html = $parent.html();
+		// Clear any previous errors.
+		parent.find( '.auto-updates-error' ).removeClass( 'notice error' ).addClass( 'hidden' );
 
 		// Show loading status.
-		$anchor.addClass( 'spin' ).find( '.plugin-autoupdate-label' ).html( '<span class="dashicons dashicons-update spin"></span> ' + wp_autoupdates.enabling );
+		label.text( 'enable' === action ? wp_autoupdates.enabling : wp_autoupdates.disabling );
+		anchor.find( '.dashicons-update' ).removeClass( 'hidden' );
 
-		$.post(
-			ajaxurl,
-			{
-				action: 'enable_auto_updates',
-				_ajax_nonce: href._wpnonce,
-				type: 'plugin',
-				asset: href.plugin
-			},
-			function (response) {
+		data = {
+			action: 'toggle_auto_updates',
+			_ajax_nonce: href._wpnonce,
+			state:  action,
+			type: type,
+			asset: 'plugin' === type ? href.plugin : href.theme,
+		};
 
-			}
-		)
-		.done(function (response) {
-			if ( response.success ) {
-				$( '.autoupdate_enabled span' ).html( response.data.enabled_count );
-				$( '.autoupdate_disabled span' ).html( response.data.disabled_count );
-				$parent.html( response.data.return_html );
-				$parent.find('.plugin-autoupdate-disable').focus();
-				wp.a11y.speak( wp_autoupdates.auto_enabled, 'polite' );
-			} else {
-				var errorHTML = add_error_notice( html, response.data.error );
-				wp.a11y.speak( response.data.error, 'polite' );
-				$parent.html( errorHTML );
-			}
-		})
-		.fail(function (response) {
-			var errorHTML = add_error_notice( html, wp_autoupdates.auto_update_error );
-			wp.a11y.speak( wp_autoupdates.auto_update_error, 'polite' );
-			$parent.html( errorHTML );
-		})
-		.always(function (response) {
-		});
-	});
-	// Disable auto-updates for a theme.
-	$('.autoupdates_column').on('click', 'a.theme-autoupdate-disable', function (e) {
-		e.preventDefault();
-		var $anchor = $( this );
-		$anchor.blur();
-		var href = wpAjax.unserialize($anchor.attr( 'href' ) );
-		var $parent = $anchor.parents( '.autoupdates_column' );
-		// Clear errors
-		$parent.find( '.notice' ).remove();
-		var html = $parent.html();
+		$.post( ajaxurl, data )
+			.done( function( response ) {
+				if ( response.success ) {
+					// Update the counts in the enabled/disabled views if on on
+					// screen with a list table.
+					// TODO: If either count started out 0 the appropriate span won't
+					//       be there and hence won't be updated.
+					if ( 'themes' !== pagenow ) {
+						var enabled        = $( '.autoupdate_enabled span' ),
+							disabled       = $( '.autoupdate_disabled span' ),
+							enabledNumber  = parseInt( enabled.text().replace( /[^\d]+/g, '' ) ) || 0,
+							disabledNumber = parseInt( disabled.text().replace( /[^\d]+/g, '' ) ) || 0;
 
-		// Show loading status.
-		$anchor.html( '<span class="dashicons dashicons-update spin"></span> ' + wp_autoupdates.disabling );
+						switch ( action ) {
+							case 'enable':
+								++enabledNumber;
+								--disabledNumber;
 
-		$.post(
-			ajaxurl,
-			{
-				action: 'disable_auto_updates',
-				_ajax_nonce: href._wpnonce,
-				type: 'theme',
-				asset: href.theme
-			},
-			function (response) {
+								break;
+							case 'disable':
+								--enabledNumber;
+								++disabledNumber;
+								break;
+						}
 
-			}
-		)
-		.done(function (response) {
-			if ( response.success ) {
-				$( '.autoupdate_enabled span' ).html( response.data.enabled_count );
-				$( '.autoupdate_disabled span' ).html( response.data.disabled_count );
-				$parent.html( response.data.return_html );
-				$parent.find('.theme-autoupdate-enable').focus();
-				wp.a11y.speak( wp_autoupdates.auto_disabled, 'polite' );
-			} else {
-				var errorHTML = add_error_notice( html, response.data.error );
-				wp.a11y.speak( response.data.error, 'polite' );
-				$parent.html( errorHTML );
-			}
-		})
-		.fail(function (response) {
-			var errorHTML = add_error_notice( html, wp_autoupdates.auto_update_error );
-			wp.a11y.speak( wp_autoupdates.auto_update_error, 'polite' );
-			$parent.html( errorHTML );
-		})
-		.always(function (response) {
-		});
-	});
-	// Enable auto-updates for a theme.
-	$('.autoupdates_column').on('click', 'a.theme-autoupdate-enable', function (e) {
-		e.preventDefault();
-		var $anchor = $( this );
-		$anchor.blur();
-		var href = wpAjax.unserialize( $anchor.attr( 'href' ) );
-		var $parent = $anchor.parents( '.autoupdates_column' );
-		// Clear errors
-		$parent.find( '.notice' ).remove();
-		var html = $parent.html();
+						enabledNumber  = Math.max( 0, enabledNumber );
+						disabledNumber = Math.max( 0, disabledNumber );
 
-		// Show loading status.
-		$anchor.addClass( 'spin' ).find( '.theme-autoupdate-label' ).html( '<span class="dashicons dashicons-update spin"></span> ' + wp_autoupdates.enabling );
+						enabled.text( '(' + enabledNumber + ')' );
+						disabled.text( '(' + disabledNumber + ')' );
+					}
 
-		$.post(
-			ajaxurl,
-			{
-				action: 'enable_auto_updates',
-				_ajax_nonce: href._wpnonce,
-				type: 'theme',
-				asset: href.theme
-			},
-			function (response) {
+					if ( 'enable' === action ) {
+						anchor.removeClass( 'enable' ).addClass( 'disable' );
+						label.text( wp_autoupdates.disable );
+						parent.find( '.auto-update-time').removeClass( 'hidden' );
+					} else {
+						anchor.removeClass( 'disable' ).addClass( 'enable' );
+						label.text( wp_autoupdates.enable );
+						parent.find( '.auto-update-time').addClass( 'hidden' );
+					}
 
-			}
-		)
-		.done(function (response) {
-			if ( response.success ) {
-				$( '.autoupdate_enabled span' ).html( response.data.enabled_count );
-				$( '.autoupdate_disabled span' ).html( response.data.disabled_count );
-				$parent.html( response.data.return_html );
-				$parent.find('.theme-autoupdate-disable').focus();
-				wp.a11y.speak( wp_autoupdates.auto_enabled, 'polite' );
-			} else {
-				var errorHTML = add_error_notice( html, response.data.error );
-				wp.a11y.speak( response.data.error, 'polite' );
-				$parent.html( errorHTML );
-			}
-		})
-		.fail(function (response) {
-			var errorHTML = add_error_notice( html, wp_autoupdates.auto_update_error );
-			wp.a11y.speak( wp_autoupdates.auto_update_error, 'polite' );
-			$parent.html( errorHTML );
-		})
-		.always(function (response) {
-		});
-	});
-	// Disable auto-updates for a theme.
-	$('.theme-overlay').on('click', 'a.theme-autoupdate-disable', function (e) {
-		e.preventDefault();
-		var $anchor = $( this );
-		$anchor.blur();
-		var href = wpAjax.unserialize($anchor.attr( 'href' ) );
-		var $parent = $anchor.parents( '.theme-autoupdate' );
-		// Clear errors
-		$parent.find( '.notice' ).remove();
-		var html = $parent.html();
-
-		// Show loading status.
-		$anchor.html( '<span class="dashicons dashicons-update spin"></span> ' + wp_autoupdates.disabling );
-
-		$.post(
-			ajaxurl,
-			{
-				action: 'disable_auto_updates',
-				_ajax_nonce: href._wpnonce,
-				type: 'theme',
-				asset: href.theme
-			},
-			function (response) {
-
-			}
-		)
-		.done(function (response) {
-			if ( response.success ) {
-				$parent.html( response.data.return_html );
-				$parent.find('.theme-autoupdate-enable').focus();
-				wp.a11y.speak( wp_autoupdates.auto_disabled, 'polite' );
-			} else {
-				var errorHTML = add_error_notice( html, response.data.error );
-				wp.a11y.speak( response.data.error, 'polite' );
-				$parent.html( errorHTML );
-			}
-		})
-		.fail(function (response) {
-			var errorHTML = add_error_notice( html, wp_autoupdates.auto_update_error );
-			wp.a11y.speak( wp_autoupdates.auto_update_error, 'polite' );
-			$parent.html( errorHTML );
-		})
-		.always(function (response) {
-		});
-	});
-	// Enable auto-updates for a theme.
-	$('.theme-overlay').on('click', 'a.theme-autoupdate-enable', function (e) {
-		e.preventDefault();
-		var $anchor = $( this );
-		$anchor.blur();
-		var href = wpAjax.unserialize( $anchor.attr( 'href' ) );
-		var $parent = $anchor.parents( '.theme-autoupdate' );
-		// Clear errors
-		$parent.find( '.notice' ).remove();
-		var html = $parent.html();
-
-		// Show loading status.
-		$parent.find( '.theme-autoupdate-label' ).html( '<span class="dashicons dashicons-update spin"></span> ' + wp_autoupdates.enabling );
-
-		$.post(
-			ajaxurl,
-			{
-				action: 'enable_auto_updates',
-				_ajax_nonce: href._wpnonce,
-				type: 'theme',
-				asset: href.theme
-			},
-			function (response) {
-
-			}
-		)
-		.done(function (response) {
-			if ( response.success ) {
-				$parent.html( response.data.return_html );
-				$parent.find('.theme-autoupdate-disable').focus();
-				wp.a11y.speak( wp_autoupdates.auto_enabled, 'polite' );
-			} else {
-				var errorHTML = add_error_notice( html, response.data.error );
-				wp.a11y.speak( response.data.error, 'polite' );
-				$parent.html( errorHTML );
-			}
-			
-		})
-		.fail(function (response) {
-			var errorHTML = add_error_notice( html, wp_autoupdates.auto_update_error );
-			wp.a11y.speak( wp_autoupdates.auto_update_error, 'polite' );
-			$parent.html( errorHTML );
-		})
-		.always(function (response) {
-		});
-	});
-});
+					wp.a11y.speak( 'enable' === action ? wp_autoupdates.enabled : wp_autoupdates.disabled, 'polite' );
+				} else {
+					parent.find( '.auto-updates-error' ).removeClass( 'hidden' ).addClass( 'notice error' ).find( 'p' ).text( response.data.error );
+					wp.a11y.speak( response.data.error, 'polite' );
+				}
+			} )
+			.fail( function( response ) {
+				parent.find( '.auto-updates-error' ).removeClass( 'hidden' ).addClass( 'notice error' ).find( 'p' ).text( wp_autoupdates.auto_update_error );
+				wp.a11y.speak( wp_autoupdates.auto_update_error, 'polite' );
+			} )
+			.always( function() {
+				anchor.find( '.dashicons-update' ).addClass( 'hidden' );
+			} );
+	} );
+} )( jQuery );

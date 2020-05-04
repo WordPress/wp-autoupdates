@@ -2,6 +2,10 @@
 	animation: rotation 2s infinite linear;
 }
 
+.auto-updates-error {
+	display: inline-block;
+}
+
 #autoupdates_column {
 	min-width: 200px;
 }
