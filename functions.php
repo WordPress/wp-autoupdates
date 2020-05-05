@@ -77,12 +77,12 @@ function wp_autoupdates_enqueues( $hook ) {
 <# if ( data.actions.autoupdate ) { #>
 <p class="theme-autoupdate">
 <# if ( data.autoupdate ) { #>
-	<a class="theme auto-update disable" href="{{{ data.actions.autoupdate }}}" aria-label="{$aria_label_disable}">
+	<a class="auto-update" href="{{{ data.actions.autoupdate }}}" data-type="theme" data-asset="{{ data.id }}" data-action="disable" aria-label="{$aria_label_disable}">
 		<span class="dashicons dashicons-update spin hidden"></span>
 		<span class="label">{$text_disable}</span>
 	</a>
 <# } else { #>
-	<a class="theme auto-update enable" href="{{{ data.actions.autoupdate }}}" aria-label="{$aria_label_enable}">
+	<a class="auto-update" href="{{{ data.actions.autoupdate }}}" data-type="theme" data-asset="{{ data.id }}" data-action="disable" aria-label="{$aria_label_enable}">
 		<span class="dashicons dashicons-update spin hidden"></span>
 		<span class="label">{$text_enable}</span>
 	</a>
@@ -163,15 +163,13 @@ function wp_autoupdates_prepare_themes_for_js( $prepared_themes ) {
 	}
 
 	$wp_auto_update_themes = get_option( 'wp_auto_update_themes', array() );
-	foreach( $prepared_themes as $theme ) {
+	foreach( $prepared_themes as &$theme ) {
 		// Set extra data for use in the template.
 		$slug         = $theme['id'];
 		$encoded_slug = urlencode( $slug );
 
 		$theme['autoupdate']            = in_array( $slug, $wp_auto_update_themes, true );
-		$theme['actions']['autoupdate'] = current_user_can( 'update_themes' ) ? wp_nonce_url( admin_url( 'themes.php?action=autoupdate&amp;theme=' . $encoded_slug ), 'autoupdate-theme_' . $slug ) : null;
-
-		$prepared_themes[ $slug ] = $theme;
+		$theme['actions']['autoupdate'] = current_user_can( 'update_themes' ) ? wp_nonce_url( admin_url( 'themes.php?action=autoupdate&amp;theme=' . $encoded_slug ), 'updates' ) : null;
 	}
 
 	return $prepared_themes;
@@ -317,8 +315,9 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 	}
 
 	printf(
-		'<a href="%s" class="plugin auto-update %s" aria-label="%s"><span class="dashicons dashicons-update spin hidden"></span><span class="label">%s</span></a>',
-		wp_nonce_url( 'plugins.php?action=autoupdate&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page . '&amp;plugin_status=' . $plugin_status, 'autoupdate-plugin_' . $plugin_file ),
+		'<a href="%s" class="auto-update" data-type="plugin" data-asset="%s" data-action="%s" aria-label="%s"><span class="dashicons dashicons-update spin hidden"></span><span class="label">%s</span></a>',
+		wp_nonce_url( 'plugins.php?action=autoupdate&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page . '&amp;plugin_status=' . $plugin_status, 'updates' ),
+		esc_attr( $plugin_file ),
 		$action,
 		$aria_label,
 		$text
@@ -375,7 +374,8 @@ function wp_autoupdates_plugins_enabler() {
 			exit;
 		}
 
-		check_admin_referer( 'autoupdate-plugin_' . $plugin );
+		check_admin_referer( 'updates' );
+
 		$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
 
 		if ( in_array( $plugin, $wp_auto_update_plugins, true ) ) {
@@ -414,7 +414,7 @@ function wp_autoupdates_themes_enabler() {
 			exit;
 		}
 
-		check_admin_referer( 'autoupdate-theme_' . $theme );
+		check_admin_referer( 'updates' );
 		$wp_auto_update_themes = get_site_option( 'wp_auto_update_themes', array() );
 
 		if ( in_array( $theme, $wp_auto_update_themes, true ) ) {
@@ -1252,8 +1252,9 @@ function wp_autoupdates_add_themes_autoupdates_column_content( $column_name, $st
 	}
 
 	printf(
-		'<a href="%s" class="theme auto-update %s" aria-label="%s"><span class="dashicons dashicons-update spin hidden"></span><span class="label">%s</span></a>',
-		wp_nonce_url( 'themes.php?action=autoupdate&amp;theme=' . urlencode( $stylesheet ) . '&amp;paged=' . $page . '&amp;plugin_status=' . $thene_status , 'autoupdate-theme_' . $stylesheet ),
+		'<a href="%s" class="auto-update" data-type="theme" data-asset="%s" data-action="%s" aria-label="%s"><span class="dashicons dashicons-update spin hidden"></span><span class="label">%s</span></a>',
+		wp_nonce_url( 'themes.php?action=autoupdate&amp;theme=' . urlencode( $stylesheet ) . '&amp;paged=' . $page . '&amp;plugin_status=' . $thene_status , 'updates' ),
+		esc_attr( $stylesheet ),
 		$action,
 		$aria_label,
 		$text
@@ -1378,7 +1379,7 @@ function wp_autoupdates_toggle_auto_updates() {
 		wp_send_json_error( array( 'error' => __( 'Invalid data. Unknown state.', 'wp-autoupdates' ) ) );
 	}
 
-	check_ajax_referer( "autoupdate-{$type}_{$asset}" );
+	check_ajax_referer( 'updates' );
 
 	switch ( $type ) {
 		case 'plugin':
