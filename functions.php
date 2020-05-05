@@ -67,18 +67,14 @@ function wp_autoupdates_enqueues( $hook ) {
 		if ( wp_autoupdates_is_themes_auto_update_enabled() ) {
 			$script = 'jQuery( document ).ready( function() {';
 
-			/* translators: %s: Theme name. */
-			$aria_label_enable  = sprintf( _x( 'Enable automatic update for %s', 'theme' ), '{{ data.name }}' );
-			$aria_label_disable = sprintf( _x( 'Disable automatic update for %s', 'theme' ), '{{ data.name }}' );
-
 			// Put the enable/disable link below the author and before the update box.
 			$autoupdate_text = '<p class="theme-autoupdate"> <# if ( data.autoupdate ) { #>';
 			$autoupdate_text .= '<span class="theme-autoupdate-disabled">';
-			$autoupdate_text .= '<a class="theme-autoupdate-disable" href="{{{ data.actions.autoupdate }}}" aria-label="' . $aria_label_disable . '"><span class="theme-autoupdate-label">' . __( 'Disable automatic updates' ) . '</span></a>';
+			$autoupdate_text .= '<a class="theme-autoupdate-disable" href="{{{ data.actions.autoupdate }}}"><span class="theme-autoupdate-label">' . __( 'Disable auto-updates' ) . '</span></a>';
 			$autoupdate_text .= '</span>';
 			$autoupdate_text .= '<# } else { #>';
 			$autoupdate_text .= '<span class="theme-autoupdate-enabled">';
-			$autoupdate_text .= '<a class="theme-autoupdate-enable" href="{{{ data.actions.autoupdate }}}" aria-label="' . $aria_label_enable . '"><span class="theme-autoupdate-label">' . __( 'Enable automatic updates' ) . '</span></a>';
+			$autoupdate_text .= '<a class="theme-autoupdate-enable" href="{{{ data.actions.autoupdate }}}"><span class="theme-autoupdate-label">' . __( 'Enable auto-updates' ) . '</span></a>';
 			$autoupdate_text .= '</span>';
 			$autoupdate_text .= '<# } #> </p>';
 
@@ -280,13 +276,6 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 		}
 		$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
 		if ( in_array( $plugin_file, $wp_auto_update_plugins, true ) ) {
-			$aria_label = esc_attr(
-				sprintf(
-					/* translators: Plugin name. */
-					_x( 'Disable automatic updates for %s', 'plugin', 'wp-autoupdates' ),
-					esc_html( $plugins[ $plugin_file ]['Name'] )
-				)
-			);
 			echo '<p>';
 			echo '<span class="plugin-autoupdate-enabled">' . __( 'Auto-updates enabled', 'wp-autoupdates' ) . '</span>';
 			echo '<br />';
@@ -300,27 +289,18 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 			}
 			if ( current_user_can( 'update_plugins', $plugin_file ) ) {
 				echo sprintf(
-					'<a href="%s" class="plugin-autoupdate-disable" aria-label="%s">%s</a>',
+					'<a href="%s" class="plugin-autoupdate-disable">%s</a>',
 					wp_nonce_url( 'plugins.php?action=autoupdate&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page . '&amp;plugin_status=' . $plugin_status, 'autoupdate-plugin_' . $plugin_file ),
-					$aria_label,
 					__( 'Disable auto-updates', 'wp-autoupdates' )
 				);
 			}
 			echo '</p>';
 		} else {
 			if ( current_user_can( 'update_plugins', $plugin_file ) ) {
-				$aria_label = esc_attr(
-					sprintf(
-						/* translators: Plugin name. */
-						_x( 'Enable automatic updates for %s', 'plugin', 'wp-autoupdates' ),
-						esc_html( $plugins[ $plugin_file ]['Name'] )
-					)
-				);
 				echo '<p class="plugin-autoupdate-disabled">';
 				echo sprintf(
-					'<a href="%s" class="edit plugin-autoupdate-enable" aria-label="%s"><span class="plugin-autoupdate-label">%s</span></a>',
+					'<a href="%s" class="edit plugin-autoupdate-enable"><span class="plugin-autoupdate-label">%s</span></a>',
 					wp_nonce_url( 'plugins.php?action=autoupdate&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page . '&amp;plugin_status=' . $plugin_status, 'autoupdate-plugin_' . $plugin_file ),
-					$aria_label,
 					__( 'Enable auto-updates', 'wp-autoupdates' )
 				);
 				echo '</p>';
@@ -1154,7 +1134,7 @@ function wp_autoupdates_get_update_message() {
 	} else {
 		return sprintf(
 			/* translators: Time until the next update. */
-			__( 'Automatic update scheduled in %s.', 'wp-autoupdates' ),
+			__( 'Auto-update scheduled in %s.', 'wp-autoupdates' ),
 			$time_to_next_update
 		);
 	}
@@ -1207,13 +1187,6 @@ function wp_autoupdates_add_themes_autoupdates_column_content( $column_name, $st
 		}
 		$wp_auto_update_themes = get_site_option( 'wp_auto_update_themes', array() );
 		if ( in_array( $stylesheet, $wp_auto_update_themes, true ) ) {
-			$aria_label = esc_attr(
-				sprintf(
-					/* translators: Theme name. */
-					_x( 'Disable automatic updates for %s', 'theme', 'wp-autoupdates' ),
-					esc_html( $themes[ $stylesheet ]->get( 'Name' ) )
-				)
-			);
 			echo '<p>';
 			echo '<span class="theme-autoupdate-enabled">' . __( 'Auto-updates enabled', 'wp-autoupdates' ) . '</span>';
 			echo '<br />';
@@ -1227,27 +1200,18 @@ function wp_autoupdates_add_themes_autoupdates_column_content( $column_name, $st
 			}
 			if ( current_user_can( 'update_themes', $stylesheet ) ) {
 				echo sprintf(
-					'<a href="%s" class="theme-autoupdate-disable" aria-label="%s">%s</a>',
+					'<a href="%s" class="theme-autoupdate-disable">%s</a>',
 					wp_nonce_url( $base_url, 'autoupdate-theme_' . $stylesheet ),
-					$aria_label,
 					__( 'Disable auto-updates', 'wp-autoupdates' )
 				);
 			}
 			echo '</p>';
 		} else {
 			if ( current_user_can( 'update_themes', $stylesheet ) ) {
-				$aria_label = esc_attr(
-					sprintf(
-						/* translators: Theme name. */
-						_x( 'Enable automatic updates for %s', 'theme', 'wp-autoupdates' ),
-						esc_html( $themes[ $stylesheet ]->get( 'Name' ) )
-					)
-				);
 				echo '<p class="theme-autoupdate-disabled">';
 				echo sprintf(
-					'<a href="%s" class="edit theme-autoupdate-enable" aria-label="%s"><span class="theme-autoupdate-label">%s</span></a>',
+					'<a href="%s" class="edit theme-autoupdate-enable"><span class="theme-autoupdate-label">%s</span></a>',
 					wp_nonce_url( $base_url, 'autoupdate-theme_' . $stylesheet ),
-					$aria_label,
 					__( 'Enable auto-updates', 'wp-autoupdates' )
 				);
 				echo '</p>';
@@ -1403,18 +1367,9 @@ function wp_autoupdates_disable_auto_updates() {
 			'plugins.php'
 		);
 
-		$aria_label = esc_attr(
-			sprintf(
-				/* translators: Plugin name. */
-				_x( 'Enable automatic updates for %s', 'plugin', 'wp-autoupdates' ),
-				$all_plugins[ $asset ]['Name']
-			)
-		);
-
 		$return_html = sprintf(
-			'<p class="plugin-autoupdate-disabled"><a href="%s" class="edit plugin-autoupdate-enable" aria-label="%s"><span class="plugin-autoupdate-label">%s</span></a></p>',
+			'<p class="plugin-autoupdate-disabled"><a href="%s" class="edit plugin-autoupdate-enable"><span class="plugin-autoupdate-label">%s</span></a></p>',
 			esc_url_raw( $plugin_url ),
-			$aria_label,
 			esc_html__( 'Enable auto-updates', 'wp-autoupdates' )
 		);
 
@@ -1445,16 +1400,8 @@ function wp_autoupdates_disable_auto_updates() {
 			'themes.php'
 		);
 
-		$aria_label = esc_attr(
-			sprintf(
-				/* translators: Theme name. */
-				_x( 'Enable automatic updates for %s', 'plugin', 'wp-autoupdates' ),
-				$all_themes[ $asset ]->get( 'Name' )
-			)
-		);
-
 		$return_html = sprintf(
-			'<p class="theme-autoupdate-disabled"><a href="%s" class="edit theme-autoupdate-enable" aria-label="%s"><span class="theme-autoupdate-label">%s</span></a></p>',
+			'<p class="theme-autoupdate-disabled"><a href="%s" class="edit theme-autoupdate-enable"><span class="theme-autoupdate-label">%s</span></a></p>',
 			esc_url_raw( $theme_url ),
 			$aria_label,
 			esc_html__( 'Enable auto-updates', 'wp-autoupdates' )
@@ -1532,19 +1479,10 @@ function wp_autoupdates_enable_auto_updates() {
 			'plugins.php'
 		);
 
-		$aria_label = esc_attr(
-			sprintf(
-				/* translators: Plugin name. */
-				_x( 'Disable automatic updates for %s', 'plugin', 'wp-autoupdates' ),
-				esc_html( $all_plugins[ $asset ]['Name'] )
-			)
-		);
-
 		$return_html = sprintf(
-			'<p><span class="plugin-autoupdate-enabled">%s</span><br /><a href="%s" class="plugin-autoupdate-disable" aria-label="%s">%s</a></p>',
+			'<p><span class="plugin-autoupdate-enabled">%s</span><br /><a href="%s" class="plugin-autoupdate-disable">%s</a></p>',
 			esc_html__( 'Auto-updates enabled', 'wp-autoupdates' ),
 			esc_url_raw( $plugin_url ),
-			$aria_label,
 			esc_html__( 'Disable auto-updates', 'wp-autoupdates' )
 		);
 
@@ -1575,19 +1513,10 @@ function wp_autoupdates_enable_auto_updates() {
 			'themes.php'
 		);
 
-		$aria_label = esc_attr(
-			sprintf(
-				/* translators: Theme name. */
-				_x( 'Disable automatic updates for %s', 'theme', 'wp-autoupdates' ),
-				esc_html( $all_themes[ $asset ]->get( 'Name' ) )
-			)
-		);
-
 		$return_html = sprintf(
-			'<p><span class="theme-autoupdate-enabled">%s</span><br /><a href="%s" class="theme-autoupdate-disable" aria-label="%s">%s</a></p>',
+			'<p><span class="theme-autoupdate-enabled">%s</span><br /><a href="%s" class="theme-autoupdate-disable">%s</a></p>',
 			esc_html__( 'Auto-updates enabled', 'wp-autoupdates' ),
 			esc_url_raw( $theme_url ),
-			$aria_label,
 			esc_html__( 'Disable auto-updates', 'wp-autoupdates' )
 		);
 
