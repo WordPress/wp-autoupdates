@@ -49,40 +49,26 @@ function wp_autoupdates_enqueues( $hook ) {
 		wp_add_inline_script( 'jquery', $script );
 	}
 
-	// When manually updating a plugin the 'time until next update' text needs to be hidden.
-	// Doesn't need to be done on the update-core.php page since that page refreshes after an update.
-	if ( 'plugins.php' === $hook ) {
-		$script = 'jQuery( document ).ready(function() {
-			jQuery( ".update-link" ).click( function() {
-				var plugin = jQuery( this ).closest("tr").data("plugin");
-				var plugin_row = jQuery( "tr.update[data-plugin=\'" + plugin + "\']" );
-				var plugin_auto_update_time_text = plugin_row.find("span.plugin-autoupdate-time");
-				plugin_auto_update_time_text.remove();
-			});
-		});';
-		wp_add_inline_script( 'jquery', $script );
-	}
-
 	if ( 'themes.php' === $hook ) {
 		if ( wp_autoupdates_is_themes_auto_update_enabled() ) {
 			/* translators: %s: Theme name. */
 			$aria_label_enable  = sprintf( _x( 'Enable automatic update for %s', 'theme name' ), '{{ data.name }}' );
 			/* translators: %s: Theme name. */
 			$aria_label_disable = sprintf( _x( 'Disable automatic update for %s', 'theme name' ), '{{ data.name }}' );
-			$text_enable        = __( 'Enable automatic updates', 'wp-autoupdates' );
-			$text_disable       = __( 'Disable automatic updates', 'wp-autoupdates' );
+			$text_enable        = __( 'Enable auto-updates', 'wp-autoupdates' );
+			$text_disable       = __( 'Disable auto-updates', 'wp-autoupdates' );
 
 			$update_message  = wp_autoupdates_get_update_message();
 			$autoupdate_text = <<<EOF
 <# if ( data.actions.autoupdate ) { #>
 <p class="theme-autoupdate">
 <# if ( data.autoupdate ) { #>
-	<a class="auto-update" href="{{{ data.actions.autoupdate }}}" data-type="theme" data-asset="{{ data.id }}" data-action="disable" aria-label="{$aria_label_disable}">
+	<a class="auto-update" href="{{{ data.actions.autoupdate }}}" data-wp-type="theme" data-wp-asset="{{ data.id }}" data-wp-action="disable" aria-label="{$aria_label_disable}">
 		<span class="dashicons dashicons-update spin hidden"></span>
 		<span class="label">{$text_disable}</span>
 	</a>
 <# } else { #>
-	<a class="auto-update" href="{{{ data.actions.autoupdate }}}" data-type="theme" data-asset="{{ data.id }}" data-action="disable" aria-label="{$aria_label_enable}">
+	<a class="auto-update" href="{{{ data.actions.autoupdate }}}" data-wp-type="theme" data-wp-asset="{{ data.id }}" data-wp-action="enable" aria-label="{$aria_label_enable}">
 		<span class="dashicons dashicons-update spin hidden"></span>
 		<span class="label">{$text_enable}</span>
 	</a>
@@ -315,7 +301,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 	}
 
 	printf(
-		'<a href="%s" class="auto-update" data-type="plugin" data-asset="%s" data-action="%s" aria-label="%s"><span class="dashicons dashicons-update spin hidden"></span><span class="label">%s</span></a>',
+		'<a href="%s" class="auto-update" data-wp-type="plugin" data-wp-asset="%s" data-wp-action="%s" aria-label="%s"><span class="dashicons dashicons-update spin hidden"></span><span class="label">%s</span></a>',
 		wp_nonce_url( 'plugins.php?action=autoupdate&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page . '&amp;plugin_status=' . $plugin_status, 'updates' ),
 		esc_attr( $plugin_file ),
 		$action,
@@ -1252,7 +1238,7 @@ function wp_autoupdates_add_themes_autoupdates_column_content( $column_name, $st
 	}
 
 	printf(
-		'<a href="%s" class="auto-update" data-type="theme" data-asset="%s" data-action="%s" aria-label="%s"><span class="dashicons dashicons-update spin hidden"></span><span class="label">%s</span></a>',
+		'<a href="%s" class="auto-update" data-wp-type="theme" data-wp-asset="%s" data-wp-action="%s" aria-label="%s"><span class="dashicons dashicons-update spin hidden"></span><span class="label">%s</span></a>',
 		wp_nonce_url( 'themes.php?action=autoupdate&amp;theme=' . urlencode( $stylesheet ) . '&amp;paged=' . $page . '&amp;plugin_status=' . $thene_status , 'updates' ),
 		esc_attr( $stylesheet ),
 		$action,
