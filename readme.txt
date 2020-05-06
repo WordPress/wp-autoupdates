@@ -1,9 +1,9 @@
 === WordPress Auto-updates ===
-Contributors: wordpressdotorg, audrasjb, whodunitagency, pbiron, xkon, karmatosed, mapk, jeffpaul, bookdude13
+Contributors: wordpressdotorg, audrasjb, whodunitagency, pbiron, whyisjake, xkon, karmatosed, mapk, jeffpaul, bookdude13
 Requires at least: 5.3
 Tested up to: 5.4
 Requires PHP: 5.6
-Stable tag: 0.6.0
+Stable tag: 0.7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,13 @@ Interested in contributing to this plugin? Feel free to join us in `#core-auto-u
 7. Email notification example
 
 == Changelog ==
+
+= 0.7.0 =
+May 6, 2020
+- PHPCBF fixes - [#114](https://github.com/WordPress/wp-autoupdates/pull/114)
+- Remove constants from the feature plugin - [#112](https://github.com/WordPress/wp-autoupdates/pull/112)
+- Various i18n fixes/optimizations - [#109](https://github.com/WordPress/wp-autoupdates/pull/109)
+- Simplifies Ajax on both the JS and PHP sides - [#103](https://github.com/WordPress/wp-autoupdates/pull/103)
 
 = 0.6.0 =
 April 22, 2020

@@ -51,6 +51,7 @@ Thanks to everyone who contributed to this feature plugin!
 - [@paaljoachim](https://profiles.wordpress.org/paaljoachim/)
 - [@timothybjacobs](https://profiles.wordpress.org/timothybjacobs/)
 - [@wpamitkumar](https://profiles.wordpress.org/wpamitkumar)
+- [@casiepa](https://profiles.wordpress.org/casiepa)
 
 ## Documentation 📚
 
@@ -87,6 +88,13 @@ Work in progress.
 ![Email notification example](https://jeanbaptisteaudras.com/share/wp-auto-updates/wp-auto-updates-7-email-notification.png)
 
 ## Changelog 🗓
+
+### 0.7.0 🦢
+May 6, 2020
+- PHPCBF fixes - [#114](https://github.com/WordPress/wp-autoupdates/pull/114)
+- Remove constants from the feature plugin - [#112](https://github.com/WordPress/wp-autoupdates/pull/112)
+- Various i18n fixes/optimizations - [#109](https://github.com/WordPress/wp-autoupdates/pull/109)
+- Simplifies Ajax on both the JS and PHP sides - [#103](https://github.com/WordPress/wp-autoupdates/pull/103)
 
 ### 0.6.0 🦋
 April 22, 2020
