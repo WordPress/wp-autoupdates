@@ -88,15 +88,14 @@
 		} );
 
 		/**
-		 * When manually updating a plugin the 'time until next update' text needs to be hidden.
+		 * When manually updating a plugin/theme the 'time until next update' text needs to be cleared.
 		 *
-		 * TODO: fire this off an event that wp-admin/js/updates.js triggers when the update is complete.
+		 * TODO: fire this off an event that wp-admin/js/updates.js triggers when the update succeeds.
 		 */
 		$( '.update-link' ).click( function() {
-			var plugin      = $( this ).closest( 'tr' ).attr( 'data-plugin' ),
-				$plugin_row = $( 'tr.update[data-plugin="' + plugin + '"]' );
+			var plugin = $( this ).closest( 'tr' ).attr( 'data-plugin' );
 
-			$plugin_row.find( '.auto-update-time' ).empty();
+			$( 'tr.update[data-plugin="' + plugin + '"]' ).find( '.auto-update-time' ).empty();
 		} );
 	} );
 } )( jQuery, window._wpUpdatesSettings, window.pagenow );
