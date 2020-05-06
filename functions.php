@@ -169,7 +169,7 @@ add_action( 'wp_prepare_themes_for_js', 'wp_autoupdates_prepare_themes_for_js' )
  * @return bool True if plugins auto-update is enabled, false otherwise.
  */
 function wp_autoupdates_is_plugins_auto_update_enabled() {
-	$enabled = ! defined( 'WP_DISABLE_PLUGINS_AUTO_UPDATE' ) || ! WP_DISABLE_PLUGINS_AUTO_UPDATE;
+	$enabled = true;
 
 	/**
 	 * Filters whether plugins manual auto-update is enabled.
@@ -186,7 +186,7 @@ function wp_autoupdates_is_plugins_auto_update_enabled() {
  * @return bool True if themes auto-update is enabled, false otherwise.
  */
 function wp_autoupdates_is_themes_auto_update_enabled() {
-	$enabled = ! defined( 'WP_DISABLE_THEMES_AUTO_UPDATE' ) || ! WP_DISABLE_THEMES_AUTO_UPDATE;
+	$enabled = true;
 
 	/**
 	 * Filters whether themes manual auto-update is enabled.
@@ -909,21 +909,6 @@ function wp_autoupdates_debug_information( $info ) {
 		}
 	}
 
-	// Populate constants informations.
-	$plugins_enabled = defined( 'WP_DISABLE_PLUGINS_AUTO_UPDATE' ) ? WP_DISABLE_PLUGINS_AUTO_UPDATE : __( 'Undefined', 'wp-autoupdates' );
-	$info['wp-constants']['fields']['WP_DISABLE_PLUGINS_AUTO_UPDATE'] = array(
-		'label' => 'WP_DISABLE_PLUGINS_AUTO_UPDATE',
-		'value' => $plugins_enabled,
-		'debug' => strtolower( $plugins_enabled ),
-	);
-
-	$themes_enabled = defined( 'WP_DISABLE_THEMES_AUTO_UPDATE' ) ? WP_DISABLE_THEMES_AUTO_UPDATE : __( 'Undefined', 'wp-autoupdates' );
-	$info['wp-constants']['fields']['WP_DISABLE_THEMES_AUTO_UPDATE'] = array(
-		'label' => 'WP_DISABLE_THEMES_AUTO_UPDATE',
-		'value' => $themes_enabled,
-		'debug' => strtolower( $themes_enabled ),
-	);
-
 	return $info;
 }
 add_filter( 'debug_information', 'wp_autoupdates_debug_information' );
@@ -935,7 +920,7 @@ add_filter( 'debug_information', 'wp_autoupdates_debug_information' );
  * @return bool True if plugins notifications are enabled, false otherwise.
  */
 function wp_autoupdates_is_plugins_auto_update_email_enabled() {
-	$enabled = ! defined( 'WP_DISABLE_PLUGINS_AUTO_UPDATE_EMAIL' ) || ! WP_DISABLE_PLUGINS_AUTO_UPDATE;
+	$enabled = true;
 
 	/**
 	 * Filters whether plugins auto-update email notifications are enabled.
@@ -952,7 +937,7 @@ function wp_autoupdates_is_plugins_auto_update_email_enabled() {
  * @return bool True if themes notifications are enabled, false otherwise.
  */
 function wp_autoupdates_is_themes_auto_update_email_enabled() {
-	$enabled = ! defined( 'WP_DISABLE_THEMES_AUTO_UPDATE_EMAIL' ) || ! WP_DISABLE_THEMES_AUTO_UPDATE;
+	$enabled = true;
 
 	/**
 	 * Filters whether themes auto-update email notifications are enabled.
