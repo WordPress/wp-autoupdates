@@ -1296,6 +1296,8 @@ add_filter( 'handle_network_bulk_actions-themes-network', 'wp_autoupdates_themes
  * Toggle auto updates via Ajax.
  */
 function wp_autoupdates_toggle_auto_updates() {
+	check_ajax_referer( 'updates' );
+
 	if ( empty( $_POST['type'] ) || empty( $_POST['asset'] ) || empty( $_POST['state'] ) ) {
 		wp_send_json_error( array( 'error' => __( 'Invalid data. No selected item.', 'wp-autoupdates' ) ) );
 	}
@@ -1311,8 +1313,6 @@ function wp_autoupdates_toggle_auto_updates() {
 		wp_send_json_error( array( 'error' => __( 'Invalid data. Unknown type.', 'wp-autoupdates' ) ) );
 	}
 	$type = $_POST['type'];
-
-	check_ajax_referer( 'updates' );
 
 	switch ( $type ) {
 		case 'plugin':
