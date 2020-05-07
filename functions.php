@@ -1356,4 +1356,4 @@ function wp_autoupdates_toggle_auto_updates() {
 
 	wp_send_json_success();
 }
-add_action( 'wp_ajax_toggle_auto_updates', 'wp_autoupdates_toggle_auto_updates' );
+add_action( 'wp_ajax_toggle-auto-updates', 'wp_autoupdates_toggle_auto_updates' );

@@ -1,5 +1,8 @@
 // For merging with wp-admin/js/updates.js
-( function( $, settings, pagenow ) {
+// in this plugin, translatable strings are in l10n.  settings is used only for the
+// ajax_nonce.  Once merged into core, all the strings will be in settings.l10n 
+// and the l10n param will not be passed.
+( function( $, l10n, settings, pagenow ) {
 	'use strict';
 
 	$( document ).ready(
@@ -21,11 +24,11 @@
 					$parent.find( '.auto-updates-error' ).removeClass( 'notice error' ).addClass( 'hidden' );
 
 					// Show loading status.
-					$label.text( 'enable' === action ? wp_autoupdates.enabling : wp_autoupdates.disabling );
+					$label.text( 'enable' === action ? l10n.enabling : l10n.disabling );
 					$anchor.find( '.dashicons-update' ).removeClass( 'hidden' );
 
 					data = {
-						action: 'toggle_auto_updates',
+						action: 'toggle-auto-updates',
 						_ajax_nonce: settings.ajax_nonce,
 						state: action,
 						type: type,
@@ -69,15 +72,15 @@
 
 								if ( 'enable' === action ) {
 									$anchor.attr( 'data-wp-action', 'disable' );
-									$label.text( wp_autoupdates.disable );
+									$label.text( l10n.disable );
 									$parent.find( '.auto-update-time' ).removeClass( 'hidden' );
 								} else {
 									$anchor.attr( 'data-wp-action', 'enable' );
-									$label.text( wp_autoupdates.enable );
+									$label.text( l10n.enable );
 									$parent.find( '.auto-update-time' ).addClass( 'hidden' );
 								}
 
-								wp.a11y.speak( 'enable' === action ? wp_autoupdates.enabled : wp_autoupdates.disabled, 'polite' );
+								wp.a11y.speak( 'enable' === action ? l10n.enabled : l10n.disabled, 'polite' );
 							} else {
 								$parent.find( '.auto-updates-error' ).removeClass( 'hidden' ).addClass( 'notice error' ).find( 'p' ).text( response.data.error );
 								wp.a11y.speak( response.data.error, 'polite' );
@@ -86,8 +89,8 @@
 					)
 					.fail(
 						function( response ) {
-							$parent.find( '.auto-updates-error' ).removeClass( 'hidden' ).addClass( 'notice error' ).find( 'p' ).text( wp_autoupdates.auto_update_error );
-							wp.a11y.speak( wp_autoupdates.auto_update_error, 'polite' );
+							$parent.find( '.auto-updates-error' ).removeClass( 'hidden' ).addClass( 'notice error' ).find( 'p' ).text( l10n.auto_update_error );
+							wp.a11y.speak( l10n.auto_update_error, 'polite' );
 						}
 					)
 					.always(
@@ -112,4 +115,4 @@
 			);
 		}
 	);
-} )( window.jQuery, window._wpUpdatesSettings, window.pagenow );
+} )( window.jQuery, window.wp_autoupdates, window._wpUpdatesSettings, window.pagenow );
