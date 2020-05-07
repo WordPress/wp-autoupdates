@@ -1328,10 +1328,7 @@ function wp_autoupdates_toggle_auto_updates() {
 	if ( ! $all_items[ $asset ] ) {
 		wp_send_json_error(
 			array(
-				'error' => sprintf(
-					__( 'Invalid data. %s does not exist.', 'wp-autoupdates' ),
-					'plugin' === $type ? __( 'Plugin', 'wp-autoupdates' ) : __( 'Theme', 'wp-autoupdates' )
-				),
+				'error' => 'plugin' === $type ? __( 'Invalid data. Plugin does not exist.', 'wp-autoupdates' ) : __( 'Invalid data. Theme does not exist.', 'wp-autoupdates' ),
 			)
 		);
 	}
@@ -1339,10 +1336,7 @@ function wp_autoupdates_toggle_auto_updates() {
 	if ( ! current_user_can( $cap ) ) {
 		wp_send_json_error(
 			array(
-				'error' => sprintf(
-					__( 'You do not have permission to modify %s.', 'wp-autoupdates' ),
-					'plugin' === $type ? __( 'plugins', 'wp-autoupdates' ) : __( 'themes', 'wp-autoupdates' )
-				),
+				'error' => 'plugin' === $type ? __( 'You do not have permission to modify plugins.', 'wp-autoupdates' ) : __( 'You do not have permission to modify themes.', 'wp-autoupdates' ),
 			)
 		);
 	}
