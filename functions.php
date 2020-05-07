@@ -1353,3 +1353,56 @@ function wp_autoupdates_toggle_auto_updates() {
 	wp_send_json_success();
 }
 add_action( 'wp_ajax_toggle_auto_updates', 'wp_autoupdates_toggle_auto_updates' );
+
+/**
+ * Set up auto-updates help tabs.
+ */
+function wp_autoupdates_help_tab_update_core() {
+	$screen = get_current_screen();
+
+	if ( 'update-core' === $screen->id || 'update-core-network' === $screen->id ) {
+		$help_tab_content  = '<p>' . __( 'Plugins and Themes with auto-updates enabled will display the estimated date of the next auto-update. Auto-updates schedule depends on WordPress planned tasks.' ) . '</p>';
+		$help_tab_content .= '<p>' . __( 'Please note: WordPress auto-updates may be overridden by third-parties plugins or custom code.' ) . '</p>';
+		$help_tab_content .= '<p>' . sprintf(
+			__( 'For more information: <a href="%s">Documentation about auto-updates</a>', 'wp-autoupdates' ),
+			'https://wordpress.org/support/article/auto-updates/'
+		) . '<p>';
+		$screen->add_help_tab( array(
+			'id'       => 'auto-updates',
+			'title'    => __( 'Auto-updates', 'wp-autoupdates' ),
+			'content'  => $help_tab_content,
+			'priority' => 11,
+		) );
+	}
+
+	if ( 'plugins' === $screen->id || 'plugins-network' === $screen->id ) {
+		$help_tab_content  = '<p>' . __( 'Auto-updates can be enabled and disabled on a plugin by plugin basis. Plugins with auto-updates enabled will display the estimated date of the next auto-update. Auto-updates schedule depends on WordPress planned tasks.' ) . '</p>';
+		$help_tab_content .= '<p>' . __( 'Please note: WordPress auto-updates may be overridden by third-parties plugins or custom code.' ) . '</p>';
+		$help_tab_content .= '<p>' . sprintf(
+			__( 'For more information: <a href="%s">Documentation about auto-updates</a>', 'wp-autoupdates' ),
+			'https://wordpress.org/support/article/auto-updates/'
+		) . '<p>';
+		$screen->add_help_tab( array(
+			'id'       => 'auto-updates',
+			'title'    => __( 'Auto-updates', 'wp-autoupdates' ),
+			'content'  => $help_tab_content,
+			'priority' => 11,
+		) );
+	}
+
+	if ( 'themes' === $screen->id || 'themes-network' === $screen->id ) {
+		$help_tab_content  = '<p>' . __( 'Auto-updates can be enabled and disabled on a theme by theme basis. Themes with auto-updates enabled will display the estimated date of the next auto-update. Auto-updates schedule depends on WordPress planned tasks.' ) . '</p>';
+		$help_tab_content .= '<p>' . __( 'Please note: WordPress auto-updates may be overridden by third-parties plugins or custom code.' ) . '</p>';
+		$help_tab_content .= '<p>' . sprintf(
+			__( 'For more information: <a href="%s">Documentation about auto-updates</a>', 'wp-autoupdates' ),
+			'https://wordpress.org/support/article/auto-updates/'
+		) . '<p>';
+		$screen->add_help_tab( array(
+			'id'       => 'auto-updates',
+			'title'    => __( 'Auto-updates', 'wp-autoupdates' ),
+			'content'  => $help_tab_content,
+			'priority' => 11,
+		) );
+	}
+}
+add_action( 'current_screen', 'wp_autoupdates_help_tab_update_core' );
