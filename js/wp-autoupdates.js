@@ -1,4 +1,4 @@
-/* global wp_autoupdates */
+// For merging with wp-admin/js/updates.js
 ( function( $, settings, pagenow ) {
 	'use strict';
 
@@ -32,7 +32,7 @@
 						asset: $anchor.attr( 'data-wp-asset' ),
 					};
 
-					$.post( ajaxurl, data )
+					$.post( window.ajaxurl, data )
 					.done(
 						function( response ) {
 							var $enabled, $disabled, enabledNumber, disabledNumber;
@@ -112,4 +112,4 @@
 			);
 		}
 	);
-} )( jQuery, window._wpUpdatesSettings, window.pagenow );
+} )( window.jQuery, window._wpUpdatesSettings, window.pagenow );

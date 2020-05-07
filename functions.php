@@ -156,7 +156,7 @@ function wp_autoupdates_prepare_themes_for_js( $prepared_themes ) {
 
 	return $prepared_themes;
 }
-add_action( 'wp_prepare_themes_for_js', 'wp_autoupdates_prepare_themes_for_js' );
+add_filter( 'wp_prepare_themes_for_js', 'wp_autoupdates_prepare_themes_for_js' );
 
 
 /**
@@ -309,8 +309,8 @@ function wp_autoupdates_plugins_bulk_actions( $actions ) {
 	$actions['disable-autoupdate-selected'] = __( 'Disable auto-updates', 'wp-autoupdates' );
 	return $actions;
 }
-add_action( 'bulk_actions-plugins', 'wp_autoupdates_plugins_bulk_actions' );
-add_action( 'bulk_actions-plugins-network', 'wp_autoupdates_plugins_bulk_actions' );
+add_filter( 'bulk_actions-plugins', 'wp_autoupdates_plugins_bulk_actions' );
+add_filter( 'bulk_actions-plugins-network', 'wp_autoupdates_plugins_bulk_actions' );
 
 
 /**
@@ -488,9 +488,10 @@ function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $i
 		return $redirect_to;
 	}
 
+	return $redirect_to;
 }
-add_action( 'handle_bulk_actions-plugins', 'wp_autoupdates_plugins_bulk_actions_handle', 10, 3 );
-add_action( 'handle_bulk_actions-plugins-network', 'wp_autoupdates_plugins_bulk_actions_handle', 10, 3 );
+add_filter( 'handle_bulk_actions-plugins', 'wp_autoupdates_plugins_bulk_actions_handle', 10, 3 );
+add_filter( 'handle_bulk_actions-plugins-network', 'wp_autoupdates_plugins_bulk_actions_handle', 10, 3 );
 
 
 /**
@@ -1211,7 +1212,7 @@ function wp_autoupdates_themes_bulk_actions( $actions ) {
 	$actions['disable-autoupdate-selected'] = __( 'Disable auto-updates', 'wp-autoupdates' );
 	return $actions;
 }
-add_action( 'bulk_actions-themes-network', 'wp_autoupdates_themes_bulk_actions' );
+add_filter( 'bulk_actions-themes-network', 'wp_autoupdates_themes_bulk_actions' );
 
 
 /**
@@ -1255,9 +1256,7 @@ function wp_autoupdates_themes_bulk_actions_handle( $redirect_to, $doaction, $it
 
 		$redirect_to = self_admin_url( "themes.php?enable-autoupdate=true&theme_status=$status&paged=$page&s=$s" );
 		return $redirect_to;
-	}
-
-	if ( 'disable-autoupdate-selected' === $doaction ) {
+	} elseif ( 'disable-autoupdate-selected' === $doaction ) {
 		if ( ! current_user_can( 'update_themes' ) || ! wp_autoupdates_is_themes_auto_update_enabled() ) {
 			wp_die( __( 'Sorry, you are not allowed to enable themes automatic updates.', 'wp-autoupdates' ) );
 		}
@@ -1288,8 +1287,10 @@ function wp_autoupdates_themes_bulk_actions_handle( $redirect_to, $doaction, $it
 		$redirect_to = self_admin_url( "themes.php?disable-autoupdate=true&theme_status=$status&paged=$page&s=$s" );
 		return $redirect_to;
 	}
+
+	return $redirect_to;
 }
-add_action( 'handle_network_bulk_actions-themes-network', 'wp_autoupdates_themes_bulk_actions_handle', 10, 3 );
+add_filter( 'handle_network_bulk_actions-themes-network', 'wp_autoupdates_themes_bulk_actions_handle', 10, 3 );
 
 /**
  * Toggle auto updates via Ajax.
@@ -1299,25 +1300,37 @@ function wp_autoupdates_toggle_auto_updates() {
 		wp_send_json_error( array( 'error' => __( 'Invalid data. No selected item.', 'wp-autoupdates' ) ) );
 	}
 
-	$type  = sanitize_text_field( $_POST['type'] );
-	$state = sanitize_text_field( $_POST['state'] );
 	$asset = sanitize_text_field( urldecode( $_POST['asset'] ) );
 
-	if ( ! in_array( $state, array( 'enable', 'disable', true ) ) ) {
+	if ( 'enable' !== $_POST['state'] && 'disable' !== $_POST['state'] ) {
 		wp_send_json_error( array( 'error' => __( 'Invalid data. Unknown state.', 'wp-autoupdates' ) ) );
 	}
+	$state = $_POST['state'];
+
+	if ( 'plugin' !== $_POST['type'] && 'theme' !== $_POST['type'] ) {
+		wp_send_json_error( array( 'error' => __( 'Invalid data. Unknown type.', 'wp-autoupdates' ) ) );
+	}
+	$type = $_POST['type'];
 
 	check_ajax_referer( 'updates' );
 
 	switch ( $type ) {
 		case 'plugin':
-			$cap    = 'update_plugins';
+			if ( ! current_user_can( 'update_plugins' ) ) {
+				$error_message = __( 'You do not have permission to modify plugins.', 'wp-autoupdates' );
+				wp_send_json_error( array( 'error' => $error_message ) );
+			}
+
 			$option = 'wp_auto_update_plugins';
 			/** This filter is documented in wp-admin/includes/class-wp-plugins-list-table.php */
 			$all_items = apply_filters( 'all_plugins', get_plugins() );
 			break;
 		case 'theme':
-			$cap       = 'update_themes';
+			if ( ! current_user_can( 'update_themes' ) ) {
+				$error_message = __( 'You do not have permission to modify themes.', 'wp-autoupdates' );
+				wp_send_json_error( array( 'error' => $error_message ) );
+			}
+
 			$option    = 'wp_auto_update_themes';
 			$all_items = wp_get_themes();
 			break;
@@ -1325,35 +1338,20 @@ function wp_autoupdates_toggle_auto_updates() {
 			wp_send_json_error( array( 'error' => __( 'Invalid data. Unknown type.', 'wp-autoupdates' ) ) );
 	}
 
-	if ( ! $all_items[ $asset ] ) {
-		wp_send_json_error(
-			array(
-				'error' => sprintf(
-					__( 'Invalid data. %s does not exist.', 'wp-autoupdates' ),
-					'plugin' === $type ? __( 'Plugin', 'wp-autoupdates' ) : __( 'Theme', 'wp-autoupdates' )
-				),
-			)
-		);
-	}
-
-	if ( ! current_user_can( $cap ) ) {
-		wp_send_json_error(
-			array(
-				'error' => sprintf(
-					__( 'You do not have permission to modify %s.', 'wp-autoupdates' ),
-					'plugin' === $type ? __( 'plugins', 'wp-autoupdates' ) : __( 'themes', 'wp-autoupdates' )
-				),
-			)
-		);
+	if ( ! array_key_exists( $asset, $all_items ) ) {
+		$error_message = __( 'Invalid data. The item does not exist.', 'wp-autoupdates' );
+		wp_send_json_error( array( 'error' => $error_message ) );
 	}
 
 	$wp_autoupdates = (array) get_site_option( $option, array() );
+
 	if ( 'disable' === $state ) {
 		$wp_autoupdates = array_diff( $wp_autoupdates, array( $asset ) );
 	} else {
 		$wp_autoupdates[] = $asset;
 		$wp_autoupdates   = array_unique( $wp_autoupdates );
 	}
+
 	update_site_option( $option, $wp_autoupdates );
 
 	wp_send_json_success();
