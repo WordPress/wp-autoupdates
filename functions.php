@@ -307,10 +307,10 @@ function wp_autoupdates_plugins_bulk_actions( $actions ) {
 	$plugin_status = ! empty( $_GET['plugin_status'] ) ? $_GET['plugin_status'] : '';
 
 	if ( 'autoupdate_enabled' !== $plugin_status ) {
-		$actions['enable-autoupdates-selected']  = __( 'Enable Auto-updates' );
+		$actions['enable-autoupdate-selected']  = __( 'Enable Auto-updates' );
 	}
 	if ( 'autoupdate_disabled' !== $plugin_status ) {
-		$actions['disable-autoupdates-selected'] = __( 'Disable Auto-updates' );
+		$actions['disable-autoupdate-selected'] = __( 'Disable Auto-updates' );
 	}
 
 	return $actions;
