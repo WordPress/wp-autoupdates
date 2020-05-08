@@ -326,7 +326,7 @@ function wp_autoupdates_plugins_enabler() {
 	if ( ! isset( $_GET['action'] ) ) {
 		return;
 	}
-	if ( 'enable-auto-update' === $_GET['action'] || 'disable-auto-update' === $_GET['action'] ) {
+	if ( ! ( 'enable-auto-update' === $_GET['action'] || 'disable-auto-update' === $_GET['action'] ) ) {
 		return;
 	}
 
@@ -374,7 +374,7 @@ function wp_autoupdates_themes_enabler() {
 	if ( ! isset( $_GET['action'] ) ) {
 		return;
 	}
-	if ( 'enable-auto-update' === $_GET['action'] || 'disable-auto-update' === $_GET['action'] ) {
+	if ( ! ( 'enable-auto-update' === $_GET['action'] || 'disable-auto-update' === $_GET['action'] ) ) {
 		return;
 	}
 
