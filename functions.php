@@ -279,7 +279,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 
 	printf(
 		'<a href="%s" class="toggle-auto-update" data-wp-action="%s"><span class="dashicons dashicons-update spin hidden"></span><span class="label">%s</span></a>',
-		wp_nonce_url( 'plugins.php?action=toggle-auto-update&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page . '&amp;plugin_status=' . $plugin_status, 'updates' ),
+		wp_nonce_url( 'plugins.php?action=' . $action . '-auto-update&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page . '&amp;plugin_status=' . $plugin_status, 'updates' ),
 		$action,
 		$text
 	);
@@ -323,7 +323,10 @@ add_filter( 'bulk_actions-plugins-network', 'wp_autoupdates_plugins_bulk_actions
  * Handles auto-updates enabling for plugins.
  */
 function wp_autoupdates_plugins_enabler() {
-	if ( ! ( isset( $_GET['action'] ) && 'toggle-auto-update' === $_GET['action'] ) ) {
+	if ( ! isset( $_GET['action'] ) ) {
+		return;
+	}
+	if ( 'enable-auto-update' === $_GET['action'] || 'disable-auto-update' === $_GET['action'] ) {
 		return;
 	}
 
@@ -349,7 +352,7 @@ function wp_autoupdates_plugins_enabler() {
 
 	$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
 
-	if ( in_array( $plugin, $wp_auto_update_plugins, true ) ) {
+	if ( 'disable-auto-update' === $_GET['action'] ) {
 		$wp_auto_update_plugins = array_diff( $wp_auto_update_plugins, array( $plugin ) );
 		$action_type            = 'disable-auto-update=true';
 	} else {
@@ -368,7 +371,10 @@ function wp_autoupdates_plugins_enabler() {
  * Handles auto-updates enabling for themes.
  */
 function wp_autoupdates_themes_enabler() {
-	if ( ! ( isset( $_GET['action'] ) && 'toggle-auto-update' === $_GET['action'] ) ) {
+	if ( ! isset( $_GET['action'] ) ) {
+		return;
+	}
+	if ( 'enable-auto-update' === $_GET['action'] || 'disable-auto-update' === $_GET['action'] ) {
 		return;
 	}
 
@@ -390,7 +396,7 @@ function wp_autoupdates_themes_enabler() {
 
 	$wp_auto_update_themes = get_site_option( 'wp_auto_update_themes', array() );
 
-	if ( in_array( $theme, $wp_auto_update_themes, true ) ) {
+	if ( 'disable-auto-update' === $_GET['action'] ) {
 		$wp_auto_update_themes = array_diff( $wp_auto_update_themes, array( $theme ) );
 		$action_type           = 'disable-auto-update=true';
 	} else {
@@ -1203,7 +1209,7 @@ function wp_autoupdates_add_themes_autoupdates_column_content( $column_name, $st
 
 	printf(
 		'<a href="%s" class="toggle-auto-update" data-wp-action="%s"><span class="dashicons dashicons-update spin hidden"></span><span class="label">%s</span></a>',
-		wp_nonce_url( 'themes.php?action=toggle-auto-update&amp;theme=' . urlencode( $stylesheet ) . '&amp;paged=' . $page . '&amp;plugin_status=' . $theme_status, 'updates' ),
+		wp_nonce_url( 'themes.php?action=' . $action . '-auto-update&amp;theme=' . urlencode( $stylesheet ) . '&amp;paged=' . $page . '&amp;theme_status=' . $theme_status, 'updates' ),
 		$action,
 		$text
 	);
