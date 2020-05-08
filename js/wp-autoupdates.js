@@ -128,7 +128,7 @@
 			/**
 			 * Clear the "time until next update" when a theme is successfully updated manually.
 			 */
-			$( document ).on( 'wp-theme-update-success11',
+			$( document ).on( 'wp-theme-update-success',
 				function( event, response ) {
 					var isModalOpen    = $( 'body.modal-open' ).length;
 
