@@ -263,7 +263,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 		return;
 	}
 
-	$page              = ! empty( $_GET['paged'] ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
+	$page              = ! empty( $_GET['paged'] ) ? absint( $_GET['paged'] ) : '';
 	$plugin_status     = ! empty( $_GET['plugin_status'] ) ? wp_unslash( esc_html( $_GET['plugin_status'] ) ) : '';
 
 	$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
@@ -341,7 +341,7 @@ function wp_autoupdates_plugins_enabler() {
 	}
 
 	$plugin = ! empty( esc_html( $_GET['plugin'] ) ) ? wp_unslash( esc_html( $_GET['plugin'] ) ) : '';
-	$page   = isset( $_GET['paged'] ) && ! empty( esc_html( $_GET['paged'] ) ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
+	$page   = ! empty( $_GET['paged'] ) ? absint( $_GET['paged'] ) : '';
 	$status = isset( $_GET['plugin_status'] ) && ! empty( esc_html( $_GET['plugin_status'] ) ) ? wp_unslash( esc_html( $_GET['plugin_status'] ) ) : '';
 	$s      = isset( $_GET['s'] ) && ! empty( esc_html( $_GET['s'] ) ) ? wp_unslash( esc_html( $_GET['s'] ) ) : '';
 
@@ -453,7 +453,7 @@ function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $i
 		}
 
 		$plugins = ! empty( $items ) ? (array) wp_unslash( $items ) : array();
-		$page    = isset( $_GET['paged'] ) && ! empty( esc_html( $_GET['paged'] ) ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
+		$page    = ! empty( $_GET['paged'] ) ? absint( $_GET['paged'] ) : '';
 		$status  = isset( $_GET['plugin_status'] ) && ! empty( esc_html( $_GET['plugin_status'] ) ) ? wp_unslash( esc_html( $_GET['plugin_status'] ) ) : '';
 		$s       = isset( $_GET['s'] ) && ! empty( esc_html( $_GET['s'] ) ) ? wp_unslash( esc_html( $_GET['s'] ) ) : '';
 
@@ -489,7 +489,7 @@ function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $i
 		}
 
 		$plugins = ! empty( $items ) ? (array) wp_unslash( $items ) : array();
-		$page    = isset( $_GET['paged'] ) && ! empty( esc_html( $_GET['paged'] ) ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
+		$page    = ! empty( $_GET['paged'] ) ? absint( $_GET['paged'] ) : '';
 		$status  = isset( $_GET['plugin_status'] ) && ! empty( esc_html( $_GET['plugin_status'] ) ) ? wp_unslash( esc_html( $_GET['plugin_status'] ) ) : '';
 		$s       = isset( $_GET['s'] ) && ! empty( esc_html( $_GET['s'] ) ) ? wp_unslash( esc_html( $_GET['s'] ) ) : '';
 
@@ -1193,7 +1193,7 @@ function wp_autoupdates_add_themes_autoupdates_column_content( $column_name, $st
 		return;
 	}
 
-	$page         = ! empty( $_GET['paged'] ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
+	$page         = ! empty( $_GET['paged'] ) ? absint( $_GET['paged'] ) : '';
 	$theme_status = ! empty( $_GET['theme_status'] ) ? wp_unslash( esc_html( $_GET['theme_status'] ) ) : '';
 
 	$wp_auto_update_themes  = (array) get_site_option( 'wp_auto_update_themes', array() );
@@ -1262,7 +1262,7 @@ function wp_autoupdates_themes_bulk_actions_handle( $redirect_to, $doaction, $it
 		}
 
 		$themes = ! empty( $items ) ? (array) wp_unslash( $items ) : array();
-		$page   = isset( $_GET['paged'] ) && ! empty( esc_html( $_GET['paged'] ) ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
+		$page   = ! empty( $_GET['paged'] ) ? absint( $_GET['paged'] ) : '';
 		$status = isset( $_GET['theme_status'] ) && ! empty( esc_html( $_GET['theme_status'] ) ) ? wp_unslash( esc_html( $_GET['theme_status'] ) ) : '';
 		$s      = isset( $_GET['s'] ) && ! empty( esc_html( $_GET['s'] ) ) ? wp_unslash( esc_html( $_GET['s'] ) ) : '';
 
@@ -1300,7 +1300,7 @@ function wp_autoupdates_themes_bulk_actions_handle( $redirect_to, $doaction, $it
 		}
 
 		$themes = ! empty( $items ) ? (array) wp_unslash( $items ) : array();
-		$page   = isset( $_GET['paged'] ) && ! empty( esc_html( $_GET['paged'] ) ) ? wp_unslash( esc_html( $_GET['paged'] ) ) : '';
+		$page   = ! empty( $_GET['paged'] ) ? absint( $_GET['paged'] ) : '';
 		$status = isset( $_GET['theme_status'] ) && ! empty( esc_html( $_GET['theme_status'] ) ) ? wp_unslash( esc_html( $_GET['theme_status'] ) ) : '';
 		$s      = isset( $_GET['s'] ) && ! empty( esc_html( $_GET['s'] ) ) ? wp_unslash( esc_html( $_GET['s'] ) ) : '';
 
