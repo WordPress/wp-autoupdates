@@ -500,7 +500,6 @@ function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $i
 
 		$auto_update_plugins     = (array) get_site_option( 'wp_auto_update_plugins', array() );
 		$new_autoupdated_plugins = array_diff( $auto_update_plugins, $plugins );
-		$new_autoupdated_plugins = array_unique( $new_autoupdated_plugins );
 
 		// return early if all selected plugins already have auto-updates disabled.
 		// must use non-strict comparison, so that array order is not treated as significant.
