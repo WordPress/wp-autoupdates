@@ -23,9 +23,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'WP_AUTO_UPDATES_VERSION', '0.7.0' );
 
-/**
- * Load only when needed.
- */
-if ( ! function_exists( 'wp_is_plugins_auto_update_enabled' ) ) {
-	include_once plugin_dir_path( __FILE__ ) . 'functions.php';
+// Needs to run after the admin APIs have been loaded from wp-admin/includes/.
+function wp_autoupdates_self_deactivate() {
+	if (
+		function_exists( 'wp_is_plugins_auto_update_enabled' ) ||
+		function_exists( 'wp_autoupdates_get_update_message' ) ||
+		function_exists( 'wp_is_auto_update_enabled_for_type' )
+	) {
+		// Deactivate the plugin. This functionality has already been merged to core.
+		deactivate_plugins( plugin_basename( __FILE__ ), false, is_network_admin() );
+	}
 }
+add_action( 'admin_init', 'wp_autoupdates_self_deactivate', 1 );
+
+include_once plugin_dir_path( __FILE__ ) . 'functions.php';
