@@ -772,9 +772,9 @@ add_action( 'pre_current_active_plugins', 'wp_autoupdates_plugins_filter_plugins
 
 
 /**
- * Populate site health informations.
+ * Populate site health auto-update informations.
  *
- * @param array $args {
+ * @param array $info {
  *     The debug information to be added to the core information page.
  *
  *     This is an associative multi-dimensional array, up to three levels deep. The topmost array holds the sections.
@@ -804,137 +804,93 @@ add_action( 'pre_current_active_plugins', 'wp_autoupdates_plugins_filter_plugins
  * @return array
  */
 function wp_autoupdates_debug_information( $info ) {
-	// Plugins
+	$enabled_string  = __( 'Auto-updates enabled', 'wp-autoupdates' );
+	$disabled_string = __( 'Auto-updates disabled', 'wp-autoupdates' );
+
 	if ( wp_autoupdates_is_plugins_auto_update_enabled() ) {
 		// Populate plugins informations.
-		$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
+		$plugins      = get_plugins();
+		$auto_updates = (array) get_site_option( 'wp_auto_update_plugins', array() );
 
-		$plugins        = get_plugins();
-		$plugin_updates = get_plugin_updates();
+		foreach ( $info['wp-plugins-active']['fields'] as &$field ) {
+			$plugin_path = key( wp_list_filter( $plugins, array( 'Name' => $field['label'] ) ) );
 
-		foreach ( $plugins as $plugin_path => $plugin ) {
-			$plugin_part = ( is_plugin_active( $plugin_path ) ) ? 'wp-plugins-active' : 'wp-plugins-inactive';
-
-			$plugin_version = $plugin['Version'];
-			$plugin_author  = $plugin['Author'];
-
-			$plugin_version_string       = __( 'No version or author information is available.', 'wp-autoupdates' );
-			$plugin_version_string_debug = __( 'author: (undefined), version: (undefined)', 'wp-autoupdates' );
-
-			if ( ! empty( $plugin_version ) && ! empty( $plugin_author ) ) {
-				/* translators: 1: Plugin version number. 2: Plugin author name. */
-				$plugin_version_string = sprintf( __( 'Version %1$s by %2$s', 'wp-autoupdates' ), $plugin_version, $plugin_author );
-				/* translators: 1: Plugin version number. 2: Plugin author name. */
-				$plugin_version_string_debug = sprintf( __( 'version: %1$s, author: %2$s', 'wp-autoupdates' ), $plugin_version, $plugin_author );
+			if ( in_array( $plugin_path, $auto_updates, true ) ) {
+				$field['value'] .= ' | ' . $enabled_string;
+				$field['debug'] .= ', ' . $enabled_string;
 			} else {
-				if ( ! empty( $plugin_author ) ) {
-					/* translators: %s: Plugin author name. */
-					$plugin_version_string = sprintf( __( 'By %s', 'wp-autoupdates' ), $plugin_author );
-					/* translators: %s: Plugin author name. */
-					$plugin_version_string_debug = sprintf( __( 'author: %s, version: (undefined)', 'wp-autoupdates' ), $plugin_author );
-				}
-
-				if ( ! empty( $plugin_version ) ) {
-					/* translators: %s: Plugin version number. */
-					$plugin_version_string = sprintf( __( 'Version %s', 'wp-autoupdates' ), $plugin_version );
-					/* translators: %s: Plugin version number. */
-					$plugin_version_string_debug = sprintf( __( 'author: (undefined), version: %s', 'wp-autoupdates' ), $plugin_version );
-				}
+				$field['value'] .= ' | ' . $disabled_string;
+				$field['debug'] .= ', ' . $disabled_string;
 			}
+		}
+		foreach ( $info['wp-plugins-inactive']['fields'] as &$field ) {
+			$plugin_path = key( wp_list_filter( $plugins, array( 'Name' => $field['label'] ) ) );
 
-			if ( array_key_exists( $plugin_path, $plugin_updates ) ) {
-				/* translators: %s: Latest plugin version number. */
-				$plugin_version_string .= ' ' . sprintf( __( '(latest version: %s)', 'wp-autoupdates' ), $plugin_updates[ $plugin_path ]->update->new_version );
-				/* translators: %s: Latest plugin version number. */
-				$plugin_version_string_debug .= ' ' . sprintf( __( '(latest version: %s)', 'wp-autoupdates' ), $plugin_updates[ $plugin_path ]->update->new_version );
-			}
-
-			if ( in_array( $plugin_path, $wp_auto_update_plugins, true ) ) {
-				$plugin_version_string       .= ' | ' . sprintf( __( 'Auto-updates enabled', 'wp-autoupdates' ) );
-				$plugin_version_string_debug .= sprintf( __( 'Auto-updates enabled', 'wp-autoupdates' ) );
+			if ( in_array( $plugin_path, $auto_updates, true ) ) {
+				$field['value'] .= ' | ' . $enabled_string;
+				$field['debug'] .= ', ' . $enabled_string;
 			} else {
-				$plugin_version_string       .= ' | ' . sprintf( __( 'Auto-updates disabled', 'wp-autoupdates' ) );
-				$plugin_version_string_debug .= sprintf( __( 'Auto-updates disabled', 'wp-autoupdates' ) );
+				$field['value'] .= ' | ' . $disabled_string;
+				$field['debug'] .= ', ' . $disabled_string;
 			}
-
-			$info[ $plugin_part ]['fields'][ sanitize_text_field( $plugin['Name'] ) ] = array(
-				'label' => $plugin['Name'],
-				'value' => $plugin_version_string,
-				'debug' => $plugin_version_string_debug,
-			);
 		}
 	}
 
 	if ( wp_autoupdates_is_themes_auto_update_enabled() ) {
 		// Populate themes informations.
-		$wp_auto_update_themes = get_site_option( 'wp_auto_update_themes', array() );
 
-		$themes       = wp_get_themes();
+		// set up the themes array so we can filter it the same way we do with the plugins array above,
+		// this is necessary only because of the way site health sets up $info.
+		$themes = array();
+		foreach ( wp_get_themes() as $theme ) {
+			$theme_slug            = $theme->get_stylesheet();
+			$themes[ $theme_slug ] = array(
+				'Name' => sprintf(
+					/* translators: 1: Theme name. 2: Theme slug. */
+					__( '%1$s (%2$s)', 'wp-autoupdates' ),
+					$theme->name,
+					$theme_slug
+				)
+			);
+		}
 		$active_theme = wp_get_theme();
+		$auto_updates = get_site_option( 'wp_auto_update_themes', array() );
 
-		foreach ( $themes as $theme_path => $theme ) {
-			$theme_version = sanitize_text_field( $theme['Version'] );
-			$theme_author  = sanitize_text_field( $theme['Author'] );
+		if ( in_array( $active_theme->get_stylesheet(), $auto_updates, true ) ) {
+			$auto_update_string = __( 'Enabled', 'wp-autoupdates' );
+		} else {
+			$auto_update_string = __( 'Disabled', 'wp-autoupdates' );
+		}
 
-			$is_active_theme = $theme->name === $active_theme->name;
+		$info['wp-active-theme']['fields']['auto_update'] = array(
+			'label' => __( 'Auto-update', 'wp-autoupdates' ),
+			'value' => $auto_update_string,
+			'debug' => $auto_update_string,
+		);
 
-			if ( $is_active_theme ) {
-				$theme_part = 'wp-active-theme';
-
-				if ( in_array( $theme_path, $wp_auto_update_themes, true ) ) {
-					$theme_auto_update_string = sprintf( __( 'Enabled', 'wp-autoupdates' ) );
-				} else {
-					$theme_auto_update_string = sprintf( __( 'Disabled', 'wp-autoupdates' ) );
-				}
-
-				$info[ $theme_part ]['fields']['Auto-update'] = array(
-					'label' => __( 'Auto-update', 'wp-autoupdates' ),
-					'value' => $theme_auto_update_string,
-					'debug' => $theme_auto_update_string,
-				);
+		if ( $active_theme->parent_theme ) {
+			if ( in_array( $active_theme->get_template(), $auto_updates, true ) ) {
+				$auto_update_string = __( 'Enabled', 'wp-autoupdates' );
 			} else {
-				$theme_part = 'wp-themes-inactive';
+				$auto_update_string = __( 'Disabled', 'wp-autoupdates' );
+			}
 
-				$theme_version_string       = __( 'No version or author information is available.', 'wp-autoupdates' );
-				$theme_version_string_debug = __( 'author: (undefined), version: (undefined)', 'wp-autoupdates' );
+			$info['wp-parent-theme']['fields']['auto_update'] = array(
+				'label' => __( 'Auto-update', 'wp-autoupdates' ),
+				'value' => $auto_update_string,
+				'debug' => $auto_update_string,
+			);
+		}
 
-				if ( ! empty( $theme_version ) && ! empty( $theme_author ) ) {
-					/* translators: 1: Theme version number. 2: Theme author name. */
-					$theme_version_string = sprintf( __( 'Version %1$s by %2$s', 'wp-autoupdates' ), $theme_version, $theme_author );
-					/* translators: 1: Theme version number. 2: Theme author name. */
-					$theme_version_string_debug = sprintf( __( 'version: %1$s, author: %2$s', 'wp-autoupdates' ), $theme_version, $theme_author );
-				} else {
-					if ( ! empty( $theme_author ) ) {
-						/* translators: %s: Theme author name. */
-						$theme_version_string = sprintf( __( 'By %s', 'wp-autoupdates' ), $theme_author );
-						/* translators: %s: Theme author name. */
-						$theme_version_string_debug = sprintf( __( 'author: %s, version: (undefined)', 'wp-autoupdates' ), $theme_author );
-					}
+		foreach ( $info['wp-themes-inactive']['fields'] as &$field ) {
+			$theme_slug = key( wp_list_filter( $themes, array( 'Name' => $field['label'] ) ) );
 
-					if ( ! empty( $theme_version ) ) {
-						/* translators: %s: Theme version number. */
-						$theme_version_string = sprintf( __( 'Version %s', 'wp-autoupdates' ), $theme_version );
-						/* translators: %s: Theme version number. */
-						$theme_version_string_debug = sprintf( __( 'author: (undefined), version: %s', 'wp-autoupdates' ), $theme_version );
-					}
-				}
-
-				if ( in_array( $theme_path, $wp_auto_update_themes, true ) ) {
-					$theme_version_string       .= ' | ' . sprintf( __( 'Auto-updates enabled', 'wp-autoupdates' ) );
-					$theme_version_string_debug .= sprintf( __( 'Auto-updates enabled', 'wp-autoupdates' ) );
-				} else {
-					$theme_version_string       .= ' | ' . sprintf( __( 'Auto-updates disabled', 'wp-autoupdates' ) );
-					$theme_version_string_debug .= sprintf( __( 'Auto-updates disabled', 'wp-autoupdates' ) );
-				}
-
-				$theme_name = sanitize_text_field( $theme['Name'] );
-				$label_name = sprintf( __( '%1$s (%2$s)', 'wp-autoupdates' ), $theme_name, $theme_path );
-
-				$info[ $theme_part ]['fields'][ $theme_name ] = array(
-					'label' => $label_name,
-					'value' => $theme_version_string,
-					'debug' => $theme_version_string_debug,
-				);
+			if ( in_array( $theme_slug, $auto_updates, true ) ) {
+				$field['value'] .= ' | ' . $enabled_string;
+				$field['debug'] .= ', ' . $enabled_string;
+			} else {
+				$field['value'] .= ' | ' . $disabled_string;
+				$field['debug'] .= ', ' . $disabled_string;
 			}
 		}
 	}
