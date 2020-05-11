@@ -199,12 +199,12 @@ function wp_autoupdates_is_themes_auto_update_enabled() {
  * @return bool
  */
 function wp_autoupdates_selected_plugins( $update, $item ) {
-	$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
-	if ( in_array( $item->plugin, $wp_auto_update_plugins, true ) && wp_autoupdates_is_plugins_auto_update_enabled() ) {
-		return true;
-	} else {
-		return $update;
+	if ( wp_autoupdates_is_plugins_auto_update_enabled() ) {
+		$auto_updates = (array) get_site_option( 'wp_auto_update_plugins', array() );
+		return in_array( $item->plugin, $auto_updates, true );
 	}
+
+	return $update;
 }
 add_filter( 'auto_update_plugin', 'wp_autoupdates_selected_plugins', 10, 2 );
 
@@ -217,12 +217,12 @@ add_filter( 'auto_update_plugin', 'wp_autoupdates_selected_plugins', 10, 2 );
  * @return bool
  */
 function wp_autoupdates_selected_themes( $update, $item ) {
-	$wp_auto_update_themes = get_site_option( 'wp_auto_update_themes', array() );
-	if ( in_array( $item->theme, $wp_auto_update_themes, true ) && wp_autoupdates_is_themes_auto_update_enabled() ) {
-		return true;
-	} else {
-		return $update;
+	if ( wp_autoupdates_is_themes_auto_update_enabled() ) {
+		$auto_updates = (array) get_site_option( 'wp_auto_update_themes', array() );
+		return in_array( $item->theme, $auto_updates, true );
 	}
+
+	return $update;
 }
 add_filter( 'auto_update_theme', 'wp_autoupdates_selected_themes', 10, 2 );
 
