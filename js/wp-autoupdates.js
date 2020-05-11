@@ -46,7 +46,9 @@
 
 				// Show loading status.
 				$label.text(
-					'enable' === action ? l10n.autoUpdatesEnabling : l10n.autoUpdatesDisabling
+					'enable' === action
+						? l10n.autoUpdatesEnabling
+						: l10n.autoUpdatesDisabling
 				);
 				$anchor.find( '.dashicons-update' ).removeClass( 'hidden' );
 
