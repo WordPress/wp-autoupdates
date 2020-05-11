@@ -320,116 +320,128 @@ add_filter( 'bulk_actions-plugins-network', 'wp_autoupdates_plugins_bulk_actions
 
 
 /**
- * Handles auto-updates enabling for plugins.
+ * Handle enabling and disabling of plugin auto-updates.
  */
-function wp_autoupdates_plugins_enabler() {
+function wp_autoupdates_handle_plugins_enable_disable() {
 	if ( ! isset( $_GET['action'] ) ) {
 		return;
 	}
-	if ( ! ( 'enable-auto-update' === $_GET['action'] || 'disable-auto-update' === $_GET['action'] ) ) {
-		return;
+
+	if ( 'enable-auto-update' === $_GET['action'] || 'disable-auto-update' === $_GET['action'] ) {
+		$plugin = isset( $_GET['plugin'] ) ? wp_unslash( $_GET['plugin'] ) : '';
+		$page   = ! empty( $_GET['paged'] ) ? absint( $_GET['paged'] ) : '';
+		$status = isset( $_GET['plugin_status'] ) && ! empty( esc_html( $_GET['plugin_status'] ) ) ? wp_unslash( esc_html( $_GET['plugin_status'] ) ) : '';
+		$s      = isset( $_GET['s'] ) && ! empty( esc_html( $_GET['s'] ) ) ? wp_unslash( esc_html( $_GET['s'] ) ) : '';
 	}
 
-	check_admin_referer( 'updates' );
+	if ( 'enable-auto-update' === $_GET['action'] ) {
+		if ( ! current_user_can( 'update_plugins' ) || ! wp_autoupdates_is_plugins_auto_update_enabled() ) {
+			wp_die( __( 'Sorry, you are not allowed to enable plugins automatic updates.', 'wp-autoupdates' ) );
+		}
 
-	if ( ! current_user_can( 'update_plugins' ) || ! wp_autoupdates_is_plugins_auto_update_enabled() ) {
-		wp_die( __( 'Sorry, you are not allowed to enable plugins automatic updates.', 'wp-autoupdates' ) );
-	}
+		if ( is_multisite() && ! is_network_admin() ) {
+			wp_die( __( 'Please connect to your network admin to manage plugins automatic updates.', 'wp-autoupdates' ) );
+		}
 
-	if ( is_multisite() && ! is_network_admin() ) {
-		wp_die( __( 'Please connect to your network admin to manage plugins automatic updates.', 'wp-autoupdates' ) );
-	}
+		check_admin_referer( 'updates' );
 
-	$plugin = ! empty( esc_html( $_GET['plugin'] ) ) ? wp_unslash( esc_html( $_GET['plugin'] ) ) : '';
-	$page   = ! empty( $_GET['paged'] ) ? absint( $_GET['paged'] ) : '';
-	$status = isset( $_GET['plugin_status'] ) && ! empty( esc_html( $_GET['plugin_status'] ) ) ? wp_unslash( esc_html( $_GET['plugin_status'] ) ) : '';
-	$s      = isset( $_GET['s'] ) && ! empty( esc_html( $_GET['s'] ) ) ? wp_unslash( esc_html( $_GET['s'] ) ) : '';
+		if ( empty( $plugin ) ) {
+			wp_redirect( self_admin_url( "plugins.php?plugin_status=$status&paged=$page&s=$s" ) );
+			exit;
+		}
 
-	if ( empty( $plugin ) ) {
-		wp_redirect( self_admin_url( "plugins.php?plugin_status=$status&paged=$page&s=$s" ) );
+		$auto_updates = get_site_option( 'wp_auto_update_plugins', array() );
+
+		$auto_updates[] = $plugin;
+		$auto_updates   = array_unique( $auto_updates );
+
+		update_site_option( 'wp_auto_update_plugins', $auto_updates );
+
+		wp_redirect( self_admin_url( "plugins.php?disable-auto-update=true&plugin_status=$status&paged=$page&s=$s" ) );
+		exit;
+	} elseif ( 'disable-auto-update' === $_GET['action'] ) {
+		if ( ! current_user_can( 'update_plugins' ) || ! wp_autoupdates_is_plugins_auto_update_enabled() ) {
+			wp_die( __( 'Sorry, you are not allowed to disable plugins automatic updates.', 'wp-autoupdates' ) );
+		}
+
+		if ( is_multisite() && ! is_network_admin() ) {
+			wp_die( __( 'Please connect to your network admin to manage plugins automatic updates.', 'wp-autoupdates' ) );
+		}
+
+		check_admin_referer( 'updates' );
+
+		if ( empty( $plugin ) ) {
+			wp_redirect( self_admin_url( "plugins.php?plugin_status=$status&paged=$page&s=$s" ) );
+			exit;
+		}
+
+		$auto_updates = get_site_option( 'wp_auto_update_plugins', array() );
+
+		$auto_updates = array_diff( $auto_updates, array( $plugin ) );
+
+		update_site_option( 'wp_auto_update_plugins', $auto_updates );
+
+		wp_redirect( self_admin_url( "plugins.php?disable-auto-update=true&plugin_status=$status&paged=$page&s=$s" ) );
 		exit;
 	}
-
-	$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
-
-	if ( 'disable-auto-update' === $_GET['action'] ) {
-		$wp_auto_update_plugins = array_diff( $wp_auto_update_plugins, array( $plugin ) );
-		$action_type            = 'disable-auto-update=true';
-	} else {
-		$wp_auto_update_plugins[] = $plugin;
-		$wp_auto_update_plugins   = array_unique( $wp_auto_update_plugins );
-		$action_type = 'enable-auto-update=true';
-	}
-
-	update_site_option( 'wp_auto_update_plugins', $wp_auto_update_plugins );
-	wp_redirect( self_admin_url( "plugins.php?$action_type&plugin_status=$status&paged=$page&s=$s" ) );
-	exit;
 }
+add_action( 'load-plugins.php', 'wp_autoupdates_handle_plugins_enable_disable' );
 
 
 /**
- * Handles auto-updates enabling for themes.
+ * Handle enabling and disabling of theme auto-updates.
  */
-function wp_autoupdates_themes_enabler() {
+function wp_autoupdates_handle_themes_enable_disable() {
 	if ( ! isset( $_GET['action'] ) ) {
 		return;
 	}
-	if ( ! ( 'enable-auto-update' === $_GET['action'] || 'disable-auto-update' === $_GET['action'] ) ) {
-		return;
-	}
 
-	check_admin_referer( 'updates' );
+	// in core, the referer is setup in wp-admin/themes.php or wp-admin/network/themes.php.
+	$temp_args = array( 'enabled-auto-update', 'disabled-auto-update' );
+	$referer   = remove_query_arg( $temp_args, wp_get_referer() );
 
-	if ( ! current_user_can( 'update_themes' ) || ! wp_autoupdates_is_themes_auto_update_enabled() ) {
-		wp_die( __( 'Sorry, you are not allowed to enable themes automatic updates.', 'wp-autoupdates' ) );
-	}
+	if ( 'enable-auto-update' === $_GET['action'] ) {
+		if ( ! ( current_user_can( 'update_themes' ) && wp_autoupdates_is_themes_auto_update_enabled() ) ) {
+			wp_die( __( 'Sorry, you are not allowed to enable themes automatic updates.' ) );
+		}
 
-	if ( is_multisite() && ! is_network_admin() ) {
-		wp_die( __( 'Please connect to your network admin to manage themes automatic updates.', 'wp-autoupdates' ) );
-	}
+		if ( is_multisite() && ! is_network_admin() ) {
+			wp_die( __( 'Please connect to your network admin to manage themes automatic updates.', 'wp-autoupdates' ) );
+		}
 
-	$theme = ! empty( esc_html( $_GET['theme'] ) ) ? wp_unslash( esc_html( $_GET['theme'] ) ) : '';
-	if ( empty( $theme ) ) {
-		wp_redirect( self_admin_url( 'themes.php' ) );
+		check_admin_referer( 'updates' );
+
+		$auto_updates   = (array) get_site_option( 'wp_auto_update_themes', array() );
+
+		$auto_updates[] = $_GET['theme'];
+		$auto_updates   = array_unique( $auto_updates );
+
+		update_site_option( 'wp_auto_update_themes', $auto_updates );
+
+		wp_safe_redirect( add_query_arg( 'enabled-auto-update', 1, $referer ) );
+		exit;
+	} elseif ( 'disable-auto-update' === $_GET['action'] ) {
+		if ( ! current_user_can( 'update_themes' ) || ! wp_autoupdates_is_themes_auto_update_enabled() ) {
+			wp_die( __( 'Sorry, you are not allowed to disable themes automatic updates.', 'wp-autoupdates' ) );
+		}
+
+		if ( is_multisite() && ! is_network_admin() ) {
+			wp_die( __( 'Please connect to your network admin to manage themes automatic updates.', 'wp-autoupdates' ) );
+		}
+
+		check_admin_referer( 'updates' );
+
+		$auto_updates     = get_site_option( 'wp_auto_update_themes', array() );
+
+		$new_auto_updates = array_diff( $auto_updates, array( $_GET['theme'] ) );
+
+		update_site_option( 'wp_auto_update_themes', $new_auto_updates );
+
+		wp_safe_redirect( add_query_arg( 'disabled-auto-update', 1, $referer ) );
 		exit;
 	}
-
-	$wp_auto_update_themes = get_site_option( 'wp_auto_update_themes', array() );
-
-	if ( 'disable-auto-update' === $_GET['action'] ) {
-		$wp_auto_update_themes = array_diff( $wp_auto_update_themes, array( $theme ) );
-		$action_type           = 'disable-auto-update=true';
-	} else {
-		$wp_auto_update_themes[] = $theme;
-		$wp_auto_update_themes   = array_unique( $wp_auto_update_themes );
-		$action_type = 'enable-auto-update=true';
-	}
-
-	update_site_option( 'wp_auto_update_themes', $wp_auto_update_themes );
-
-	$theme_status = '';
-	if ( is_multisite() && is_network_admin() ) {
-		$theme_status = ! empty( $_GET['theme_status'] ) ? 'theme_status=' . $_GET['theme_status'] : '';
-	}
-
-	wp_redirect( self_admin_url( "themes.php?$action_type&$theme_status" ) );
-	exit;
 }
-
-
-/**
- * Handle autoupdates enabling.
- */
-function wp_autoupdates_enabler() {
-	$pagenow = $GLOBALS['pagenow'];
-
-	if ( 'plugins.php' === $pagenow ) {
-		wp_autoupdates_plugins_enabler();
-	} elseif ( 'themes.php' === $pagenow ) {
-		wp_autoupdates_themes_enabler();
-	}
-}
-add_action( 'admin_init', 'wp_autoupdates_enabler' );
+add_action( 'load-themes.php', 'wp_autoupdates_handle_themes_enable_disable' );
 
 
 /**
