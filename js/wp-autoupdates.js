@@ -16,7 +16,7 @@
 					$label = $anchor.find( '.label' ),
 					$parent = $anchor.parents(
 						'themes' !== pagenow
-							? '.autoupdates_column'
+							? '.column-auto-updates'
 							: '.theme-autoupdate'
 					);
 
@@ -69,8 +69,8 @@
 							// TODO: If either count started out 0 the appropriate span won't
 							//       be there and hence won't be updated.
 							if ( 'themes' !== pagenow ) {
-								$enabled = $( '.autoupdate_enabled span' );
-								$disabled = $( '.autoupdate_disabled span' );
+								$enabled = $( '.auto-update-enabled span' );
+								$disabled = $( '.auto-update-disabled span' );
 								enabledNumber =
 									parseInt(
 										$enabled.text().replace( /[^\d]+/g, '' )
