@@ -103,12 +103,30 @@
 
 							if ( 'enable' === action ) {
 								$anchor.attr( 'data-wp-action', 'disable' );
+								$anchor.attr(
+									'href',
+									$anchor
+										.attr( 'href' )
+										.replace(
+											'action=enable-auto-update',
+											'action=disable-auto-update'
+										)
+								);
 								$label.text( l10n.autoUpdatesDisable );
 								$parent
 									.find( '.auto-update-time' )
 									.removeClass( 'hidden' );
 							} else {
 								$anchor.attr( 'data-wp-action', 'enable' );
+								$anchor.attr(
+									'href',
+									$anchor
+										.attr( 'href' )
+										.replace(
+											'action=disable-auto-update',
+											'action=enable-auto-update'
+										)
+								);
 								$label.text( l10n.autoUpdatesEnable );
 								$parent
 									.find( '.auto-update-time' )
