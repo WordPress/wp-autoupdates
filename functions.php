@@ -1356,13 +1356,16 @@ add_action( 'wp_ajax_toggle_auto_updates', 'wp_autoupdates_toggle_auto_updates' 
 
 /**
  * Set up auto-updates help tabs.
+ *
+ * @todo This needs copy review before core merge.
  */
 function wp_autoupdates_help_tab_update_core() {
 	$screen = get_current_screen();
 
-	if ( 'update-core' === $screen->id || 'update-core-network' === $screen->id ) {
+	if ( ( 'update-core' === $screen->id || 'update-core-network' === $screen->id ) && ( wp_autoupdates_is_plugins_auto_update_enabled() || wp_autoupdates_is_themes_auto_update_enabled() ) ) {
 		$help_tab_content  = '<p>' . __( 'Plugins and Themes with auto-updates enabled will display the estimated date of the next auto-update. Auto-updates schedule depends on WordPress planned tasks.' ) . '</p>';
 		$help_tab_content .= '<p>' . __( 'Please note: WordPress auto-updates may be overridden by third-parties plugins or custom code.' ) . '</p>';
+		// @todo The link below should be moved to the "help sidebar" during core merge process.
 		$help_tab_content .= '<p>' . sprintf(
 			__( 'For more information: <a href="%s">Documentation about auto-updates</a>', 'wp-autoupdates' ),
 			'https://wordpress.org/support/article/auto-updates/'
@@ -1371,13 +1374,15 @@ function wp_autoupdates_help_tab_update_core() {
 			'id'       => 'auto-updates',
 			'title'    => __( 'Auto-updates', 'wp-autoupdates' ),
 			'content'  => $help_tab_content,
+			// @todo Check if the priority parameter is still necessary during core merge process.
 			'priority' => 11,
 		) );
 	}
 
-	if ( 'plugins' === $screen->id || 'plugins-network' === $screen->id ) {
+	if ( ( 'plugins' === $screen->id || 'plugins-network' === $screen->id ) && wp_autoupdates_is_plugins_auto_update_enabled() ) {
 		$help_tab_content  = '<p>' . __( 'Auto-updates can be enabled and disabled on a plugin by plugin basis. Plugins with auto-updates enabled will display the estimated date of the next auto-update. Auto-updates schedule depends on WordPress planned tasks.' ) . '</p>';
 		$help_tab_content .= '<p>' . __( 'Please note: WordPress auto-updates may be overridden by third-parties plugins or custom code.' ) . '</p>';
+		// @todo The link below should be moved to the "help sidebar" during core merge.
 		$help_tab_content .= '<p>' . sprintf(
 			__( 'For more information: <a href="%s">Documentation about auto-updates</a>', 'wp-autoupdates' ),
 			'https://wordpress.org/support/article/auto-updates/'
@@ -1386,13 +1391,15 @@ function wp_autoupdates_help_tab_update_core() {
 			'id'       => 'auto-updates',
 			'title'    => __( 'Auto-updates', 'wp-autoupdates' ),
 			'content'  => $help_tab_content,
+			// @todo Check if the priority parameter is still necessary during core merge process.
 			'priority' => 11,
 		) );
 	}
 
-	if ( 'themes' === $screen->id || 'themes-network' === $screen->id ) {
+	if ( ( 'themes' === $screen->id || 'themes-network' === $screen->id ) && wp_autoupdates_is_themes_auto_update_enabled() ) {
 		$help_tab_content  = '<p>' . __( 'Auto-updates can be enabled and disabled on a theme by theme basis. Themes with auto-updates enabled will display the estimated date of the next auto-update. Auto-updates schedule depends on WordPress planned tasks.' ) . '</p>';
 		$help_tab_content .= '<p>' . __( 'Please note: WordPress auto-updates may be overridden by third-parties plugins or custom code.' ) . '</p>';
+		// @todo The link below should be moved to the "help sidebar" during core merge.
 		$help_tab_content .= '<p>' . sprintf(
 			__( 'For more information: <a href="%s">Documentation about auto-updates</a>', 'wp-autoupdates' ),
 			'https://wordpress.org/support/article/auto-updates/'
@@ -1401,6 +1408,7 @@ function wp_autoupdates_help_tab_update_core() {
 			'id'       => 'auto-updates',
 			'title'    => __( 'Auto-updates', 'wp-autoupdates' ),
 			'content'  => $help_tab_content,
+			// @todo Check if the priority parameter is still necessary during core merge process.
 			'priority' => 11,
 		) );
 	}
