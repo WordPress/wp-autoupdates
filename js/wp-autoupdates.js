@@ -7,7 +7,7 @@
 
 	$( document ).ready(
 		function() {
-			$( '.autoupdates_column, .theme-overlay' ).on(
+			$( '.column-auto-updates, .theme-overlay' ).on(
 				'click',
 				'.toggle-auto-update',
 				function( event ) {
