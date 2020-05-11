@@ -901,36 +901,6 @@ add_filter( 'debug_information', 'wp_autoupdates_debug_information' );
 
 
 /**
- * Checks whether plugins auto-update email notifications are enabled.
- *
- * @return bool True if plugins notifications are enabled, false otherwise.
- */
-function wp_autoupdates_is_plugins_auto_update_email_enabled() {
-	/**
-	 * Filters whether plugins auto-update email notifications are enabled.
-	 *
-	 * @param bool $enabled True if plugins notifications are enabled, false otherwise.
-	 */
-	return apply_filters( 'send_plugins_auto_update_email', true );
-}
-
-
-/**
- * Checks whether themes auto-update email notifications are enabled.
- *
- * @return bool True if themes notifications are enabled, false otherwise.
- */
-function wp_autoupdates_is_themes_auto_update_email_enabled() {
-	/**
-	 * Filters whether themes auto-update email notifications are enabled.
-	 *
-	 * @param bool $enabled True if themes notifications are enabled, false otherwise.
-	 */
-	return apply_filters( 'send_themes_auto_update_email', true );
-}
-
-
-/**
  * If we tried to perform plugin or theme updates, check if we should send an email.
  *
  * @param object $results The result of updates tasks.
@@ -939,7 +909,14 @@ function wp_autoupdates_automatic_updates_complete_notification( $results ) {
 	$successful_updates = array();
 	$failed_updates     = array();
 
-	if ( isset( $results['plugin'] ) && wp_autoupdates_is_plugins_auto_update_email_enabled() ) {
+	/**
+	 * Filters whether to send an email following an automatic background plugin update.
+	 *
+	 * @param bool $enabled True if plugins notifications are enabled, false otherwise.
+	 */
+	$notifications_enabled = apply_filters( 'auto_plugin_update_send_email', true );
+
+	if ( isset( $results['plugin'] ) && $notifications_enabled ) {
 		foreach ( $results['plugin'] as $update_result ) {
 			if ( true === $update_result->result ) {
 				$successful_updates['plugin'][] = $update_result;
@@ -949,7 +926,14 @@ function wp_autoupdates_automatic_updates_complete_notification( $results ) {
 		}
 	}
 
-	if ( isset( $results['theme'] ) && wp_autoupdates_is_themes_auto_update_enabled() ) {
+	/**
+	 * Filters whether to send an email following an automatic background theme update.
+	 *
+	 * @param bool $enabled True if notifications are enabled, false otherwise.
+	 */
+	$notifications_enabled = apply_filters( 'send_theme_auto_update_email', true );
+
+	if ( isset( $results['theme'] ) && $notifications_enabled ) {
 		foreach ( $results['theme'] as $update_result ) {
 			if ( true === $update_result->result ) {
 				$successful_updates['theme'][] = $update_result;
@@ -1090,7 +1074,7 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 	 * @param object $successful_updates The updates that succeeded.
 	 * @param object $failed_updates     The updates that failed.
 	 */
-	$email = apply_filters( 'wp_autoupdates_notifications_email', $email, $type, $successful_updates, $failed_updates );
+	$email = apply_filters( 'auto_plugin_theme_update_email', $email, $type, $successful_updates, $failed_updates );
 	wp_mail( $email['to'], wp_specialchars_decode( $email['subject'] ), $email['body'], $email['headers'] );
 }
 
