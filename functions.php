@@ -621,8 +621,8 @@ function wp_autoupdates_plugins_status_links( $status_links ) {
 
 	// when merged, these counts will need to be set in WP_Plugins_List_Table::prepare_items().
 	$counts = array(
-		'autoupdate_enabled'  => $enabled_count,
-		'autoupdate_disabled' => $totals['all'] - $enabled_count,
+		'auto-update-enabled'  => $enabled_count,
+		'auto-update-disabled' => $totals['all'] - $enabled_count,
 	);
 
 	// we can't use the global $status set in WP_Plugin_List_Table::__construct() because
@@ -635,7 +635,7 @@ function wp_autoupdates_plugins_status_links( $status_links ) {
 		}
 
 		switch ( $type ) {
-			case 'autoupdate_enabled':
+			case 'auto-update-enabled':
 				/* translators: %s: Number of plugins. */
 				$text = _n(
 					'Auto-updates Enabled <span class="count">(%s)</span>',
@@ -645,7 +645,7 @@ function wp_autoupdates_plugins_status_links( $status_links ) {
 				);
 
 				break;
-			case 'autoupdate_disabled':
+			case 'auto-update-disabled':
 				/* translators: %s: Number of plugins. */
 				$text = _n(
 					'Auto-updates Disabled <span class="count">(%s)</span>',
@@ -690,8 +690,8 @@ function wp_autoupdates_plugins_filter_plugins_by_status( $plugins ) {
 	global $wp_list_table, $page;
 
 	$custom_statuses = array(
-		'autoupdate_enabled',
-		'autoupdate_disabled',
+		'auto-update-enabled',
+		'auto-update-disabled',
 	);
 
 	if ( ! ( isset( $_REQUEST['plugin_status'] ) &&
@@ -706,12 +706,12 @@ function wp_autoupdates_plugins_filter_plugins_by_status( $plugins ) {
 
 	foreach ( $plugins as $plugin_file => $plugin_data ) {
 		switch ( $_REQUEST['plugin_status'] ) {
-			case 'autoupdate_enabled':
+			case 'auto-update-enabled':
 				if ( in_array( $plugin_file, $wp_auto_update_plugins, true ) ) {
 					$_plugins[ $plugin_file ] = _get_plugin_data_markup_translate( $plugin_file, $plugin_data, false, true );
 				}
 				break;
-			case 'autoupdate_disabled':
+			case 'auto-update-disabled':
 				if ( ! in_array( $plugin_file, $wp_auto_update_plugins, true ) ) {
 					$_plugins[ $plugin_file ] = _get_plugin_data_markup_translate( $plugin_file, $plugin_data, false, true );
 				}
