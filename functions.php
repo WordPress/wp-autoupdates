@@ -119,13 +119,13 @@ EOF;
 			'wp-autoupdates',
 			'wp_autoupdates',
 			array(
-				'enable'            => __( 'Enable auto-updates', 'wp-autoupdates' ),
-				'enabling'          => __( 'Enabling...', 'wp-autoupdates' ),
-				'enabled'           => __( 'Auto-updates enabled', 'wp-autoupdates' ),
-				'disable'           => __( 'Disable auto-updates', 'wp-autoupdates' ),
-				'disabling'         => __( 'Disabling...', 'wp-autoupdates' ),
-				'disabled'          => __( 'Auto-updates disabled', 'wp-autoupdates' ),
-				'auto_update_error' => __( 'The request could not be completed.', 'wp-autoupdates' ),
+				'autoUpdatesEnable'        => __( 'Enable auto-updates', 'wp-autoupdates' ),
+				'autoUpdatesEnabling'      => __( 'Enabling...', 'wp-autoupdates' ),
+				'autoUpdatesEnabled'       => __( 'Auto-updates enabled', 'wp-autoupdates' ),
+				'autoUpdatesDisable'       => __( 'Disable auto-updates', 'wp-autoupdates' ),
+				'autoUpdatesDisabling'     => __( 'Disabling...', 'wp-autoupdates' ),
+				'autoUpdatesDisabled'      => __( 'Auto-updates disabled', 'wp-autoupdates' ),
+				'autoUpdatesError'         => __( 'The request could not be completed.', 'wp-autoupdates' ),
 			)
 		);
 	}

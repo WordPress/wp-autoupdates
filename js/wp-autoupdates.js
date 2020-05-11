@@ -46,7 +46,7 @@
 
 				// Show loading status.
 				$label.text(
-					'enable' === action ? l10n.enabling : l10n.disabling
+					'enable' === action ? l10n.autoUpdatesEnabling : l10n.autoUpdatesDisabling
 				);
 				$anchor.find( '.dashicons-update' ).removeClass( 'hidden' );
 
@@ -103,13 +103,13 @@
 
 							if ( 'enable' === action ) {
 								$anchor.attr( 'data-wp-action', 'disable' );
-								$label.text( l10n.disable );
+								$label.text( l10n.autoUpdatesDisable );
 								$parent
 									.find( '.auto-update-time' )
 									.removeClass( 'hidden' );
 							} else {
 								$anchor.attr( 'data-wp-action', 'enable' );
-								$label.text( l10n.enable );
+								$label.text( l10n.autoUpdatesEnable );
 								$parent
 									.find( '.auto-update-time' )
 									.addClass( 'hidden' );
@@ -117,8 +117,8 @@
 
 							wp.a11y.speak(
 								'enable' === action
-									? l10n.enabled
-									: l10n.disabled,
+									? l10n.autoUpdatesEnabled
+									: l10n.autoUpdatesDisabled,
 								'polite'
 							);
 						} else {
@@ -137,8 +137,8 @@
 							.removeClass( 'hidden' )
 							.addClass( 'notice error' )
 							.find( 'p' )
-							.text( l10n.auto_update_error );
-						wp.a11y.speak( l10n.auto_update_error, 'polite' );
+							.text( l10n.autoUpdatesError );
+						wp.a11y.speak( l10n.autoUpdatesError, 'polite' );
 					} )
 					.always( function() {
 						$anchor
