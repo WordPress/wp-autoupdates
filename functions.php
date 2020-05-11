@@ -147,12 +147,15 @@ function wp_autoupdates_prepare_themes_for_js( $prepared_themes ) {
 	$auto_updates = get_option( 'wp_auto_update_themes', array() );
 	foreach ( $prepared_themes as &$theme ) {
 		// Set extra data for use in the template.
-		$slug         = $theme['id'];
-		$auto_update  = in_array( $slug, $auto_updates, true );
+		$slug               = $theme['id'];
+		$encoded_slug       = urlencode( $slug );
+
+		$auto_update        = in_array( $slug, $auto_updates, true );
+		$auto_update_action = $auto_update ? 'disable-auto-update' : 'enable-auto-update';
 
 		$theme['autoupdate']            = $auto_update;
 		$theme['actions']['autoupdate'] = current_user_can( 'update_themes' )
-			? wp_nonce_url( admin_url( sprintf( 'themes.php?action=%s&theme=%s', $auto_update ? 'disable-auto-update' : 'enable-auto-update', urlencode( $slug ) ) ), 'updates' )
+			? wp_nonce_url( admin_url( 'themes.php?action=' . $auto_update_action . '&amp;theme=' . $encoded_slug ), 'updates' )
 			: null;
 	}
 
