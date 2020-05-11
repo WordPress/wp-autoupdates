@@ -557,52 +557,62 @@ add_action( 'deleted_plugin', 'wp_autoupdates_plugin_deleted', 10, 2 );
 
 
 /**
- * Auto-update notices for plugins.
- */
-function wp_autoupdates_plugins_notices() {
-	if ( isset( $_GET['enable-auto-update'] ) ) {
-		echo '<div id="message" class="notice notice-success is-dismissible"><p>';
-		_e( 'Selected plugins will be auto-updated.', 'wp-autoupdates' );
-		echo '</p></div>';
-	}
-
-	if ( isset( $_GET['disable-auto-update'] ) ) {
-		echo '<div id="message" class="notice notice-success is-dismissible"><p>';
-		_e( 'Selected plugins will no longer be auto-updated.', 'wp-autoupdates' );
-		echo '</p></div>';
-	}
-}
-
-
-/**
- * Auto-update notices for themes.
- */
-function wp_autoupdates_themes_notices() {
-	if ( isset( $_GET['enable-auto-update'] ) ) {
-		echo '<div id="message" class="notice notice-success is-dismissible"><p>';
-		_e( 'Selected themes will be auto-updated.', 'wp-autoupdates' );
-		echo '</p></div>';
-	}
-
-	if ( isset( $_GET['disable-auto-update'] ) ) {
-		echo '<div id="message" class="notice notice-success is-dismissible"><p>';
-		_e( 'Selected themes will no longer be auto-updated.', 'wp-autoupdates' );
-		echo '</p></div>';
-	}
-}
-
-
-/**
  * Auto-update notices.
+ *
+ * Note: the struture of this function may seem more complicated than it needs to
+ * be, but it is done this way to make it easier to copy into the relevant files
+ * in the core merge patch (each of which uses a different way to output the notices).
  */
 function wp_autoupdates_notices() {
-	// Plugins screen.
 	$pagenow = $GLOBALS['pagenow'];
 
-	if ( 'plugins.php' === $pagenow ) {
-		wp_autoupdates_plugins_notices();
-	} elseif ( 'themes.php' === $pagenow ) {
-		wp_autoupdates_themes_notices();
+	switch ( $pagenow ) {
+		case 'plugins.php':
+			if ( isset( $_GET['enable-auto-update'] ) ) {
+				?><div id="message" class="updated notice is-dismissible"><p><?php _e( 'Plugin will be auto-updated.', 'wp-autoupdates' ) ?></p></div><?php
+			} elseif ( isset( $_GET['disable-auto-update'] ) ) {
+				?><div id="message" class="updated notice is-dismissible"><p><?php _e( 'Plugin will no longer be auto-updated.', 'wp-autoupdates' ) ?></p></div><?php
+			} elseif ( isset( $_GET['enable-auto-update-multi'] ) ) {
+				?><div id="message" class="updated notice is-dismissible"><p><?php _e( 'Selected plugins will be auto-updated.', 'wp-autoupdates' ) ?></p></div><?php
+			} elseif ( isset( $_GET['disable-auto-update-multi'] ) ) {
+				?><div id="message" class="updated notice is-dismissible"><p><?php _e( 'Selected plugins will no longer be auto-updated.', 'wp-autoupdates' ) ?></p></div><?php
+			} else {
+				return;
+			}
+			break;
+		case 'themes.php':
+			if ( is_network_admin() ) {
+				if ( isset( $_GET['enabled-auto-update'] ) ) {
+					$enabled = absint( $_GET['enabled-auto-update'] );
+					if ( 1 == $enabled ) {
+						$message = __( 'Theme will be auto-updated.' );
+					} else {
+						/* translators: %s: Number of themes. */
+						$message = _n( '%s theme will be auto-updated.', '%s themes will be auto-updated.', $enabled );
+					}
+					echo '<div id="message" class="updated notice is-dismissible"><p>' . sprintf( $message, number_format_i18n( $enabled ) ) . '</p></div>';
+				} elseif ( isset( $_GET['disabled-auto-update'] ) ) {
+					$disabled = absint( $_GET['disabled-auto-update'] );
+					if ( 1 == $disabled ) {
+						$message = __( 'Theme will no longer be auto-updated.' );
+					} else {
+						/* translators: %s: Number of themes. */
+						$message = _n( '%s theme will no longer be auto-updated.', '%s themes will no longer be auto-updated.', $disabled );
+					}
+					echo '<div id="message" class="updated notice is-dismissible"><p>' . sprintf( $message, number_format_i18n( $disabled ) ) . '</p></div>';
+				}
+			} else {
+				if ( isset( $_GET['enabled-auto-update'] ) ) {
+				?>
+				<div id="message7" class="updated notice is-dismissible"><p><?php _e( 'Theme will be auto-updated.', 'wp-autoupdates' ); ?></p></div>
+				<?php
+				} elseif ( isset( $_GET['disabled-auto-update'] ) ) {
+				?>
+				<div id="message8" class="updated notice is-dismissible"><p><?php _e( 'Theme will no longer be auto-updated.', 'wp-autoupdates' ); ?></p></div>
+				<?php
+				}
+			}
+			break;
 	}
 }
 add_action( 'admin_notices', 'wp_autoupdates_notices' );
