@@ -298,7 +298,7 @@ add_action( 'manage_plugins_custom_column', 'wp_autoupdates_add_plugins_autoupda
 
 
 /**
- * Add plugins autoupdates bulk actions.
+ * Add plugins auto-update bulk actions.
  *
  * @param string[] $actions An array of the available bulk actions.
  * @return string[]
@@ -306,11 +306,11 @@ add_action( 'manage_plugins_custom_column', 'wp_autoupdates_add_plugins_autoupda
 function wp_autoupdates_plugins_bulk_actions( $actions ) {
 	$plugin_status = ! empty( $_GET['plugin_status'] ) ? $_GET['plugin_status'] : '';
 
-	if ( 'autoupdate_enabled' !== $plugin_status ) {
-		$actions['enable-autoupdate-selected']  = __( 'Enable Auto-updates' );
+	if ( 'auto-update-enabled' !== $plugin_status ) {
+		$actions['enable-auto-update-selected']  = __( 'Enable Auto-updates' );
 	}
-	if ( 'autoupdate_disabled' !== $plugin_status ) {
-		$actions['disable-autoupdate-selected'] = __( 'Disable Auto-updates' );
+	if ( 'auto-update-disabled' !== $plugin_status ) {
+		$actions['disable-auto-update-selected'] = __( 'Disable Auto-updates' );
 	}
 
 	return $actions;
@@ -445,7 +445,7 @@ add_action( 'load-themes.php', 'wp_autoupdates_handle_themes_enable_disable' );
 
 
 /**
- * Handle plugins autoupdates bulk actions.
+ * Handle plugins auto-update bulk actions.
  *
  * @param string $redirect_to The redirect URL.
  * @param string $doaction    The action being taken.
@@ -453,9 +453,8 @@ add_action( 'load-themes.php', 'wp_autoupdates_handle_themes_enable_disable' );
  * @return string
  */
 function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $items ) {
-	if ( 'enable-autoupdate-selected' === $doaction ) {
-		check_admin_referer( 'bulk-plugins' );
-
+	if ( 'enable-auto-update-selected' === $doaction ) {
+		// in core, this will be in a case statement in wp-admin/plugins.php for this $doaction.
 		if ( ! current_user_can( 'update_plugins' ) || ! wp_autoupdates_is_plugins_auto_update_enabled() ) {
 			wp_die( __( 'Sorry, you are not allowed to enable plugins automatic updates.', 'wp-autoupdates' ) );
 		}
@@ -464,34 +463,35 @@ function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $i
 			wp_die( __( 'Please connect to your network admin to manage plugins automatic updates.', 'wp-autoupdates' ) );
 		}
 
+		check_admin_referer( 'bulk-plugins' );
+
+		// in core, $items will be $_POST['checked'].
 		$plugins = ! empty( $items ) ? (array) wp_unslash( $items ) : array();
+
+		// in core, these are variables in the scope of wp-admin/plugins.php.
 		$page    = ! empty( $_GET['paged'] ) ? absint( $_GET['paged'] ) : '';
 		$status  = isset( $_GET['plugin_status'] ) && ! empty( esc_html( $_GET['plugin_status'] ) ) ? wp_unslash( esc_html( $_GET['plugin_status'] ) ) : '';
 		$s       = isset( $_GET['s'] ) && ! empty( esc_html( $_GET['s'] ) ) ? wp_unslash( esc_html( $_GET['s'] ) ) : '';
 
 		if ( empty( $plugins ) ) {
-			$redirect_to = self_admin_url( "plugins.php?plugin_status=$status&paged=$page&s=$s" );
-			return $redirect_to;
+			return self_admin_url( "plugins.php?plugin_status=$status&paged=$page&s=$s" );
 		}
 
-		$auto_update_plugins     = (array) get_site_option( 'wp_auto_update_plugins', array() );
-		$new_autoupdated_plugins = array_merge( $auto_update_plugins, $plugins );
-		$new_autoupdated_plugins = array_unique( $new_autoupdated_plugins );
+		$auto_updates     = (array) get_site_option( 'wp_auto_update_plugins', array() );
+		$new_auto_updates = array_merge( $auto_updates, $plugins );
+		$new_auto_updates = array_unique( $new_auto_updates );
 
 		// return early if all selected plugins already have auto-updates enabled.
 		// must use non-strict comparison, so that array order is not treated as significant.
-		if ( $new_autoupdated_plugins == $auto_update_plugins ) {
-			$redirect_to = self_admin_url( "plugins.php?plugin_status=$status&paged=$page&s=$s" );
-			return $redirect_to;
+		if ( $new_auto_updates == $auto_updates ) {
+			return self_admin_url( "plugins.php?plugin_status=$status&paged=$page&s=$s" );
 		}
 
-		update_site_option( 'wp_auto_update_plugins', $new_autoupdated_plugins );
+		update_site_option( 'wp_auto_update_plugins', $new_auto_updates );
 
-		$redirect_to = self_admin_url( "plugins.php?enable-auto-update=true&plugin_status=$status&paged=$page&s=$s" );
-		return $redirect_to;
-	} elseif ( 'disable-autoupdate-selected' === $doaction ) {
-		check_admin_referer( 'bulk-plugins' );
-
+		return self_admin_url( "plugins.php?enable-auto-update-multi&plugin_status=$status&paged=$page&s=$s" );
+	} elseif ( 'disable-auto-update-selected' === $doaction ) {
+		// in core, this will be in a case statement in wp-admin/plugins.php for this $doaction.
 		if ( ! current_user_can( 'update_plugins' ) || ! wp_autoupdates_is_plugins_auto_update_enabled() ) {
 			wp_die( __( 'Sorry, you are not allowed to enable plugins automatic updates.', 'wp-autoupdates' ) );
 		}
@@ -500,30 +500,32 @@ function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $i
 			wp_die( __( 'Please connect to your network admin to manage plugins automatic updates.', 'wp-autoupdates' ) );
 		}
 
+		check_admin_referer( 'bulk-plugins' );
+
+		// in core, $items will be $_POST['checked'].
 		$plugins = ! empty( $items ) ? (array) wp_unslash( $items ) : array();
+
+		// in core, these are variables in the scope of wp-admin/plugins.php.
 		$page    = ! empty( $_GET['paged'] ) ? absint( $_GET['paged'] ) : '';
 		$status  = isset( $_GET['plugin_status'] ) && ! empty( esc_html( $_GET['plugin_status'] ) ) ? wp_unslash( esc_html( $_GET['plugin_status'] ) ) : '';
 		$s       = isset( $_GET['s'] ) && ! empty( esc_html( $_GET['s'] ) ) ? wp_unslash( esc_html( $_GET['s'] ) ) : '';
 
 		if ( empty( $plugins ) ) {
-			$redirect_to = self_admin_url( "plugins.php?plugin_status=$status&paged=$page&s=$s" );
-			return $redirect_to;
+			return self_admin_url( "plugins.php?plugin_status=$status&paged=$page&s=$s" );
 		}
 
-		$auto_update_plugins     = (array) get_site_option( 'wp_auto_update_plugins', array() );
-		$new_autoupdated_plugins = array_diff( $auto_update_plugins, $plugins );
+		$auto_updates     = (array) get_site_option( 'wp_auto_update_plugins', array() );
+		$new_auto_updates = array_diff( $auto_updates, $plugins );
 
 		// return early if all selected plugins already have auto-updates disabled.
 		// must use non-strict comparison, so that array order is not treated as significant.
-		if ( $new_autoupdated_plugins == $auto_update_plugins ) {
-			$redirect_to = self_admin_url( "plugins.php?plugin_status=$status&paged=$page&s=$s" );
-			return $redirect_to;
+		if ( $new_auto_updates == $auto_updates ) {
+			return self_admin_url( "plugins.php?plugin_status=$status&paged=$page&s=$s" );
 		}
 
-		update_site_option( 'wp_auto_update_plugins', $new_autoupdated_plugins );
+		update_site_option( 'wp_auto_update_plugins', $new_auto_updates );
 
-		$redirect_to = self_admin_url( "plugins.php?disable-auto-update=true&plugin_status=$status&paged=$page&s=$s" );
-		return $redirect_to;
+		return self_admin_url( "plugins.php?disable-auto-update-multi=true&plugin_status=$status&paged=$page&s=$s" );
 	}
 
 	return $redirect_to;
@@ -1239,21 +1241,21 @@ add_action( 'manage_themes_custom_column', 'wp_autoupdates_add_themes_autoupdate
 
 
 /**
- * Add themes autoupdates bulk actions.
+ * Add themes auto-update bulk actions.
  *
  * @param string[] $actions An array of the available bulk actions.
  * @return string[]
  */
 function wp_autoupdates_themes_bulk_actions( $actions ) {
-	$actions['enable-autoupdate-selected']  = __( 'Enable auto-updates', 'wp-autoupdates' );
-	$actions['disable-autoupdate-selected'] = __( 'Disable auto-updates', 'wp-autoupdates' );
+	$actions['enable-auto-update-selected']  = __( 'Enable auto-updates', 'wp-autoupdates' );
+	$actions['disable-auto-update-selected'] = __( 'Disable auto-updates', 'wp-autoupdates' );
 	return $actions;
 }
 add_filter( 'bulk_actions-themes-network', 'wp_autoupdates_themes_bulk_actions' );
 
 
 /**
- * Handle themes autoupdates bulk actions.
+ * Handle themes auto-update bulk actions.
  *
  * @param string $redirect_to The redirect URL.
  * @param string $doaction    The action being taken.
@@ -1261,84 +1263,56 @@ add_filter( 'bulk_actions-themes-network', 'wp_autoupdates_themes_bulk_actions' 
  * @return string
  */
 function wp_autoupdates_themes_bulk_actions_handle( $redirect_to, $doaction, $items ) {
-	if ( 'enable-autoupdate-selected' === $doaction ) {
-		check_admin_referer( 'bulk-themes' );
-
+	if ( 'enable-auto-update-selected' === $doaction ) {
+		// in core, this will be in a case statement in wp-admin/network/themes.php for this $doaction.
 		if ( ! current_user_can( 'update_themes' ) || ! wp_autoupdates_is_themes_auto_update_enabled() ) {
 			wp_die( __( 'Sorry, you are not allowed to enable themes automatic updates.', 'wp-autoupdates' ) );
 		}
 
-		if ( is_multisite() && ! is_network_admin() ) {
-			wp_die( __( 'Please connect to your network admin to manage themes automatic updates.', 'wp-autoupdates' ) );
-		}
-
-		$themes = ! empty( $items ) ? (array) wp_unslash( $items ) : array();
-		$page   = ! empty( $_GET['paged'] ) ? absint( $_GET['paged'] ) : '';
-		$status = isset( $_GET['theme_status'] ) && ! empty( esc_html( $_GET['theme_status'] ) ) ? wp_unslash( esc_html( $_GET['theme_status'] ) ) : '';
-		$s      = isset( $_GET['s'] ) && ! empty( esc_html( $_GET['s'] ) ) ? wp_unslash( esc_html( $_GET['s'] ) ) : '';
-
-		if ( empty( $themes ) ) {
-			$redirect_to = self_admin_url( "themes.php?theme_status=$status&paged=$page&s=$s" );
-			return $redirect_to;
-		}
-
-		$themes = isset( $_POST['checked'] ) ? (array) wp_unslash( $_POST['checked'] ) : array();
-
-		$auto_update_themes     = (array) get_site_option( 'wp_auto_update_themes', array() );
-		$new_auto_update_themes = array_merge( $auto_update_themes, $themes );
-		$new_auto_update_themes = array_unique( $new_auto_update_themes );
-
-		// return early if all selected themes already have auto-updates enabled.
-		// must use non-strict comparison, so that array order is not treated as significant.
-		if ( $new_auto_update_themes == $auto_update_themes ) {
-			wp_redirect( self_admin_url( "themes.php?theme_status=$status&paged=$page&s=$s" ) );
-			exit;
-		}
-
-		update_site_option( 'wp_auto_update_themes', $new_auto_update_themes );
-
-		$redirect_to = self_admin_url( "themes.php?enable-auto-update=true&theme_status=$status&paged=$page&s=$s" );
-		return $redirect_to;
-	} elseif ( 'disable-autoupdate-selected' === $doaction ) {
 		check_admin_referer( 'bulk-themes' );
 
-		if ( ! current_user_can( 'update_themes' ) || ! wp_autoupdates_is_themes_auto_update_enabled() ) {
-			wp_die( __( 'Sorry, you are not allowed to enable themes automatic updates.', 'wp-autoupdates' ) );
-		}
-
-		if ( is_multisite() && ! is_network_admin() ) {
-			wp_die( __( 'Please connect to your network admin to manage themes automatic updates.', 'wp-autoupdates' ) );
-		}
-
+		// in core, $items will be $_GET['checked'].
 		$themes = ! empty( $items ) ? (array) wp_unslash( $items ) : array();
-		$page   = ! empty( $_GET['paged'] ) ? absint( $_GET['paged'] ) : '';
-		$status = isset( $_GET['theme_status'] ) && ! empty( esc_html( $_GET['theme_status'] ) ) ? wp_unslash( esc_html( $_GET['theme_status'] ) ) : '';
-		$s      = isset( $_GET['s'] ) && ! empty( esc_html( $_GET['s'] ) ) ? wp_unslash( esc_html( $_GET['s'] ) ) : '';
 
-		if ( empty( $themes ) ) {
-			$redirect_to = self_admin_url( "themes.php?theme_status=$status&paged=$page&s=$s" );
-			return $redirect_to;
+		// in core, the referer is setup in wp-admin/themes.php or wp-admin/network/themes.php.
+		$temp_args = array( 'enabled-auto-update', 'disabled-auto-update', 'enabled-auto-update-selected', 'disabled-auto-update-selected' );
+		$referer   = remove_query_arg( $temp_args, wp_get_referer() );
+
+		$auto_updates     = (array) get_site_option( 'wp_auto_update_themes', array() );
+		$new_auto_updates = array_merge( $auto_updates, $themes );
+		$new_auto_updates = array_unique( $new_auto_updates );
+
+		update_site_option( 'wp_auto_update_themes', $new_auto_updates );
+
+		$redirect_to = add_query_arg( 'enabled-auto-update', count( $themes ), $referer );
+	} elseif ( 'disable-auto-update-selected' === $doaction ) {
+		// in core, this will be in a case statement in wp-admin/network/themes.php for this $doaction.
+		if ( ! current_user_can( 'update_themes' ) || ! wp_autoupdates_is_themes_auto_update_enabled() ) {
+			wp_die( __( 'Sorry, you are not allowed to disable themes automatic updates.', 'wp-autoupdates' ) );
 		}
 
-		$auto_update_themes     = (array) get_site_option( 'wp_auto_update_themes', array() );
-		$new_auto_update_themes = array_diff( $auto_update_themes, $themes );
+		check_admin_referer( 'bulk-themes' );
 
-		// return early if all selected themes already have auto-updates disabled.
-		// must use non-strict comparison, so that array order is not treated as significant.
-		if ( $new_auto_update_themes == $auto_update_themes ) {
-			wp_redirect( self_admin_url( "themes.php?plugin_status=$status&paged=$page&s=$s" ) );
-			exit;
-		}
+		// in core, $items will be $_GET['checked'].
+		$themes = ! empty( $items ) ? (array) wp_unslash( $items ) : array();
 
-		update_site_option( 'wp_auto_update_themes', $new_auto_update_themes );
+		// in core, the referer is setup in wp-admin/themes.php or wp-admin/network/themes.php.
+		$temp_args = array( 'enabled-auto-update', 'disabled-auto-update', 'enabled-auto-update-selected', 'disabled-auto-update-selected' );
+		$referer   = remove_query_arg( $temp_args, wp_get_referer() );
 
-		$redirect_to = self_admin_url( "themes.php?disable-auto-update=true&theme_status=$status&paged=$page&s=$s" );
-		return $redirect_to;
+		$auto_updates     = (array) get_site_option( 'wp_auto_update_themes', array() );
+
+		$new_auto_updates = array_diff( $auto_updates, $themes );
+
+		update_site_option( 'wp_auto_update_themes', $new_auto_updates );
+
+		$redirect_to = add_query_arg( 'disabled-auto-update', count( $themes ), $referer );
 	}
 
 	return $redirect_to;
 }
 add_filter( 'handle_network_bulk_actions-themes-network', 'wp_autoupdates_themes_bulk_actions_handle', 10, 3 );
+
 
 /**
  * Toggle auto updates via Ajax.
