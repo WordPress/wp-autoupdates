@@ -6,7 +6,7 @@
 	display: inline-block;
 }
 
-#autoupdates_column {
+.plugin .column-auto-updates {
 	min-width: 200px;
 }
 

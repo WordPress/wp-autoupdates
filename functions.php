@@ -226,7 +226,7 @@ add_filter( 'auto_update_theme', 'wp_autoupdates_selected_themes', 10, 2 );
 
 
 /**
- * Add autoupdate column to plugins screen.
+ * Add auto-updates column to plugins screen.
  *
  * @param string[] The column header labels keyed by column ID.
  * @return string[]
@@ -236,14 +236,14 @@ function wp_autoupdates_add_plugins_autoupdates_column( $columns ) {
 		return $columns;
 	}
 	if ( ! isset( $_GET['plugin_status'] ) || ( 'mustuse' !== $_GET['plugin_status'] && 'dropins' !== $_GET['plugin_status'] ) ) {
-		$columns['autoupdates_column'] = __( 'Automatic updates', 'wp-autoupdates' );
+		$columns['auto-updates'] = __( 'Automatic updates', 'wp-autoupdates' );
 	}
 	return $columns;
 }
 add_filter( is_multisite() ? 'manage_plugins-network_columns' : 'manage_plugins_columns', 'wp_autoupdates_add_plugins_autoupdates_column' );
 
 /**
- * Render autoupdate column's content.
+ * Render auto-updates column's content.
  *
  * @param string              Name of the column.
  * @param string $plugin_file Path to the plugin file relative to the plugins directory.
@@ -253,7 +253,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 	if ( ! ( current_user_can( 'update_plugins' ) && wp_autoupdates_is_plugins_auto_update_enabled() ) ) {
 		return;
 	}
-	if ( 'autoupdates_column' !== $column_name ) {
+	if ( 'auto-updates' !== $column_name ) {
 		return;
 	}
 
@@ -1153,7 +1153,7 @@ function wp_autoupdates_get_update_message() {
 
 
 /**
- * Add autoupdate column to network themes screen.
+ * Add auto-updates column to network themes screen.
  *
  * @param string[] The column header labels keyed by column ID.
  * @return string[]
@@ -1164,7 +1164,7 @@ function wp_autoupdates_add_themes_autoupdates_column( $columns ) {
 	}
 
 	if ( ! isset( $_GET['theme_status'] ) || 'broken' !== $_GET['theme_status'] ) {
-		$columns['autoupdates_column'] = __( 'Automatic updates', 'wp-autoupdates' );
+		$columns['auto-updates'] = __( 'Automatic updates', 'wp-autoupdates' );
 	}
 
 	return $columns;
@@ -1173,7 +1173,7 @@ add_filter( 'manage_themes-network_columns', 'wp_autoupdates_add_themes_autoupda
 
 
 /**
- * Render autoupdate column's content.
+ * Render auto-updates column's content.
  *
  * @param string             Name of the column.
  * @param string $stylesheet Directory name of the theme.
@@ -1183,7 +1183,7 @@ function wp_autoupdates_add_themes_autoupdates_column_content( $column_name, $st
 	if ( ! ( current_user_can( 'update_plugins' ) && wp_autoupdates_is_themes_auto_update_enabled() ) ) {
 		return;
 	}
-	if ( 'autoupdates_column' !== $column_name ) {
+	if ( 'auto-updates' !== $column_name ) {
 		return;
 	}
 
