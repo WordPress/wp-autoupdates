@@ -62,7 +62,7 @@
 
 				$.post( window.ajaxurl, data )
 					.done( function( response ) {
-						let $enabled, $disabled, enabledNumber, disabledNumber;
+						let $enabled, $disabled, enabledNumber, disabledNumber, errorMessage;
 
 						if ( response.success ) {
 							// Update the counts in the enabled/disabled views if on on
@@ -141,12 +141,18 @@
 								'polite'
 							);
 						} else {
+							// if WP returns 0 for response (which can happen in a few cases
+							// that aren't quite failures), output the general error message,
+							// since we won't have response.data.error.
+							errorMessage = response.data && response.data.error
+								? response.data.error
+								: wp.updates.l10n.autoUpdatesError;
 							$parent
 								.find( '.notice.error' )
 								.removeClass( 'hidden' )
 								.find( 'p' )
-								.text( response.data.error );
-							wp.a11y.speak( response.data.error, 'polite' );
+								.text( errorMessage );
+							wp.a11y.speak( errorMessage, 'polite' );
 						}
 					} )
 					.fail( function() {
