@@ -17,15 +17,32 @@
  * Text Domain: wp-autoupdates
  */
 
+
 if ( ! defined( 'ABSPATH' ) ) {
 	die( 'Invalid request.' );
 }
 
+
 define( 'WP_AUTO_UPDATES_VERSION', '0.7.0' );
+
 
 /**
  * Load only when needed.
  */
 if ( ! function_exists( 'wp_is_plugins_auto_update_enabled' ) ) {
 	include_once plugin_dir_path( __FILE__ ) . 'functions.php';
+}
+
+
+/**
+ * Remove auto-updates data on uninstall.
+ */
+function wp_autoupdates_activate() {
+	register_uninstall_hook( __FILE__, 'wp_auto_update_uninstall' );
+}
+register_activation_hook( __FILE__, 'wp_autoupdates_activate' );
+
+function wp_auto_update_uninstall() {
+	delete_site_option( 'wp_auto_update_plugins' );
+	delete_site_option( 'wp_auto_update_themes' );
 }
