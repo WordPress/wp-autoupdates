@@ -1323,16 +1323,16 @@ function wp_autoupdates_toggle_auto_updates() {
 		wp_send_json_error( array( 'error' => $error_message ) );
 	}
 
-	$wp_autoupdates = (array) get_site_option( $option, array() );
+	$auto_updates = (array) get_site_option( $option, array() );
 
 	if ( 'disable' === $state ) {
-		$wp_autoupdates = array_diff( $wp_autoupdates, array( $asset ) );
+		$auto_updates = array_diff( $auto_updates, array( $asset ) );
 	} else {
-		$wp_autoupdates[] = $asset;
-		$wp_autoupdates   = array_unique( $wp_autoupdates );
+		$auto_updates[] = $asset;
+		$auto_updates   = array_unique( $auto_updates );
 	}
 
-	update_site_option( $option, $wp_autoupdates );
+	update_site_option( $option, $auto_updates );
 
 	wp_send_json_success();
 }
