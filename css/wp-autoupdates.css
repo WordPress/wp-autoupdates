@@ -4,7 +4,8 @@
 }
 
 /* in core, this rule will go with similar rules in wp-admin/css/common.css */
-.plugins .column-auto-updates .dashicons-update.spin {
+.plugins .column-auto-updates .dashicons-update.spin,
+.theme-overlay .theme-autoupdate .dashicons-update.spin {
 	animation: rotation 2s infinite linear;
 }
 
