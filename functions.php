@@ -275,17 +275,17 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 
 	if ( in_array( $plugin_file, $auto_updates, true ) ) {
 		$text                   = __( 'Disable auto-updates', 'wp-autoupdates' );
-		$action                 = 'disable-auto-update';
+		$action                 = 'disable';
 		$auto_update_time_class = '';
 	} else {
 		$text                   = __( 'Enable auto-updates', 'wp-autoupdates' );
-		$action                 = 'enable-auto-update';
+		$action                 = 'enable';
 		$auto_update_time_class = ' hidden';
 	}
 
 	printf(
 		'<a href="%s" class="toggle-auto-update" data-wp-action="%s"><span class="dashicons dashicons-update spin hidden"></span><span class="label">%s</span></a>',
-		wp_nonce_url( 'plugins.php?action=' . $action . '&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page . '&amp;plugin_status=' . $plugin_status, 'updates' ),
+		wp_nonce_url( 'plugins.php?action=' . $action . '-auto-update&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page . '&amp;plugin_status=' . $plugin_status, 'updates' ),
 		$action,
 		$text
 	);
@@ -1170,16 +1170,16 @@ function wp_autoupdates_add_themes_autoupdates_column_content( $column_name, $st
 	if ( in_array( $stylesheet, $auto_updates, true ) ) {
 		$text                   = __( 'Disable auto-updates', 'wp-autoupdates' );
 		$auto_update_time_class = '';
-		$action                 = 'disable-auto-update';
+		$action                 = 'disable';
 	} else {
 		$text                   = __( 'Enable auto-updates', 'wp-autoupdates' );
-		$action                 = 'enable-auto-update';
+		$action                 = 'enable';
 		$auto_update_time_class = ' hidden';
 	}
 
 	printf(
 		'<a href="%s" class="toggle-auto-update" data-wp-action="%s"><span class="dashicons dashicons-update spin hidden"></span><span class="label">%s</span></a>',
-		wp_nonce_url( 'themes.php?action=' . $action . '&amp;theme=' . urlencode( $stylesheet ) . '&amp;paged=' . $page . '&amp;theme_status=' . $theme_status, 'updates' ),
+		wp_nonce_url( 'themes.php?action=' . $action . '-auto-update&amp;theme=' . urlencode( $stylesheet ) . '&amp;paged=' . $page . '&amp;theme_status=' . $theme_status, 'updates' ),
 		$action,
 		$text
 	);
