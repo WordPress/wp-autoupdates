@@ -40,8 +40,7 @@
 
 				// Clear any previous errors.
 				$parent
-					.find( '.auto-updates-error' )
-					.removeClass( 'notice error' )
+					.find( '.notice.error' )
 					.addClass( 'hidden' );
 
 				// Show loading status.
@@ -143,9 +142,8 @@
 							);
 						} else {
 							$parent
-								.find( '.auto-updates-error' )
+								.find( '.notice.error' )
 								.removeClass( 'hidden' )
-								.addClass( 'notice error' )
 								.find( 'p' )
 								.text( response.data.error );
 							wp.a11y.speak( response.data.error, 'polite' );
@@ -153,9 +151,8 @@
 					} )
 					.fail( function() {
 						$parent
-							.find( '.auto-updates-error' )
+							.find( '.notice.error' )
 							.removeClass( 'hidden' )
-							.addClass( 'notice error' )
 							.find( 'p' )
 							.text( l10n.autoUpdatesError );
 						wp.a11y.speak( l10n.autoUpdatesError, 'polite' );

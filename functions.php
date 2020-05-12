@@ -298,7 +298,7 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 			wp_autoupdates_get_update_message()
 		);
 	}
-	echo '<div class="auto-updates-error hidden"><p></p></div>';
+	echo '<div class="inline notice error hidden"><p></p></div>';
 }
 add_action( 'manage_plugins_custom_column', 'wp_autoupdates_add_plugins_autoupdates_column_content', 10, 3 );
 
@@ -1193,7 +1193,7 @@ function wp_autoupdates_add_themes_autoupdates_column_content( $column_name, $st
 			wp_autoupdates_get_update_message()
 		);
 	}
-	echo '<div class="auto-updates-error hidden"><p></p></div>';
+	echo '<div class="inline notice error hidden"><p></p></div>';
 }
 add_action( 'manage_themes_custom_column', 'wp_autoupdates_add_themes_autoupdates_column_content', 10, 3 );
 
