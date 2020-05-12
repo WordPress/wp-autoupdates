@@ -271,20 +271,21 @@ function wp_autoupdates_add_plugins_autoupdates_column_content( $column_name, $p
 	$page              = ! empty( $_GET['paged'] ) ? absint( $_GET['paged'] ) : '';
 	$plugin_status     = ! empty( $_GET['plugin_status'] ) ? wp_unslash( esc_html( $_GET['plugin_status'] ) ) : '';
 
-	$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
-	$auto_update_time_class = ' hidden';
-	if ( in_array( $plugin_file, $wp_auto_update_plugins, true ) ) {
+	$auto_updates      = (array) get_site_option( 'wp_auto_update_plugins', array() );
+
+	if ( in_array( $plugin_file, $auto_updates, true ) ) {
 		$text                   = __( 'Disable auto-updates', 'wp-autoupdates' );
+		$action                 = 'disable-auto-update';
 		$auto_update_time_class = '';
-		$action                 = 'disable';
 	} else {
-		$text   = __( 'Enable auto-updates', 'wp-autoupdates' );
-		$action = 'enable';
+		$text                   = __( 'Enable auto-updates', 'wp-autoupdates' );
+		$action                 = 'enable-auto-update';
+		$auto_update_time_class = ' hidden';
 	}
 
 	printf(
 		'<a href="%s" class="toggle-auto-update" data-wp-action="%s"><span class="dashicons dashicons-update spin hidden"></span><span class="label">%s</span></a>',
-		wp_nonce_url( 'plugins.php?action=' . $action . '-auto-update&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page . '&amp;plugin_status=' . $plugin_status, 'updates' ),
+		wp_nonce_url( 'plugins.php?action=' . $action . '&amp;plugin=' . urlencode( $plugin_file ) . '&amp;paged=' . $page . '&amp;plugin_status=' . $plugin_status, 'updates' ),
 		$action,
 		$text
 	);
@@ -1164,23 +1165,25 @@ function wp_autoupdates_add_themes_autoupdates_column_content( $column_name, $st
 	$page         = ! empty( $_GET['paged'] ) ? absint( $_GET['paged'] ) : '';
 	$theme_status = ! empty( $_GET['theme_status'] ) ? wp_unslash( esc_html( $_GET['theme_status'] ) ) : '';
 
-	$wp_auto_update_themes  = (array) get_site_option( 'wp_auto_update_themes', array() );
-	$auto_update_time_class = ' hidden';
-	if ( in_array( $stylesheet, $wp_auto_update_themes, true ) ) {
+	$auto_updates  = (array) get_site_option( 'wp_auto_update_themes', array() );
+
+	if ( in_array( $stylesheet, $auto_updates, true ) ) {
 		$text                   = __( 'Disable auto-updates', 'wp-autoupdates' );
 		$auto_update_time_class = '';
-		$action                 = 'disable';
+		$action                 = 'disable-auto-update';
 	} else {
-		$text   = __( 'Enable auto-updates', 'wp-autoupdates' );
-		$action = 'enable';
+		$text                   = __( 'Enable auto-updates', 'wp-autoupdates' );
+		$action                 = 'enable-auto-update';
+		$auto_update_time_class = ' hidden';
 	}
 
 	printf(
 		'<a href="%s" class="toggle-auto-update" data-wp-action="%s"><span class="dashicons dashicons-update spin hidden"></span><span class="label">%s</span></a>',
-		wp_nonce_url( 'themes.php?action=' . $action . '-auto-update&amp;theme=' . urlencode( $stylesheet ) . '&amp;paged=' . $page . '&amp;theme_status=' . $theme_status, 'updates' ),
+		wp_nonce_url( 'themes.php?action=' . $action . '&amp;theme=' . urlencode( $stylesheet ) . '&amp;paged=' . $page . '&amp;theme_status=' . $theme_status, 'updates' ),
 		$action,
 		$text
 	);
+
 
 	$available_updates = get_site_transient( 'update_themes' );
 	if ( isset( $available_updates->response[ $stylesheet ] ) ) {
