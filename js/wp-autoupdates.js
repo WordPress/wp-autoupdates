@@ -10,8 +10,8 @@
 			'click',
 			'.toggle-auto-update',
 			function( event ) {
-				let data, asset, type;
-				const $anchor = $( this ),
+				var data, asset, type,
+					$anchor = $( this ),
 					action = $anchor.attr( 'data-wp-action' ),
 					$label = $anchor.find( '.label' ),
 					$parent = $anchor.parents(
@@ -56,13 +56,13 @@
 					action: 'toggle-auto-updates',
 					_ajax_nonce: settings.ajax_nonce,
 					state: action,
-					type,
-					asset,
+					type: type,
+					asset: asset,
 				};
 
 				$.post( window.ajaxurl, data )
 					.done( function( response ) {
-						let $enabled, $disabled, enabledNumber, disabledNumber, errorMessage;
+						var $enabled, $disabled, enabledNumber, disabledNumber, errorMessage;
 
 						if ( response.success ) {
 							// Update the counts in the enabled/disabled views if on on
