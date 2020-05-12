@@ -6,7 +6,7 @@
 	'use strict';
 
 	$( document ).ready( function() {
-		$( '.autoupdates_column, .theme-overlay' ).on(
+		$( '.column-auto-updates, .theme-overlay' ).on(
 			'click',
 			'.toggle-auto-update',
 			function( event ) {
@@ -16,7 +16,7 @@
 					$label = $anchor.find( '.label' ),
 					$parent = $anchor.parents(
 						'themes' !== pagenow
-							? '.autoupdates_column'
+							? '.column-auto-updates'
 							: '.theme-autoupdate'
 					);
 
@@ -40,13 +40,14 @@
 
 				// Clear any previous errors.
 				$parent
-					.find( '.auto-updates-error' )
-					.removeClass( 'notice error' )
+					.find( '.notice.error' )
 					.addClass( 'hidden' );
 
 				// Show loading status.
 				$label.text(
-					'enable' === action ? l10n.enabling : l10n.disabling
+					'enable' === action
+						? l10n.autoUpdatesEnabling
+						: l10n.autoUpdatesDisabling
 				);
 				$anchor.find( '.dashicons-update' ).removeClass( 'hidden' );
 
@@ -61,7 +62,7 @@
 
 				$.post( window.ajaxurl, data )
 					.done( function( response ) {
-						let $enabled, $disabled, enabledNumber, disabledNumber;
+						let $enabled, $disabled, enabledNumber, disabledNumber, errorMessage;
 
 						if ( response.success ) {
 							// Update the counts in the enabled/disabled views if on on
@@ -69,8 +70,8 @@
 							// TODO: If either count started out 0 the appropriate span won't
 							//       be there and hence won't be updated.
 							if ( 'themes' !== pagenow ) {
-								$enabled = $( '.autoupdate_enabled span' );
-								$disabled = $( '.autoupdate_disabled span' );
+								$enabled = $( '.auto-update-enabled span' );
+								$disabled = $( '.auto-update-disabled span' );
 								enabledNumber =
 									parseInt(
 										$enabled.text().replace( /[^\d]+/g, '' )
@@ -103,13 +104,31 @@
 
 							if ( 'enable' === action ) {
 								$anchor.attr( 'data-wp-action', 'disable' );
-								$label.text( l10n.disable );
+								$anchor.attr(
+									'href',
+									$anchor
+										.attr( 'href' )
+										.replace(
+											'action=enable-auto-update',
+											'action=disable-auto-update'
+										)
+								);
+								$label.text( l10n.autoUpdatesDisable );
 								$parent
 									.find( '.auto-update-time' )
 									.removeClass( 'hidden' );
 							} else {
 								$anchor.attr( 'data-wp-action', 'enable' );
-								$label.text( l10n.enable );
+								$anchor.attr(
+									'href',
+									$anchor
+										.attr( 'href' )
+										.replace(
+											'action=disable-auto-update',
+											'action=enable-auto-update'
+										)
+								);
+								$label.text( l10n.autoUpdatesEnable );
 								$parent
 									.find( '.auto-update-time' )
 									.addClass( 'hidden' );
@@ -117,28 +136,32 @@
 
 							wp.a11y.speak(
 								'enable' === action
-									? l10n.enabled
-									: l10n.disabled,
+									? l10n.autoUpdatesEnabled
+									: l10n.autoUpdatesDisabled,
 								'polite'
 							);
 						} else {
+							// if WP returns 0 for response (which can happen in a few cases
+							// that aren't quite failures), output the general error message,
+							// since we won't have response.data.error.
+							errorMessage = response.data && response.data.error
+								? response.data.error
+								: wp.updates.l10n.autoUpdatesError;
 							$parent
-								.find( '.auto-updates-error' )
+								.find( '.notice.error' )
 								.removeClass( 'hidden' )
-								.addClass( 'notice error' )
 								.find( 'p' )
-								.text( response.data.error );
-							wp.a11y.speak( response.data.error, 'polite' );
+								.text( errorMessage );
+							wp.a11y.speak( errorMessage, 'polite' );
 						}
 					} )
 					.fail( function() {
 						$parent
-							.find( '.auto-updates-error' )
+							.find( '.notice.error' )
 							.removeClass( 'hidden' )
-							.addClass( 'notice error' )
 							.find( 'p' )
-							.text( l10n.auto_update_error );
-						wp.a11y.speak( l10n.auto_update_error, 'polite' );
+							.text( l10n.autoUpdatesError );
+						wp.a11y.speak( l10n.autoUpdatesError, 'polite' );
 					} )
 					.always( function() {
 						$anchor

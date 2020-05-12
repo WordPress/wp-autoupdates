@@ -1,15 +1,15 @@
-.dashicons-update.spin {
+/* in core, this rule will go with similar rules in wp-admin/css/list-tables.css */
+.plugins .column-auto-updates {
+	min-width: 14.2em;
+}
+
+/* in core, this rule will go with similar rules in wp-admin/css/common.css */
+.plugins .column-auto-updates .dashicons-update.spin,
+.theme-overlay .theme-autoupdate .dashicons-update.spin {
 	animation: rotation 2s infinite linear;
 }
 
-.auto-updates-error {
-	display: inline-block;
-}
-
-#autoupdates_column {
-	min-width: 200px;
-}
-
+/* in core, this rule will go with the equivalent for ".theme-overlay .theme-author a" in wp-admin/css/themes.css */
 .theme-overlay .theme-autoupdate a {
 	text-decoration: none;
 }
