@@ -90,25 +90,33 @@ Work in progress.
 ## Changelog 🗓
 
 ### 0.7.0 🦢
+
 May 6, 2020
+
 - PHPCBF fixes - [#114](https://github.com/WordPress/wp-autoupdates/pull/114)
 - Remove constants from the feature plugin - [#112](https://github.com/WordPress/wp-autoupdates/pull/112)
 - Various i18n fixes/optimizations - [#109](https://github.com/WordPress/wp-autoupdates/pull/109)
 - Simplifies Ajax on both the JS and PHP sides - [#103](https://github.com/WordPress/wp-autoupdates/pull/103)
 
 ### 0.6.0 🦋
+
 April 22, 2020
+
 - Add Ajax to Plugin and Themes Screen - [#61](https://github.com/WordPress/wp-autoupdates/pull/61)
 - Accessibility: Communicate AJAX enabling/disabling changes to screen readers - [#85](https://github.com/WordPress/wp-autoupdates/pull/85)
 - Add Better Handling to Ajax Errors - [#90](https://github.com/WordPress/wp-autoupdates/pull/90)
 - Prevent CSS from being enqueued on sub-site plugins & themes screens in multisite - [#91](https://github.com/WordPress/wp-autoupdates/pull/91)
 
 ### 0.5.1 🦒
+
 April 16, 2020
+
 - Add the plugin version when enqueueing styles, for cache busting - [#79](https://github.com/WordPress/wp-autoupdates/pull/79)
 
 ### 0.5.0 🦚
+
 April 15, 2020
+
 - Replace Disable strings with Disable auto-updates - [#78](https://github.com/WordPress/wp-autoupdates/pull/78)
 - Update confirmation message wording - [#77](https://github.com/WordPress/wp-autoupdates/pull/77)
 - Remove Automatic Updates column from the Network Admin > Sites > Edit > Themes screen - [#76](https://github.com/WordPress/wp-autoupdates/pull/76)
@@ -124,10 +132,13 @@ April 15, 2020
 - Wrong kick off year in readme.txt - [#42](https://github.com/WordPress/wp-autoupdates/pull/60)
 
 ### 0.4.1 🍺
+
 April 2, 2020
+
 - Network > Sites > Edit > Themes screen doesn’t have the Autoupdates column - [#50](https://github.com/WordPress/wp-autoupdates/pull/50)
 
 ### 0.4.0 🌹
+
 March 30, 2020
 
 This release brings full support for Themes auto-updates.
@@ -137,6 +148,7 @@ It also changes the plugin structure to allow self deactivation when the feature
 Please note: the development repository was also migrated from @audrasjb’s personal GitHub account to WordPress.org official GitHub account.
 
 Other changes:
+
 - Change plugin structure to ensure it can self-deactivate when the feature is merged into Core - [#37](https://github.com/WordPress/wp-autoupdates/pull/37)
 - Handle both themes and plugins email notifications - [#36](https://github.com/WordPress/wp-autoupdates/pull/36)
 - i18n: Merge similar translation strings - [#35](https://github.com/WordPress/wp-autoupdates/pull/35)
@@ -144,7 +156,9 @@ Other changes:
 - Avoid duplicate Updating… dialog - [#32](https://github.com/WordPress/wp-autoupdates/pull/32)
 
 ### 0.3.0 🦉
+
 March 16, 2020
+
 - Add functions to handle plugins updates notification emails - [#54](https://github.com/audrasjb/wp-autoupdates/pull/54)
 - Remove update time text after manual update - [#43](https://github.com/audrasjb/wp-autoupdates/pull/43)
 - Ensure "Automatic Updates" column is not added if no content would be output in the column - [#57](https://github.com/audrasjb/wp-autoupdates/pull/57)
@@ -152,12 +166,16 @@ March 16, 2020
 - Prevent mis-match between count in Auto-updates Enabled view and the number of plugins displayed for that view by applying 'all_plugins' filter before computing that count. - [#59](https://github.com/audrasjb/wp-autoupdates/pull/59)
 
 ### 0.2.1 🐜
+
 March 11, 2020
+
 - Prevent "PHP Notice: Undefined index: plugin_status" when adding the autoupdates_column - [#47](https://github.com/audrasjb/wp-autoupdates/pull/47)
 - Add plugin_status query arg to the enable/disable links in the Automatic Updates column - [#48](https://github.com/audrasjb/wp-autoupdates/pull/48)
 
 ### 0.2 🐝
+
 March 6, 2020
+
 - Remove auto-updates column from mustuse and dropins screens - [#39](https://github.com/audrasjb/wp-autoupdates/pull/39)
 - Ensure the the enable/disable bulk actions appear in the dropdown and are handled in multisite - [#38](https://github.com/audrasjb/wp-autoupdates/pull/38)
 - Remove dashicon from "Enable" text in plugins auto-updates column - [#36](https://github.com/audrasjb/wp-autoupdates/pull/36)
@@ -169,28 +187,40 @@ March 6, 2020
 - Add auto-update-enabled and auto-update-disabled views on the plugins screen - [#18](https://github.com/audrasjb/wp-autoupdates/pull/18)
 
 ### Version 0.1.5 🐣
+
 February 26, 2020
+
 - Fix fatal error on PHP 7+
 - Fix legacy notice classes
 - Various tiny enhancements
 - Replace required PHP version
 
 ### Version 0.1.4 👻
+
 February 26, 2020
+
 - Fix PHP warnings.
 
 ### Version 0.1.3 ☀️
+
 February 25, 2020
+
 - Replace all "autoupdate" occurrences with "auto-update" which is now the official wording.
 
 ### Version 0.1.2
+
 February 23, 2020
+
 - Add time to next update in Plugins screen.
 
 ### Version 0.1.1
+
 February 19, 2020
+
 - Fixes few PHP notices/warnings.
 
 ### Version 0.1
+
 February 18, 2020
+
 - Initial release

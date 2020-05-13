@@ -1,0 +1,30 @@
+{
+    "name": "@wordpress/wp-autoupdates",
+    "version": "0.7.0",
+    "description": "![WordPress Auto-updates](https://jeanbaptisteaudras.com/images/wp-autoupdates-banner.png)",
+    "author": "The WordPress Contributors",
+    "license": "GPL-2.0-or-later",
+    "keywords": [
+        "wordpress"
+    ],
+    "homepage": "https://github.com/WordPress/wp-autoupdates#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/WordPress/wp-autoupdates.git"
+    },
+    "bugs": {
+        "url": "https://github.com/WordPress/wp-autoupdates/issues"
+    },
+    "main": "index.js",
+    "scripts": {
+        "format:js": "wp-scripts format-js",
+        "lint:css": "wp-scripts lint-style",
+        "lint:js": "wp-scripts lint-js",
+        "lint:md:docs": "wp-scripts lint-md-docs",
+        "lint:pkg-json": "wp-scripts lint-pkg-json",
+        "test": "npm run lint:css && npm run lint:md:docs && npm run lint:js"
+    },
+    "dependencies": {
+        "@wordpress/scripts": "^9.0.0"
+    }
+}
