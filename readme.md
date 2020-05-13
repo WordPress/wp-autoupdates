@@ -89,6 +89,18 @@ Work in progress.
 
 ## Changelog 🗓
 
+### 0.8.0 🐪
+
+May 13, 2020
+
+- Self-deactivate the plugin after the functionality has been merged to core - [#123](https://github.com/WordPress/wp-autoupdates/pull/123)
+- Remove auto-updates options when plugin is uninstalled - [#125](https://github.com/WordPress/wp-autoupdates/pull/125)
+- Use ES5 in the JS, because the core build tools barf on `let` and `const` - [#127](https://github.com/WordPress/wp-autoupdates/pull/127)
+- More pre-merge cleanup - [#124](https://github.com/WordPress/wp-autoupdates/pull/124)
+- Add help tabs on update-core, plugins, and themes admin screens - [#121](https://github.com/WordPress/wp-autoupdates/pull/121)
+- Cleanup - [#119](https://github.com/WordPress/wp-autoupdates/pull/119)
+- I18n - Remove unnecessary concatenation - [#117](https://github.com/WordPress/wp-autoupdates/pull/117)
+
 ### 0.7.0 🦢
 
 May 6, 2020
@@ -172,7 +184,7 @@ March 11, 2020
 - Prevent "PHP Notice: Undefined index: plugin_status" when adding the autoupdates_column - [#47](https://github.com/audrasjb/wp-autoupdates/pull/47)
 - Add plugin_status query arg to the enable/disable links in the Automatic Updates column - [#48](https://github.com/audrasjb/wp-autoupdates/pull/48)
 
-### 0.2 🐝
+### 0.2.0 🐝
 
 March 6, 2020
 
@@ -186,7 +198,7 @@ March 6, 2020
 - In multisite, only add the "Automatic Updates" column on the plugins-network screen - [#21](https://github.com/audrasjb/wp-autoupdates/pull/21)
 - Add auto-update-enabled and auto-update-disabled views on the plugins screen - [#18](https://github.com/audrasjb/wp-autoupdates/pull/18)
 
-### Version 0.1.5 🐣
+### 0.1.5 🐣
 
 February 26, 2020
 
@@ -195,31 +207,31 @@ February 26, 2020
 - Various tiny enhancements
 - Replace required PHP version
 
-### Version 0.1.4 👻
+### 0.1.4 👻
 
 February 26, 2020
 
 - Fix PHP warnings.
 
-### Version 0.1.3 ☀️
+### 0.1.3 ☀️
 
 February 25, 2020
 
 - Replace all "autoupdate" occurrences with "auto-update" which is now the official wording.
 
-### Version 0.1.2
+### 0.1.2
 
 February 23, 2020
 
 - Add time to next update in Plugins screen.
 
-### Version 0.1.1
+### 0.1.1
 
 February 19, 2020
 
 - Fixes few PHP notices/warnings.
 
-### Version 0.1
+### 0.1.0
 
 February 18, 2020
 

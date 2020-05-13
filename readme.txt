@@ -48,6 +48,16 @@ Interested in contributing to this plugin? Feel free to join us in `#core-auto-u
 
 == Changelog ==
 
+= 0.8.0 =
+May 13, 2020
+- Self-deactivate the plugin after the functionality has been merged to core - [#123](https://github.com/WordPress/wp-autoupdates/pull/123)
+- Remove auto-updates options when plugin is uninstalled - [#125](https://github.com/WordPress/wp-autoupdates/pull/125)
+- Use ES5 in the JS, because the core build tools barf on `let` and `const` - [#127](https://github.com/WordPress/wp-autoupdates/pull/127)
+- More pre-merge cleanup - [#124](https://github.com/WordPress/wp-autoupdates/pull/124)
+- Add help tabs on update-core, plugins, and themes admin screens - [#121](https://github.com/WordPress/wp-autoupdates/pull/121)
+- Cleanup - [#119](https://github.com/WordPress/wp-autoupdates/pull/119)
+- I18n - Remove unnecessary concatenation - [#117](https://github.com/WordPress/wp-autoupdates/pull/117)
+
 = 0.7.0 =
 May 6, 2020
 - PHPCBF fixes - [#114](https://github.com/WordPress/wp-autoupdates/pull/114)
