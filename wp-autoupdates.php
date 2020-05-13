@@ -36,3 +36,18 @@ function wp_autoupdates_self_deactivate() {
 add_action( 'admin_init', 'wp_autoupdates_self_deactivate', 1 );
 
 include_once plugin_dir_path( __FILE__ ) . 'functions.php';
+
+
+/**
+ * Remove auto-updates data on uninstall.
+ */
+function wp_autoupdates_activate() {
+	register_uninstall_hook( __FILE__, 'wp_auto_update_uninstall' );
+}
+register_activation_hook( __FILE__, 'wp_autoupdates_activate' );
+
+function wp_auto_update_uninstall() {
+	delete_site_option( 'wp_auto_update_plugins' );
+	delete_site_option( 'wp_auto_update_themes' );
+}
+
