@@ -1,5 +1,5 @@
 === WordPress Auto-updates ===
-Contributors: wordpressdotorg, audrasjb, whodunitagency, pbiron, whyisjake, xkon, karmatosed, mapk, jeffpaul, bookdude13
+Contributors: wordpressdotorg, audrasjb, pbiron, whyisjake, azaozz, xkon, mapk, jeffpaul, bookdude13, ronalfy, whodunitagency
 Requires at least: 5.3
 Tested up to: 5.4
 Requires PHP: 5.6
@@ -23,6 +23,13 @@ For full details, see the [Feature Plugin proposal published on Make/Core](https
 
 Weekly meetings summaries:
 
+- [Auto-updates feature meeting summary: May 12, 2020](https://make.wordpress.org/core/2020/05/12/auto-updates-feature-meeting-summary-may-12-2020/)
+- [Auto-updates feature meeting summary: May 4, 2020](https://make.wordpress.org/core/2020/05/06/auto-updates-feature-meeting-summary-may-4-2020/)
+- **[Merge Announcement: Plugins & Themes Auto-Updates](https://make.wordpress.org/core/2020/05/02/merge-announcement-plugins-themes-auto-updates/)**
+- [Auto-updates feature meeting summary: April 28, 2020](https://make.wordpress.org/core/2020/05/01/auto-updates-feature-meeting-summary-april-28-2020/)
+- [Auto-updates feature meeting summary: April 21, 2020](https://make.wordpress.org/core/2020/04/22/auto-updates-feature-meeting-summary-april-21-2020/)
+- [Auto-updates feature meeting summary: April 14th, 2020](https://make.wordpress.org/core/2020/04/15/auto-updates-feature-meeting-summary-april-14th-2020/)
+- [Auto-updates feature meeting summary: April 7th, 2020](https://make.wordpress.org/core/2020/04/08/auto-updates-feature-meeting-summary-april-7th-2020/)
 - [Auto-updates feature meeting summary: March 17th, 2020](https://make.wordpress.org/core/2020/03/18/auto-updates-feature-meeting-summary-march-17th-2020/)
 - [Auto-updates feature meeting summary: March 10th, 2020 – Kick-off meeting](https://make.wordpress.org/core/2020/03/11/auto-updates-feature-meeting-summary-march-10th-2020-kick-off-meeting/)
 
@@ -34,7 +41,7 @@ See also:
 
 This project is currently driven by [Jb Audras](https://profiles.wordpress.org/audrasjb/) & [Paul Biron](https://profiles.wordpress.org/pbiron/) and it’s being [developed on GitHub](https://github.com/WordPress/wp-autoupdates).
 
-Interested in contributing to this plugin? Feel free to join us in `#core-auto-updates` channel on Make WordPress Slack Team. We’ll host weekly meetings on Slack every Tuesdays at 18:00 UTC.
+Interested in contributing to this plugin? Feel free to join us in `#core-auto-updates` channel on Make WordPress Slack Team. We’ll host weekly meetings on Slack every Tuesdays at 17:00 UTC.
 
 == Screenshots ==
 
