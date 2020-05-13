@@ -26,8 +26,7 @@ define( 'WP_AUTO_UPDATES_VERSION', '0.7.0' );
 // Needs to run after the admin APIs have been loaded from wp-admin/includes/.
 function wp_autoupdates_self_deactivate() {
 	if (
-		function_exists( 'wp_is_plugins_auto_update_enabled' ) ||
-		function_exists( 'wp_autoupdates_get_update_message' ) ||
+		function_exists( 'wp_get_auto_update_message' ) ||
 		function_exists( 'wp_is_auto_update_enabled_for_type' )
 	) {
 		// Deactivate the plugin. This functionality has already been merged to core.
