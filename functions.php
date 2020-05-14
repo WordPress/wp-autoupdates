@@ -363,7 +363,7 @@ function wp_autoupdates_handle_plugins_enable_disable() {
 
 		update_site_option( 'wp_auto_update_plugins', $auto_updates );
 
-		wp_redirect( self_admin_url( "plugins.php?disable-auto-update=true&plugin_status=$status&paged=$page&s=$s" ) );
+		wp_redirect( self_admin_url( "plugins.php?enable-auto-update=true&plugin_status=$status&paged=$page&s=$s" ) );
 		exit;
 	} elseif ( 'disable-auto-update' === $_GET['action'] ) {
 		if ( ! current_user_can( 'update_plugins' ) || ! wp_autoupdates_is_plugins_auto_update_enabled() ) {
