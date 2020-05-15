@@ -22,6 +22,13 @@
 
 				event.preventDefault();
 
+				// Prevent multiple simultaneous requests.
+				if ( $anchor.attr( 'data-doing-ajax' ) === 'yes' ) {
+					return;
+				}
+
+				$anchor.attr( 'data-doing-ajax', 'yes' );
+
 				switch ( pagenow ) {
 					case 'plugins':
 					case 'plugins-network':
@@ -165,6 +172,7 @@
 					} )
 					.always( function() {
 						$anchor
+							.removeAttr( 'data-doing-ajax' )
 							.find( '.dashicons-update' )
 							.addClass( 'hidden' );
 					} );
