@@ -6,9 +6,9 @@
 	'use strict';
 
 	$( document ).ready( function() {
-		$( '.column-auto-updates, .theme-overlay' ).on(
+		$( document ).on(
 			'click',
-			'.toggle-auto-update',
+			'a.toggle-auto-update',
 			function( event ) {
 				var data, asset, type,
 					$anchor = $( this ),
