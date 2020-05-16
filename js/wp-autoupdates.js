@@ -8,7 +8,7 @@
 	$( document ).ready( function() {
 		$( document ).on(
 			'click',
-			'a.toggle-auto-update',
+			'.column-auto-updates a.toggle-auto-update, .theme-overlay a.toggle-auto-update',
 			function( event ) {
 				var data, asset, type,
 					$anchor = $( this ),
