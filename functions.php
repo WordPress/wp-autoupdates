@@ -338,6 +338,9 @@ function wp_autoupdates_handle_plugins_enable_disable() {
 		$page   = ! empty( $_GET['paged'] ) ? absint( $_GET['paged'] ) : '';
 		$status = isset( $_GET['plugin_status'] ) && ! empty( esc_html( $_GET['plugin_status'] ) ) ? wp_unslash( esc_html( $_GET['plugin_status'] ) ) : '';
 		$s      = isset( $_GET['s'] ) && ! empty( esc_html( $_GET['s'] ) ) ? wp_unslash( esc_html( $_GET['s'] ) ) : '';
+
+		/** This filter is documented in wp-admin/includes/class-wp-plugins-list-table.php */
+		$all_items = apply_filters( 'all_plugins', get_plugins() );
 	}
 
 	if ( 'enable-auto-update' === $_GET['action'] ) {
@@ -360,6 +363,8 @@ function wp_autoupdates_handle_plugins_enable_disable() {
 
 		$auto_updates[] = $plugin;
 		$auto_updates   = array_unique( $auto_updates );
+		// Remove plugins that have been deleted since the site option was last updated.
+		$auto_updates   = array_intersect( $auto_updates, array_keys( $all_items ) );
 
 		update_site_option( 'wp_auto_update_plugins', $auto_updates );
 
@@ -384,6 +389,8 @@ function wp_autoupdates_handle_plugins_enable_disable() {
 		$auto_updates = get_site_option( 'wp_auto_update_plugins', array() );
 
 		$auto_updates = array_diff( $auto_updates, array( $plugin ) );
+		// Remove plugins that have been deleted since the site option was last updated.
+		$auto_updates = array_intersect( $auto_updates, array_keys( $all_items ) );
 
 		update_site_option( 'wp_auto_update_plugins', $auto_updates );
 
@@ -417,10 +424,13 @@ function wp_autoupdates_handle_themes_enable_disable() {
 
 		check_admin_referer( 'updates' );
 
+		$all_items      = wp_get_themes();
 		$auto_updates   = (array) get_site_option( 'wp_auto_update_themes', array() );
 
 		$auto_updates[] = $_GET['theme'];
 		$auto_updates   = array_unique( $auto_updates );
+		// Remove themes that have been deleted since the site option was last updated.
+		$auto_updates   = array_intersect( $auto_updates, array_keys( $all_items ) );
 
 		update_site_option( 'wp_auto_update_themes', $auto_updates );
 
@@ -437,11 +447,14 @@ function wp_autoupdates_handle_themes_enable_disable() {
 
 		check_admin_referer( 'updates' );
 
-		$auto_updates     = get_site_option( 'wp_auto_update_themes', array() );
+		$all_items    = wp_get_themes();
+		$auto_updates = get_site_option( 'wp_auto_update_themes', array() );
 
-		$new_auto_updates = array_diff( $auto_updates, array( $_GET['theme'] ) );
+		$auto_updates = array_diff( $auto_updates, array( $_GET['theme'] ) );
+		// Remove themes that have been deleted since the site option was last updated.
+		$auto_updates = array_intersect( $auto_updates, array_keys( $all_items ) );
 
-		update_site_option( 'wp_auto_update_themes', $new_auto_updates );
+		update_site_option( 'wp_auto_update_themes', $auto_updates );
 
 		wp_safe_redirect( add_query_arg( 'disabled-auto-update', 1, $referer ) );
 		exit;
@@ -493,6 +506,11 @@ function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $i
 			return self_admin_url( "plugins.php?plugin_status=$status&paged=$page&s=$s" );
 		}
 
+		/** This filter is documented in wp-admin/includes/class-wp-plugins-list-table.php */
+		$all_items        = apply_filters( 'all_plugins', get_plugins() );
+		// Remove plugins that have been deleted since the site option was last updated.
+		$new_auto_updates = array_intersect( $new_auto_updates, array_keys( $all_items ) );
+
 		update_site_option( 'wp_auto_update_plugins', $new_auto_updates );
 
 		return self_admin_url( "plugins.php?enable-auto-update-multi&plugin_status=$status&paged=$page&s=$s" );
@@ -529,6 +547,11 @@ function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $i
 			return self_admin_url( "plugins.php?plugin_status=$status&paged=$page&s=$s" );
 		}
 
+		/** This filter is documented in wp-admin/includes/class-wp-plugins-list-table.php */
+		$all_items        = apply_filters( 'all_plugins', get_plugins() );
+		// Remove plugins that have been deleted since the site option was last updated.
+		$new_auto_updates = array_intersect( $new_auto_updates, array_keys( $all_items ) );
+
 		update_site_option( 'wp_auto_update_plugins', $new_auto_updates );
 
 		return self_admin_url( "plugins.php?disable-auto-update-multi=true&plugin_status=$status&paged=$page&s=$s" );
@@ -538,28 +561,6 @@ function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $i
 }
 add_filter( 'handle_bulk_actions-plugins', 'wp_autoupdates_plugins_bulk_actions_handle', 10, 3 );
 add_filter( 'handle_bulk_actions-plugins-network', 'wp_autoupdates_plugins_bulk_actions_handle', 10, 3 );
-
-
-/**
- * Handle cleanup when plugin deleted.
- *
- * @param string $plugin_file Path to the plugin file relative to the plugins directory.
- * @param bool   $deleted     Whether the plugin deletion was successful.
- */
-function wp_autoupdates_plugin_deleted( $plugin_file, $deleted ) {
-	// Do nothing if the plugin wasn't deleted
-	if ( ! $deleted ) {
-		return;
-	}
-
-	// Remove settings
-	$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
-	if ( in_array( $plugin_file, $wp_auto_update_plugins, true ) ) {
-		$wp_auto_update_plugins = array_diff( $wp_auto_update_plugins, array( $plugin_file ) );
-		update_site_option( 'wp_auto_update_plugins', $wp_auto_update_plugins );
-	}
-}
-add_action( 'deleted_plugin', 'wp_autoupdates_plugin_deleted', 10, 2 );
 
 
 /**
@@ -644,10 +645,11 @@ function wp_autoupdates_plugins_status_links( $status_links ) {
 	}
 
 	/** This filter is documented in wp-admin/includes/class-wp-plugins-list-table.php */
-	$all_plugins           = apply_filters( 'all_plugins', get_plugins() );
-	$wp_autoupdate_plugins = get_site_option( 'wp_auto_update_plugins', array() );
-	$wp_autoupdate_plugins = array_intersect( $wp_autoupdate_plugins, array_keys( $all_plugins ) );
-	$enabled_count         = count( $wp_autoupdate_plugins );
+	$all_plugins   = apply_filters( 'all_plugins', get_plugins() );
+	$auto_updates  = (array) get_site_option( 'wp_auto_update_plugins', array() );
+	// Remove plugins that have been deleted since the site option was last updated.
+	$auto_updates  = array_intersect( $auto_updates, array_keys( $all_plugins ) );
+	$enabled_count = count( $auto_updates );
 
 	// when merged, these counts will need to be set in WP_Plugins_List_Table::prepare_items().
 	$counts = array(
@@ -1236,11 +1238,15 @@ function wp_autoupdates_themes_bulk_actions_handle( $redirect_to, $doaction, $it
 		$temp_args = array( 'enabled-auto-update', 'disabled-auto-update', 'enabled-auto-update-selected', 'disabled-auto-update-selected' );
 		$referer   = remove_query_arg( $temp_args, wp_get_referer() );
 
-		$auto_updates     = (array) get_site_option( 'wp_auto_update_themes', array() );
-		$new_auto_updates = array_merge( $auto_updates, $themes );
-		$new_auto_updates = array_unique( $new_auto_updates );
+		$all_items    = wp_get_themes();
+		$auto_updates = (array) get_site_option( 'wp_auto_update_themes', array() );
 
-		update_site_option( 'wp_auto_update_themes', $new_auto_updates );
+		$auto_updates = array_merge( $auto_updates, $themes );
+		$auto_updates = array_unique( $auto_updates );
+		// Remove themes that have been deleted since the site option was last updated.
+		$auto_updates = array_intersect( $auto_updates, array_keys( $all_items ) );
+
+		update_site_option( 'wp_auto_update_themes', $auto_updates );
 
 		$redirect_to = add_query_arg( 'enabled-auto-update', count( $themes ), $referer );
 	} elseif ( 'disable-auto-update-selected' === $doaction ) {
@@ -1258,11 +1264,14 @@ function wp_autoupdates_themes_bulk_actions_handle( $redirect_to, $doaction, $it
 		$temp_args = array( 'enabled-auto-update', 'disabled-auto-update', 'enabled-auto-update-selected', 'disabled-auto-update-selected' );
 		$referer   = remove_query_arg( $temp_args, wp_get_referer() );
 
-		$auto_updates     = (array) get_site_option( 'wp_auto_update_themes', array() );
+		$all_items    = wp_get_themes();
+		$auto_updates = (array) get_site_option( 'wp_auto_update_themes', array() );
 
-		$new_auto_updates = array_diff( $auto_updates, $themes );
+		$auto_updates = array_diff( $auto_updates, $themes );
+		// Remove themes that have been deleted since the site option was last updated.
+		$auto_updates = array_intersect( $auto_updates, array_keys( $all_items ) );
 
-		update_site_option( 'wp_auto_update_themes', $new_auto_updates );
+		update_site_option( 'wp_auto_update_themes', $auto_updates );
 
 		$redirect_to = add_query_arg( 'disabled-auto-update', count( $themes ), $referer );
 	}
@@ -1331,6 +1340,9 @@ function wp_autoupdates_toggle_auto_updates() {
 		$auto_updates[] = $asset;
 		$auto_updates   = array_unique( $auto_updates );
 	}
+
+	// Remove items that have been deleted since the site option was last updated.
+	$auto_updates = array_intersect( $auto_updates, array_keys( $all_items ) );
 
 	update_site_option( $option, $auto_updates );
 
