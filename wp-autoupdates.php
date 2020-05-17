@@ -35,14 +35,18 @@ function wp_autoupdates_self_deactivate() {
 		// The names of the site options changed in the core merge,
 		// so copy the plugin's site options to core's.
 		$auto_updates = (array) get_site_option( 'auto_update_plugins', array() );
-		$auto_updates = array_merge( $auto_updates, (array) get_site_option( 'wp_auto_update_plugins', array() ) );
+		if ( ! empty( $auto_updates ) ) {
+			$auto_updates = array_merge( $auto_updates, (array) get_site_option( 'wp_auto_update_plugins', array() ) );
 
-		update_site_option( 'auto_update_plugins', $auto_updates );
+			update_site_option( 'auto_update_plugins', $auto_updates );
+		}
 
 		$auto_updates = (array) get_site_option( 'auto_update_themes', array() );
-		$auto_updates = array_merge( $auto_updates, (array) get_site_option( 'wp_auto_update_themes', array() ) );
+		if ( ! empty( $auto_updates ) ) {
+			$auto_updates = array_merge( $auto_updates, (array) get_site_option( 'wp_auto_update_themes', array() ) );
 
-		update_site_option( 'auto_update_themes', $auto_updates );
+			update_site_option( 'auto_update_themes', $auto_updates );
+		}
 	}
 }
 add_action( 'admin_init', 'wp_autoupdates_self_deactivate', 1 );
