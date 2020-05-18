@@ -1,6 +1,6 @@
 {
     "name": "@wordpress/wp-autoupdates",
-    "version": "0.8.0",
+    "version": "0.8.1",
     "description": "![WordPress Auto-updates](https://jeanbaptisteaudras.com/images/wp-autoupdates-banner.png)",
     "author": "The WordPress Contributors",
     "license": "GPL-2.0-or-later",

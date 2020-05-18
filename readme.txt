@@ -3,7 +3,7 @@ Contributors: wordpressdotorg, audrasjb, pbiron, whyisjake, azaozz, xkon, mapk, 
 Requires at least: 5.3
 Tested up to: 5.4
 Requires PHP: 5.6
-Stable tag: 0.8.0
+Stable tag: 0.8.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,9 +13,7 @@ A feature plugin to integrate Plugins & Themes automatic updates in WordPress Co
 
 The purpose of this plugin is to prepare a future Plugins & Themes automatic updates feature.
 
-**This is a Beta Test Plugin, you shouldn’t use it in production.**
-
-**Please note that the code of this plugin is not meant to land in WordPress Core "as is", it will be completely reworked for core merge. This plugin is meant to discuss auto-updates principles and user interface.**
+**Please note that the code of this plugin is not meant to land in WordPress Core "as it is", its code will be completely reworked for core merge. This plugin is meant to discuss auto-updates principles and user interface.**
 
 In 2018, Matt Mullenweg posted 9 projects for Core to focus on in 2019. We didn’t ship as many as hoped, but we made a lot of progress. Plugins and Themes Automatic Updates were one of those 9 projects. This project is now milestoned to WordPress 5.5 and this feature plugin is here to help move towards this achievement.
 
@@ -35,9 +33,9 @@ Weekly meetings summaries:
 
 See also:
 
-- [Update on the 9 projects for 2019](https://make.wordpress.org/core/2019/12/06/update-9-projects-for-2019/):
-- [Related Trac ticket for plugins auto-updates](https://core.trac.wordpress.org/ticket/48850)
-- [Related Trac ticket for themes auto-updates](https://core.trac.wordpress.org/ticket/48850)
+- [Update on the 9 projects for 2019](https://make.wordpress.org/core/2019/12/06/update-9-projects-for-2019/)
+- [Related Trac ticket for plugins & themes auto-updates core merge](https://core.trac.wordpress.org/ticket/50052)
+- Former Trac tickets for [plugins](https://core.trac.wordpress.org/ticket/48850) & [themes](https://core.trac.wordpress.org/ticket/48850) auto-updates
 
 This project is currently driven by [Jb Audras](https://profiles.wordpress.org/audrasjb/) & [Paul Biron](https://profiles.wordpress.org/pbiron/) and it’s being [developed on GitHub](https://github.com/WordPress/wp-autoupdates).
 
@@ -55,7 +53,15 @@ Interested in contributing to this plugin? Feel free to join us in `#core-auto-u
 
 == Changelog ==
 
-= 0.8.0 =
+= 0.8.1 🍄 =
+May 18, 2020
+- Fix incorrect admin notice text when auto-updates are enabled for a plugin when JS is not enabled in the browser - [#130](https://github.com/WordPress/wp-autoupdates/pull/130)
+- Prevent multiple simultaneous requests - [#131](https://github.com/WordPress/wp-autoupdates/pull/131)
+- Strip plugins/themes that have been deleted from the site options just before they are updated - [#132](https://github.com/WordPress/wp-autoupdates/pull/132)
+- Copy the plugin's site options to core's site options on self-deactivation - [#133](https://github.com/WordPress/wp-autoupdates/pull/133)
+- fix typos and docs standards - [#134](https://github.com/WordPress/wp-autoupdates/pull/134)
+
+= 0.8.0 🐪 =
 May 13, 2020
 - Self-deactivate the plugin after the functionality has been merged to core - [#123](https://github.com/WordPress/wp-autoupdates/pull/123)
 - Remove auto-updates options when plugin is uninstalled - [#125](https://github.com/WordPress/wp-autoupdates/pull/125)
@@ -65,25 +71,25 @@ May 13, 2020
 - Cleanup - [#119](https://github.com/WordPress/wp-autoupdates/pull/119)
 - I18n - Remove unnecessary concatenation - [#117](https://github.com/WordPress/wp-autoupdates/pull/117)
 
-= 0.7.0 =
+= 0.7.0 🦢 =
 May 6, 2020
 - PHPCBF fixes - [#114](https://github.com/WordPress/wp-autoupdates/pull/114)
 - Remove constants from the feature plugin - [#112](https://github.com/WordPress/wp-autoupdates/pull/112)
 - Various i18n fixes/optimizations - [#109](https://github.com/WordPress/wp-autoupdates/pull/109)
 - Simplifies Ajax on both the JS and PHP sides - [#103](https://github.com/WordPress/wp-autoupdates/pull/103)
 
-= 0.6.0 =
+= 0.6.0 🦋 =
 April 22, 2020
 - Add Ajax to Plugin and Themes Screen - [#61](https://github.com/WordPress/wp-autoupdates/pull/61)
 - Accessibility: Communicate AJAX enabling/disabling changes to screen readers - [#85](https://github.com/WordPress/wp-autoupdates/pull/85)
 - Add Better Handling to Ajax Errors - [#90](https://github.com/WordPress/wp-autoupdates/pull/90)
 - Prevent CSS from being enqueued on sub-site plugins & themes screens in multisite - [#91](https://github.com/WordPress/wp-autoupdates/pull/91)
 
-= 0.5.1 =
+= 0.5.1 🦒 =
 April 16, 2020
 - Add the plugin version when enqueueing styles, for cache busting - [#79](https://github.com/WordPress/wp-autoupdates/pull/79)
 
-= 0.5 =
+= 0.5.0 🦚 =
 April 15, 2020
 - Replace Disable strings with Disable auto-updates - [#78](https://github.com/WordPress/wp-autoupdates/pull/78)
 - Update confirmation message wording - [#77](https://github.com/WordPress/wp-autoupdates/pull/77)
@@ -99,11 +105,11 @@ April 15, 2020
 - Switch disable link to red on Multisite Themes Screen - [#54](https://github.com/WordPress/wp-autoupdates/pull/54)
 - Wrong kick off year in readme.txt - [#42](https://github.com/WordPress/wp-autoupdates/pull/60)
 
-= 0.4.1 =
+= 0.4.1 🍺 =
 April 2, 2020
 - Network > Sites > Edit > Themes screen doesn’t have the Autoupdates column - [#50](https://github.com/WordPress/wp-autoupdates/pull/50)
 
-= 0.4.0 =
+= 0.4.0 🌹 =
 March, 30, 2020
 This release brings full support for Themes auto-updates.
 It also changes the plugin structure to allow self deactivation when the feature gets merged into WordPress Core.
@@ -115,7 +121,7 @@ Other changes:
 - Add and populate Automatic updates column, add and handle enable/disable auto-updates bulk actions to the multisite themes list table - [#33](https://github.com/WordPress/wp-autoupdates/pull/33)
 - Avoid duplicate Updating… dialog - [#32](https://github.com/WordPress/wp-autoupdates/pull/32)
 
-= 0.3.0 =
+= 0.3.0 🦉 =
 March 16, 2020
 - Add functions to handle plugins updates notification emails - [#54](https://github.com/audrasjb/wp-autoupdates/pull/54)
 - Remove update time text after manual update - [#43](https://github.com/audrasjb/wp-autoupdates/pull/43)
@@ -123,12 +129,12 @@ March 16, 2020
 - Specific messages for delayed or disabled cron events - [#58](https://github.com/audrasjb/wp-autoupdates/pull/58)
 - Prevent mis-match between count in Auto-updates Enabled view and the number of plugins displayed for that view by applying 'all_plugins' filter before computing that count. - [#59](https://github.com/audrasjb/wp-autoupdates/pull/59)
 
-= 0.2.1 =
+= 0.2.1 🐜 =
 March 11, 2020
 - Prevent "PHP Notice: Undefined index: plugin_status" when adding the autoupdates_column - [#47](https://github.com/audrasjb/wp-autoupdates/pull/47)
 - Add plugin_status query arg to the enable/disable links in the Automatic Updates column - [#48](https://github.com/audrasjb/wp-autoupdates/pull/48)
 
-= 0.2 =
+= 0.2.0 🐝 =
 March 6, 2020
 - Remove auto-updates column from mustuse and dropins screens - [#39](https://github.com/audrasjb/wp-autoupdates/pull/39)
 - Ensure the the enable/disable bulk actions appear in the dropdown and are handled in multisite - [#38](https://github.com/audrasjb/wp-autoupdates/pull/38)
@@ -140,18 +146,18 @@ March 6, 2020
 - In multisite, only add the "Automatic Updates" column on the plugins-network screen - [#21](https://github.com/audrasjb/wp-autoupdates/pull/21)
 - Add auto-update-enabled and auto-update-disabled views on the plugins screen - [#18](https://github.com/audrasjb/wp-autoupdates/pull/18)
 
-= 0.1.5 =
+= 0.1.5 🐣 =
 February 26, 2020
 - Fix fatal error on PHP 7+
 - Fix legacy notice classes
 - Various tiny enhancements
 - Replace required PHP version
 
-= 0.1.4 =
+= 0.1.4 👻 =
 February 26, 2020
 - Fix PHP warnings.
 
-= 0.1.3 =
+= 0.1.3 ☀️ =
 February 25, 2020
 - Replace all "autoupdate" occurrences with "auto-update" which is now the official wording.
 
@@ -163,6 +169,6 @@ February 23, 2020
 February 19, 2020
 * Fixes few PHP notices/warnings.
 
-= 0.1 =
+= 0.1.0 =
 February 18, 2020
 * Initial release
