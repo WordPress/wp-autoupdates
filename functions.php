@@ -1014,8 +1014,7 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 		$body[] = __( 'The following plugins failed to update:' );
 		// List failed updates.
 		foreach ( $failed_updates['plugin'] as $item ) {
-			/* translators: %s: Name of the related plugin. */
-			$body[] = ' ' . sprintf( __( '- %s', 'wp-autoupdates' ), $item->name );
+			$body[] = '- ' . $item->name;
 		}
 		$body[] = "\n";
 	}
@@ -1024,8 +1023,7 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 		$body[] = __( 'The following themes failed to update:' );
 		// List failed updates.
 		foreach ( $failed_updates['theme'] as $item ) {
-			/* translators: %s: Name of the related plugin. */
-			$body[] = ' ' . sprintf( __( '- %s', 'wp-autoupdates' ), $item->name );
+			$body[] = '- ' . $item->name;
 		}
 		$body[] = "\n";
 	}
@@ -1035,7 +1033,7 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 		// List successful updates.
 		foreach ( $successful_updates['plugin'] as $plugin ) {
 			/* translators: %s: Name of the related plugin. */
-			$body[] = ' ' . sprintf( __( '- %s', 'wp-autoupdates' ), $plugin->name );
+			$body[] = '- ' . $plugin->name;
 		}
 		$body[] = "\n";
 	}
@@ -1045,7 +1043,7 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 		// List successful updates.
 		foreach ( $successful_updates['theme'] as $plugin ) {
 			/* translators: %s: Name of the related plugin. */
-			$body[] = ' ' . sprintf( __( '- %s', 'wp-autoupdates' ), $plugin->name );
+			$body[] = '- ' . $plugin->name );
 		}
 		$body[] = "\n";
 	}
