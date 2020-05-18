@@ -1260,7 +1260,7 @@ function wp_autoupdates_themes_bulk_actions_handle( $redirect_to, $doaction, $it
 		// In core, $items will be $_GET['checked'].
 		$themes = ! empty( $items ) ? (array) wp_unslash( $items ) : array();
 
-		// In core, the referrer is setup in wp-admin/themes.php or wp-admin/network/themes.php.
+		// In core, the referer is setup in wp-admin/themes.php or wp-admin/network/themes.php.
 		$temp_args = array( 'enabled-auto-update', 'disabled-auto-update', 'enabled-auto-update-selected', 'disabled-auto-update-selected' );
 		$referer   = remove_query_arg( $temp_args, wp_get_referer() );
 
