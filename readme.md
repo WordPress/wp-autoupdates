@@ -40,7 +40,7 @@ Thanks to everyone who contributed to this feature plugin!
 - [@gmays](https://profiles.wordpress.org/gmays/)
 - [@knutsp](https://profiles.wordpress.org/knutsp/)
 - [@pbiron](https://profiles.wordpress.org/pbiron/)
-- [@passionate](https://profiles.wordpress.org/passionate/)
+- [@passoniate](https://profiles.wordpress.org/passoniate/)
 - [@nicolaskulka](https://profiles.wordpress.org/nicolaskulka/)
 - [@bookdude13](https://profiles.wordpress.org/bookdude13/)
 - [@jeffpaul](https://profiles.wordpress.org/jeffpaul/)

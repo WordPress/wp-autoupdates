@@ -409,7 +409,7 @@ function wp_autoupdates_handle_themes_enable_disable() {
 		return;
 	}
 
-	// in core, the referer is setup in wp-admin/themes.php or wp-admin/network/themes.php.
+	// In core, the referer is setup in wp-admin/themes.php or wp-admin/network/themes.php.
 	$temp_args = array( 'enabled-auto-update', 'disabled-auto-update' );
 	$referer   = remove_query_arg( $temp_args, wp_get_referer() );
 
@@ -473,7 +473,7 @@ add_action( 'load-themes.php', 'wp_autoupdates_handle_themes_enable_disable' );
  */
 function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $items ) {
 	if ( 'enable-auto-update-selected' === $doaction ) {
-		// in core, this will be in a case statement in wp-admin/plugins.php for this $doaction.
+		// In core, this will be in a case statement in wp-admin/plugins.php for this $doaction.
 		if ( ! current_user_can( 'update_plugins' ) || ! wp_autoupdates_is_plugins_auto_update_enabled() ) {
 			wp_die( __( 'Sorry, you are not allowed to enable plugins automatic updates.', 'wp-autoupdates' ) );
 		}
@@ -484,10 +484,10 @@ function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $i
 
 		check_admin_referer( 'bulk-plugins' );
 
-		// in core, $items will be $_POST['checked'].
+		// In core, $items will be $_POST['checked'].
 		$plugins = ! empty( $items ) ? (array) wp_unslash( $items ) : array();
 
-		// in core, these are variables in the scope of wp-admin/plugins.php.
+		// In core, these are variables in the scope of wp-admin/plugins.php.
 		$page    = ! empty( $_GET['paged'] ) ? absint( $_GET['paged'] ) : '';
 		$status  = isset( $_GET['plugin_status'] ) && ! empty( esc_html( $_GET['plugin_status'] ) ) ? wp_unslash( esc_html( $_GET['plugin_status'] ) ) : '';
 		$s       = isset( $_GET['s'] ) && ! empty( esc_html( $_GET['s'] ) ) ? wp_unslash( esc_html( $_GET['s'] ) ) : '';
@@ -500,7 +500,7 @@ function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $i
 		$new_auto_updates = array_merge( $auto_updates, $plugins );
 		$new_auto_updates = array_unique( $new_auto_updates );
 
-		// return early if all selected plugins already have auto-updates enabled.
+		// Return early if all selected plugins already have auto-updates enabled.
 		// must use non-strict comparison, so that array order is not treated as significant.
 		if ( $new_auto_updates == $auto_updates ) {
 			return self_admin_url( "plugins.php?plugin_status=$status&paged=$page&s=$s" );
@@ -515,7 +515,7 @@ function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $i
 
 		return self_admin_url( "plugins.php?enable-auto-update-multi&plugin_status=$status&paged=$page&s=$s" );
 	} elseif ( 'disable-auto-update-selected' === $doaction ) {
-		// in core, this will be in a case statement in wp-admin/plugins.php for this $doaction.
+		// In core, this will be in a case statement in wp-admin/plugins.php for this $doaction.
 		if ( ! current_user_can( 'update_plugins' ) || ! wp_autoupdates_is_plugins_auto_update_enabled() ) {
 			wp_die( __( 'Sorry, you are not allowed to enable plugins automatic updates.', 'wp-autoupdates' ) );
 		}
@@ -526,10 +526,10 @@ function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $i
 
 		check_admin_referer( 'bulk-plugins' );
 
-		// in core, $items will be $_POST['checked'].
+		// In core, $items will be $_POST['checked'].
 		$plugins = ! empty( $items ) ? (array) wp_unslash( $items ) : array();
 
-		// in core, these are variables in the scope of wp-admin/plugins.php.
+		// In core, these are variables in the scope of wp-admin/plugins.php.
 		$page    = ! empty( $_GET['paged'] ) ? absint( $_GET['paged'] ) : '';
 		$status  = isset( $_GET['plugin_status'] ) && ! empty( esc_html( $_GET['plugin_status'] ) ) ? wp_unslash( esc_html( $_GET['plugin_status'] ) ) : '';
 		$s       = isset( $_GET['s'] ) && ! empty( esc_html( $_GET['s'] ) ) ? wp_unslash( esc_html( $_GET['s'] ) ) : '';
@@ -541,7 +541,7 @@ function wp_autoupdates_plugins_bulk_actions_handle( $redirect_to, $doaction, $i
 		$auto_updates     = (array) get_site_option( 'wp_auto_update_plugins', array() );
 		$new_auto_updates = array_diff( $auto_updates, $plugins );
 
-		// return early if all selected plugins already have auto-updates disabled.
+		// Return early if all selected plugins already have auto-updates disabled.
 		// must use non-strict comparison, so that array order is not treated as significant.
 		if ( $new_auto_updates == $auto_updates ) {
 			return self_admin_url( "plugins.php?plugin_status=$status&paged=$page&s=$s" );
@@ -566,7 +566,7 @@ add_filter( 'handle_bulk_actions-plugins-network', 'wp_autoupdates_plugins_bulk_
 /**
  * Auto-update notices.
  *
- * Note: the struture of this function may seem more complicated than it needs to
+ * Note: the structure of this function may seem more complicated than it needs to
  * be, but it is done this way to make it easier to copy into the relevant files
  * in the core merge patch (each of which uses a different way to output the notices).
  */
@@ -651,13 +651,13 @@ function wp_autoupdates_plugins_status_links( $status_links ) {
 	$auto_updates  = array_intersect( $auto_updates, array_keys( $all_plugins ) );
 	$enabled_count = count( $auto_updates );
 
-	// when merged, these counts will need to be set in WP_Plugins_List_Table::prepare_items().
+	// When merged, these counts will need to be set in WP_Plugins_List_Table::prepare_items().
 	$counts = array(
 		'auto-update-enabled'  => $enabled_count,
 		'auto-update-disabled' => $totals['all'] - $enabled_count,
 	);
 
-	// we can't use the global $status set in WP_Plugin_List_Table::__construct() because
+	// We can't use the global $status set in WP_Plugin_List_Table::__construct() because
 	// it will be 'all' for our "custom statuses".
 	$status = isset( $_REQUEST['plugin_status'] ) ? $_REQUEST['plugin_status'] : 'all';
 
@@ -695,7 +695,7 @@ function wp_autoupdates_plugins_status_links( $status_links ) {
 		);
 	}
 
-	// make the 'all' status link not current if one of our "custom statuses" is current.
+	// Make the 'all' status link not current if one of our "custom statuses" is current.
 	if ( in_array( $status, array_keys( $counts ), true ) ) {
 		$status_links['all'] = str_replace( ' class="current" aria-current="page"', '', $status_links['all'] );
 	}
@@ -728,7 +728,7 @@ function wp_autoupdates_plugins_filter_plugins_by_status( $plugins ) {
 
 	if ( ! ( isset( $_REQUEST['plugin_status'] ) &&
 			in_array( $_REQUEST['plugin_status'], $custom_statuses, true ) ) ) {
-		// current request is not for one of our statuses.
+		// Current request is not for one of our statuses.
 		// nothing to do, so bail.
 		return;
 	}
@@ -751,10 +751,10 @@ function wp_autoupdates_plugins_filter_plugins_by_status( $plugins ) {
 		}
 	}
 
-	// set the list table's items array to just those plugins with our custom status.
+	// Set the list table's items array to just those plugins with our custom status.
 	$wp_list_table->items = $_plugins;
 
-	// now, update the pagination properties of the list table accordingly.
+	// Now, update the pagination properties of the list table accordingly.
 	$total_this_page = count( $_plugins );
 
 	$plugins_per_page = $wp_list_table->get_items_per_page( str_replace( '-', '_', $wp_list_table->screen->id . '_per_page' ), 999 );
@@ -845,7 +845,7 @@ function wp_autoupdates_debug_information( $info ) {
 	if ( wp_autoupdates_is_themes_auto_update_enabled() ) {
 		// Populate themes informations.
 
-		// set up the themes array so we can filter it the same way we do with the plugins array above,
+		// Set up the themes array so we can filter it the same way we do with the plugins array above,
 		// this is necessary only because of the way site health sets up $info.
 		$themes = array();
 		foreach ( wp_get_themes() as $theme ) {
@@ -1009,7 +1009,7 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 			break;
 	}
 
-	// Get failed plugin updates
+	// Get failed plugin updates.
 	if ( in_array( $type, array( 'fail', 'mixed' ), true ) && ! empty( $failed_updates['plugin'] ) ) {
 		$body[] = __( 'The following plugins failed to update:' );
 		// List failed updates.
@@ -1019,7 +1019,7 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 		}
 		$body[] = "\n";
 	}
-	// Get failed theme updates
+	// Get failed theme updates.
 	if ( in_array( $type, array( 'fail', 'mixed' ), true ) && ! empty( $failed_updates['theme'] ) ) {
 		$body[] = __( 'The following themes failed to update:' );
 		// List failed updates.
@@ -1029,7 +1029,7 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 		}
 		$body[] = "\n";
 	}
-	// Get successful plugin updates
+	// Get successful plugin updates.
 	if ( in_array( $type, array( 'success', 'mixed' ), true ) && ! empty( $successful_updates['plugin'] ) ) {
 		$body[] = __( 'The following plugins were successfully updated:' );
 		// List successful updates.
@@ -1039,7 +1039,7 @@ function wp_autoupdates_send_email_notification( $type, $successful_updates, $fa
 		}
 		$body[] = "\n";
 	}
-	// Get successful theme updates
+	// Get successful theme updates.
 	if ( in_array( $type, array( 'success', 'mixed' ), true ) && ! empty( $successful_updates['theme'] ) ) {
 		$body[] = __( 'The following themes were successfully updated:' );
 		// List successful updates.
@@ -1098,7 +1098,7 @@ function wp_autoupdates_get_update_message() {
 		return __( 'There may be a problem with WP-Cron. Automatic update not scheduled.', 'wp-autoupdates' );
 	}
 
-	// See if cron is disabled
+	// See if cron is disabled.
 	$cron_disabled = defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON;
 	if ( $cron_disabled ) {
 		return __( 'WP-Cron is disabled. Automatic updates not available.', 'wp-autoupdates' );
@@ -1224,17 +1224,17 @@ add_filter( 'bulk_actions-themes-network', 'wp_autoupdates_themes_bulk_actions' 
  */
 function wp_autoupdates_themes_bulk_actions_handle( $redirect_to, $doaction, $items ) {
 	if ( 'enable-auto-update-selected' === $doaction ) {
-		// in core, this will be in a case statement in wp-admin/network/themes.php for this $doaction.
+		// In core, this will be in a case statement in wp-admin/network/themes.php for this $doaction.
 		if ( ! current_user_can( 'update_themes' ) || ! wp_autoupdates_is_themes_auto_update_enabled() ) {
 			wp_die( __( 'Sorry, you are not allowed to enable themes automatic updates.', 'wp-autoupdates' ) );
 		}
 
 		check_admin_referer( 'bulk-themes' );
 
-		// in core, $items will be $_GET['checked'].
+		// In core, $items will be $_GET['checked'].
 		$themes = ! empty( $items ) ? (array) wp_unslash( $items ) : array();
 
-		// in core, the referer is setup in wp-admin/themes.php or wp-admin/network/themes.php.
+		// In core, the referer is setup in wp-admin/themes.php or wp-admin/network/themes.php.
 		$temp_args = array( 'enabled-auto-update', 'disabled-auto-update', 'enabled-auto-update-selected', 'disabled-auto-update-selected' );
 		$referer   = remove_query_arg( $temp_args, wp_get_referer() );
 
@@ -1250,17 +1250,17 @@ function wp_autoupdates_themes_bulk_actions_handle( $redirect_to, $doaction, $it
 
 		$redirect_to = add_query_arg( 'enabled-auto-update', count( $themes ), $referer );
 	} elseif ( 'disable-auto-update-selected' === $doaction ) {
-		// in core, this will be in a case statement in wp-admin/network/themes.php for this $doaction.
+		// In core, this will be in a case statement in wp-admin/network/themes.php for this $doaction.
 		if ( ! current_user_can( 'update_themes' ) || ! wp_autoupdates_is_themes_auto_update_enabled() ) {
 			wp_die( __( 'Sorry, you are not allowed to disable themes automatic updates.', 'wp-autoupdates' ) );
 		}
 
 		check_admin_referer( 'bulk-themes' );
 
-		// in core, $items will be $_GET['checked'].
+		// In core, $items will be $_GET['checked'].
 		$themes = ! empty( $items ) ? (array) wp_unslash( $items ) : array();
 
-		// in core, the referer is setup in wp-admin/themes.php or wp-admin/network/themes.php.
+		// In core, the referer is setup in wp-admin/themes.php or wp-admin/network/themes.php.
 		$temp_args = array( 'enabled-auto-update', 'disabled-auto-update', 'enabled-auto-update-selected', 'disabled-auto-update-selected' );
 		$referer   = remove_query_arg( $temp_args, wp_get_referer() );
 
