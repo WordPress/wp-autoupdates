@@ -89,6 +89,17 @@ Work in progress.
 
 ## Changelog 🗓
 
+### 0.8.1 🍄
+
+May 18, 2020
+
+- Fix incorrect admin notice text when auto-updates are enabled for a plugin when JS is not enabled in the browser - [#130](https://github.com/WordPress/wp-autoupdates/pull/130)
+- Prevent multiple simultaneous requests - [#131](https://github.com/WordPress/wp-autoupdates/pull/131)
+- Strip plugins/themes that have been deleted from the site options just before they are updated - [#132](https://github.com/WordPress/wp-autoupdates/pull/132)
+- Copy the plugin's site options to core's site options on self-deactivation - [#133](https://github.com/WordPress/wp-autoupdates/pull/133)
+- fix typos and docs standards - [#134](https://github.com/WordPress/wp-autoupdates/pull/134)
+
+
 ### 0.8.0 🐪
 
 May 13, 2020
