@@ -72,7 +72,7 @@
 						var $enabled, $disabled, enabledNumber, disabledNumber, errorMessage;
 
 						if ( response.success ) {
-							// Update the counts in the enabled/disabled views if on on
+							// Update the counts in the enabled/disabled views if on
 							// screen with a list table.
 							// TODO: If either count started out 0 the appropriate span won't
 							//       be there and hence won't be updated.
@@ -148,7 +148,7 @@
 								'polite'
 							);
 						} else {
-							// if WP returns 0 for response (which can happen in a few cases
+							// If WP returns 0 for response (which can happen in a few cases
 							// that aren't quite failures), output the general error message,
 							// since we won't have response.data.error.
 							errorMessage = response.data && response.data.error
