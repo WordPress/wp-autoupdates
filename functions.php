@@ -409,7 +409,7 @@ function wp_autoupdates_handle_themes_enable_disable() {
 		return;
 	}
 
-	// In core, the referrer is setup in wp-admin/themes.php or wp-admin/network/themes.php.
+	// In core, the referer is setup in wp-admin/themes.php or wp-admin/network/themes.php.
 	$temp_args = array( 'enabled-auto-update', 'disabled-auto-update' );
 	$referer   = remove_query_arg( $temp_args, wp_get_referer() );
 
