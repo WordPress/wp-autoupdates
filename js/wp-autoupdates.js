@@ -12,7 +12,7 @@
 			function( event ) {
 				var data, asset, type,
 					$anchor = $( this ),
-					action = $anchor.attr( 'data-wp-action' ),
+					action = $anchor.data( 'wp-action' ),
 					$label = $anchor.find( '.label' ),
 					$parent = $anchor.parents(
 						'themes' !== pagenow
@@ -23,25 +23,25 @@
 				event.preventDefault();
 
 				// Prevent multiple simultaneous requests.
-				if ( $anchor.attr( 'data-doing-ajax' ) === 'yes' ) {
+				if ( $anchor.data( 'doing-ajax' ) === 'yes' ) {
 					return;
 				}
 
-				$anchor.attr( 'data-doing-ajax', 'yes' );
+				$anchor.data( 'doing-ajax', 'yes' );
 
 				switch ( pagenow ) {
 					case 'plugins':
 					case 'plugins-network':
 						type = 'plugin';
-						asset = $anchor.closest( 'tr' ).attr( 'data-plugin' );
+						asset = $anchor.closest( 'tr' ).data( 'plugin' );
 						break;
 					case 'themes-network':
 						type = 'theme';
-						asset = $anchor.closest( 'tr' ).attr( 'data-slug' );
+						asset = $anchor.closest( 'tr' ).data( 'slug' );
 						break;
 					case 'themes':
 						type = 'theme';
-						asset = $anchor.attr( 'data-slug' );
+						asset = $anchor.data( 'slug' );
 						break;
 				}
 
@@ -110,7 +110,7 @@
 							}
 
 							if ( 'enable' === action ) {
-								$anchor.attr( 'data-wp-action', 'disable' );
+								$anchor.data( 'wp-action', 'disable' );
 								$anchor.attr(
 									'href',
 									$anchor
@@ -125,7 +125,7 @@
 									.find( '.auto-update-time' )
 									.removeClass( 'hidden' );
 							} else {
-								$anchor.attr( 'data-wp-action', 'enable' );
+								$anchor.data( 'wp-action', 'enable' );
 								$anchor.attr(
 									'href',
 									$anchor
