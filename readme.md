@@ -1,5 +1,7 @@
 # WordPress Auto-updates 🤖
 
+## UPDATE: This feature plugin was merged in WordPress 5.5 on August 11, 2020 🚀
+
 ![WordPress Auto-updates](https://jeanbaptisteaudras.com/images/wp-autoupdates-banner.png)
 
 A feature plugin to integrate Plugins & Themes automatic updates in WordPress Core.
