@@ -11,6 +11,8 @@ A feature plugin to integrate Plugins & Themes automatic updates in WordPress Co
 
 == Description ==
 
+**UPDATE: This feature plugin was merged in WordPress Core on August 11, 2020, with WordPress 5.6.
+
 The purpose of this plugin is to prepare a future Plugins & Themes automatic updates feature.
 
 **Please note that the code of this plugin is not meant to land in WordPress Core "as it is", its code will be completely reworked for core merge. This plugin is meant to discuss auto-updates principles and user interface.**
